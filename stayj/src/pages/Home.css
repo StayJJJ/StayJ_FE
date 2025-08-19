@@ -1,0 +1,114 @@
+/* 홈 전체 컨테이너 */
+.home-container {
+  font-family: 'Noto Sans KR', sans-serif;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 헤더 */
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.logo {
+  height: 40px;
+  cursor: pointer;
+}
+
+.profile-icon {
+  font-size: 24px;
+  cursor: pointer;
+}
+
+/* 검색 배너 안 검색박스 */
+.search-box {
+  display: flex;
+  gap: 10px;
+  background-color: rgba(255, 255, 255, 0.85);
+  padding: 10px 15px;
+  border-radius: 8px;
+}
+
+.search-box input {
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  padding: 8px 12px;
+  width: 120px;
+  font-size: 14px;
+}
+
+.search-box button {
+  background-color: #0055ff;
+  border: none;
+  color: white;
+  padding: 8px 15px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-size: 18px;
+}
+
+/* 숙소 카드 리스트 */
+.card-list {
+  margin-top: 30px;
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 숙소 카드 */
+.card {
+  width: 280px;
+  border: 1px solid #eee;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 2px 6px rgb(0 0 0 / 0.1);
+  cursor: pointer;
+  background: white;
+  position: relative;
+  transition: transform 0.2s ease;
+}
+
+.card:hover {
+  transform: translateY(-5px);
+}
+
+/* 카드 이미지 */
+.card img {
+  width: 100%;
+  height: 180px;
+  object-fit: cover;
+}
+
+/* 게스트 선호 태그 */
+.guest-pick {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background-color: #ff5a5f;
+  color: white;
+  padding: 4px 8px;
+  font-size: 12px;
+  font-weight: 600;
+  border-radius: 6px;
+}
+
+/* 카드 정보 */
+.card-info {
+  padding: 15px;
+}
+
+.card-info h3 {
+  margin: 0 0 6px 0;
+  font-size: 18px;
+}
+
+.card-info p {
+  margin: 4px 0;
+  color: #555;
+  font-size: 14px;
+}
