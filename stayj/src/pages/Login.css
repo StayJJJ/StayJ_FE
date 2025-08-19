@@ -1,0 +1,92 @@
+/* 전체 로그인 페이지 컨테이너 */
+.login-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  background-color: #f7f7f7;
+}
+
+/* 로그인 박스 */
+.login-box {
+  width: 400px;
+  padding: 50px;
+  background-color: #fff;
+  border-radius: 10px;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  text-align: center;
+}
+
+/* 로고 및 슬로건 */
+.logo-section {
+  margin-bottom: 30px;
+}
+
+.stayj-logo {
+  width: 200px;
+  height: 120px;
+  vertical-align: top;
+  margin-top: -20px;
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+.slogan1, .slogan2 {
+  font-size: 14px;
+  color: #888;
+  margin: 0;
+}
+
+/* 폼 섹션 */
+.form-section {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.login-input {
+  width: 100%;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 5px;
+  box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
+  font-size: 16px;
+}
+
+.login-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #6a96e6; /* 밝은 파란색 계열 */
+  color: white;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.login-button:hover {
+  background-color: #4a7ad1;
+}
+
+/* 링크 섹션 */
+.links-section {
+  margin-top: 20px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+}
+
+.link-text {
+  font-size: 14px;
+  color: #666;
+  text-decoration: none;
+}
+
+.divider {
+  width: 1px;
+  height: 15px;
+  background-color: #ccc;
+}
