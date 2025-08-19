@@ -53,25 +53,27 @@
   display: flex;
   gap: 10px;
   background-color: rgba(255, 255, 255, 0.85);
-  padding: 10px 15px;
+  padding: 20px 40px;
+  width: 80%;
   border-radius: 8px;
 }
 
 .search-box input {
   border: 1px solid #ddd;
   border-radius: 4px;
-  padding: 8px 12px;
-  width: 120px;
+  padding: 20px 30px;
+  width: 50%;
   font-size: 14px;
 }
 
 .search-box button {
+  background-color: transparent;  /* 배경 투명 */
   border: none;
   color: white;
   padding: 8px 15px;
   border-radius: 4px;
   cursor: pointer;
-  font-size: 18px;
+  font-size: 30px;
   display: flex;
   align-items: center;
   justify-content: center;
