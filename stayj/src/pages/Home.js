@@ -37,7 +37,11 @@ const Home = () => {
       {/* Header */}
       <header className="header">
         <img src="/images/logo.png" alt="StayJ 로고" className="logo" />
-        <div className="profile-icon">👤</div>
+        
+        <div className="header-right">
+          <button className="signup-btn">회원가입</button>
+          <img src="/images/profile.png" alt="프로필" className="profile-icon" />
+        </div>
       </header>
 
       {/* Search Banner */}
@@ -57,7 +61,9 @@ const Home = () => {
           <input type="text" placeholder="체크인" />
           <input type="text" placeholder="체크아웃" />
           <input type="text" placeholder="인원수" />
-          <button>🔍</button>
+          <button>
+            <img src="/images/search.png" alt="검색" className="search-icon" />
+          </button>
         </div>
       </div>
 
