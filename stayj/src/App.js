@@ -1,50 +1,49 @@
-// import logo from './logo.svg';
-// import Home from './pages/Home';
-// import Login from './pages/Login';
-// import Register from './pages/Register';
-// import './App.css';
-
-// function App() {
-//   return (
-//     <div className="App">
-//       {/* <Home /> */}
-//       <Home />
-//     </div>
-//   );
-// }
-
-// export default App;
-
-// src/App.js
-import { Routes, Route, Navigate } from 'react-router-dom';
+import logo from './logo.svg';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
-
-// 호스트 페이지들 (내가 제공한 최소 버전)
-import HostDashboard from './pages/host/HostDashboard';
-import Reservations from './pages/host/Reservations';
-
 import './App.css';
 
 function App() {
   return (
     <div className="App">
-      <Routes>
-        {/* 기본 페이지들 */}
-        <Route path="/" element={<Home />} />
-        <Route path="/login" element={<Login />} />
-        <Route path="/register" element={<Register />} />
-
-        {/* 호스트 전용 (우선 가드 없이 연결만) */}
-        <Route path="/host" element={<HostDashboard />} />
-        <Route path="/host/:guesthouseId/reservations" element={<Reservations />} />
-
-        {/* 없는 경로는 홈으로 */}
-        <Route path="*" element={<Navigate to="/" replace />} />
-      </Routes>
+      {/* <Home /> */}
+      <Home />
     </div>
   );
 }
 
 export default App;
+
+
+// // src/App.js
+
+// import React from 'react';
+// import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+// import LoginPage from './pages/Auth/LoginPage'; // LoginPage 컴포넌트 임포트
+
+// // 나중에 만들 페이지들
+// import Home from './pages/Home';
+// import RegisterPage from './pages/Auth/RegisterPage';
+
+// function App() {
+//   return (
+//     <Router>
+//       <Routes>
+//         {/* '/' 경로로 접속하면 Home가 보입니다. */}
+//         <Route path="/" element={<Home />} />
+        
+//         {/* '/login' 경로로 접속하면 LoginPage가 보입니다. */}
+//         <Route path="/login" element={<LoginPage />} />
+        
+//         {/* '/register' 경로로 접속하면 RegisterPage가 보입니다. */}
+//         <Route path="/register" element={<RegisterPage />} />
+
+//         {/* 경로가 일치하지 않을 경우 404 페이지를 보여줄 수 있습니다. */}
+//         {/* <Route path="*" element={<NotFoundPage />} /> */}
+//       </Routes>
+//     </Router>
+//   );
+// }
+
+// export default App;
