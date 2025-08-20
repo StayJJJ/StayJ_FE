@@ -11,3 +11,8 @@ code {
   font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
+
+html, body, #root { height: 100%; }
+body { overflow-y: auto; }
+.App { min-height: 100vh; overflow-y: auto; }
+.modal-body { max-height: 80vh; overflow: auto; }
