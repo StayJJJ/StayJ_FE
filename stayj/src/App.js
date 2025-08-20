@@ -2,7 +2,10 @@ import logo from './logo.svg';
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
+import Review from './pages/ReviewModal';
+
 import './App.css';
+import ReviewModal from './pages/ReviewModal';
 
 function App() {
   return (
@@ -14,7 +17,6 @@ function App() {
 }
 
 export default App;
-
 
 // // src/App.js
 
