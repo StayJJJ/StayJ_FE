@@ -1,0 +1,81 @@
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.6);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modalBox {
+  background-color: white;
+  padding: 24px;
+  border-radius: 8px;
+  width: 400px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.closeBtn {
+  background: none;
+  border: none;
+  font-size: 24px;
+  cursor: pointer;
+}
+
+.starRating {
+  margin: 16px 0;
+  font-size: 24px;
+}
+
+.starFilled {
+  color: gold;
+  cursor: pointer;
+}
+
+.starEmpty {
+  color: lightgray;
+  cursor: pointer;
+}
+
+.reviewForm {
+  display: flex;
+  flex-direction: column;
+}
+
+.input {
+  padding: 8px;
+  margin-bottom: 12px;
+  font-size: 16px;
+}
+
+.textarea {
+  padding: 8px;
+  height: 100px;
+  font-size: 16px;
+  margin-bottom: 16px;
+  resize: none;
+}
+
+.submitBtn {
+  background-color: #4a7ad1;
+  color: white;
+  border: none;
+  padding: 10px;
+  font-size: 16px;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+.submitBtn:hover {
+  background-color: #4a7ad1;
+}
