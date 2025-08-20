@@ -1,4 +1,5 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import './Home.css';
 
 const accommodations = [
@@ -31,7 +32,12 @@ const accommodations = [
   },
 ];
 
-const Home = () => {
+const Home = () => {  
+  const navigate = useNavigate();
+
+  const handleCardClick = (accommodationId) => {
+    navigate(`/detail/${accommodationId}`);
+  };
   return (
     <div className="home-container">
       {/* Header */}
@@ -71,7 +77,11 @@ const Home = () => {
       {/* Accommodation Cards */}
       <div className="card-list">
         {accommodations.map((item) => (
-          <div className="card" key={item.id}>
+          <div 
+            className="card" 
+            key={item.id}
+            onClick={() => handleCardClick(item.id)}
+          >
             <img src={item.imageUrl} alt={item.title} />
             {item.isGuestPick && <div className="guest-pick">게스트 선호</div>}
             <div className="card-info">
@@ -88,3 +98,4 @@ const Home = () => {
 };
 
 export default Home;
+export { accommodations };
