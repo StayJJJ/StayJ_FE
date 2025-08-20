@@ -52,14 +52,15 @@ const Home = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           height: '300px',
+          width: '100%',
           display: 'flex',
           alignItems: 'center',
           justifyContent: 'center',
         }}
       >
         <div className="search-box">
-          <input type="text" placeholder="체크인" />
-          <input type="text" placeholder="체크아웃" />
+          <input type="text" placeholder="게스트하우스 이름" />
+          <input type="text" placeholder="날짜" />
           <input type="text" placeholder="인원수" />
           <button>
             <img src="/images/search.png" alt="검색" className="search-icon" />
