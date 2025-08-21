@@ -10,6 +10,7 @@ import HostDashboard from './pages/host/HostDashboard';
 import Reservations from './pages/host/Reservations';
 import './App.css';
 import ReviewModal from './pages/ReviewModal';
+import GuestPage from './pages/GuestPage';
 
 function App() {
   return (
@@ -19,6 +20,10 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />
         <Route path="/register" element={<Register />} />
+
+
+        {/* 게스트 전용 */}
+        <Route path="/guest" element={<GuestPage />} />
 
         {/* 호스트 전용 (우선 가드 없이 연결만) */}
         <Route path="/host" element={<HostDashboard />} />

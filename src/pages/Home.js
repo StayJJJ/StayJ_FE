@@ -46,7 +46,7 @@ const Home = () => {
         
         <div className="header-right">
           <button className="signup-btn">회원가입</button>
-          <img src="/images/profile.png" alt="프로필" className="profile-icon" />
+          <img src="/images/profile.png" alt="프로필" className="profile-icon" onClick={() => navigate(`/guest`)}/>
         </div>
       </header>
 
