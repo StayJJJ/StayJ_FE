@@ -1,0 +1,35 @@
+@import './theme.css';
+
+.host-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 80px; }
+
+.table{
+  width:100%; border-collapse: separate; border-spacing:0;
+  background: var(--panel); border-radius: var(--radius-xl);
+  box-shadow: var(--shadow-soft); overflow: hidden;
+}
+.table thead th{
+  background: var(--sky-100); color: #0c4a6e; padding: 14px 16px; text-align: left; font-weight: 800;
+}
+.table tbody td{ padding: 14px 16px; border-top: 1px solid #eef7ff; }
+.table tbody tr:hover{ background: #f0f9ff; }
+
+/* chip */
+.chip{
+  display:inline-flex; align-items:center; gap: 6px;
+  background: #ecfeff; color: #155e75; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+}
+
+.muted { color: var(--muted); }
+.error { color: var(--danger); font-weight:700; }
+
+/* mobile table -> stacked cards */
+@media (max-width: 640px) {
+  .table { display: none; }
+  .res-list { display:grid; gap: 12px; }
+  .res-card{
+    background: var(--panel); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft);
+    padding: 12px; display:grid; gap: 6px;
+  }
+  .res-card .title{ font-weight: 800; }
+  .res-card .row{ display:flex; gap: 8px; color: var(--muted); }
+}
