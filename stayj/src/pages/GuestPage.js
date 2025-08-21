@@ -1,6 +1,4 @@
-import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
+import React, { useState } from 'react';
 import './GuestPage.css';
 
 // Mock 데이터
@@ -60,9 +58,6 @@ const mockReservations = [
 ];
 
 const GuestPage = () => {
-
-  const navigate = useNavigate(); // Initialize the hook
-
   const [userData, setUserData] = useState(mockUserData);
   const [isEditing, setIsEditing] = useState(false);
   const [editForm, setEditForm] = useState({
@@ -70,10 +65,6 @@ const GuestPage = () => {
     phone_number: userData.phone_number,
     password: ""
   });
-  // 페이지 첫 렌더링 시 유저 정보 가져오기
-  useEffect(() => {  
-     handleUserData();
-  }, []);
 
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
@@ -137,57 +128,6 @@ const GuestPage = () => {
     return '⭐'.repeat(Math.floor(rating)) + (rating % 1 ? '⭐' : '');
   };
 
-
-  // 20250821
-  const handleUserData = async () => {
-    try {
-      // 쿠키에서 userId 꺼내오기
-      const userId = Cookies.get("Id");
-      console.log(userId);
-      if (!userId) {
-        console.error("userId가 쿠키에 없습니다. 로그인 필요.");
-        return;
-      }
-
-      // userId를 URL 뒤에 붙이기
-      const url = `http://localhost:8080/user/${userId}`;
-
-      const res = await fetch(url, {
-        method: "GET",
-        headers: {
-          "Accept": "application/json"
-        }
-      });
-      if (!res.ok) {
-        throw new Error(`요청 실패: ${res.status}`);
-      }
-
-      const data = await res.json();
-      console.log("서버 응답:", data);
-
-      // 여기서 state 업데이트 → 화면 반영
-      setUserData({
-        id: data.id,
-        username: data.username,
-        login_id: data.login_id,
-        role: data.role,
-        phone_number: data.phone_number
-      });
-    }catch (error) {
-      console.error("유저 정보 불러오기 오류:", error);
-    }
-  };
-
-
-  const logout = () => {
-    // 쿠키 삭제
-    Cookies.remove('userId');
-    Cookies.remove('authToken');
-    console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
-    // 로그인 페이지로 이동
-    navigate('/login');
-  };
-
   return (
     <div className="guest-page-container">
       {/* Header */}
@@ -195,7 +135,7 @@ const GuestPage = () => {
         <img src="/images/logo.png" alt="StayJ 로고" className="guest-logo" />
         
         <div className="guest-header-right">
-          <button className="logout-btn" onClick={logout}>로그아웃</button>
+          <button className="logout-btn">로그아웃</button>
           <img src="/images/profile.png" alt="프로필" className="guest-profile-icon" />
         </div>
       </header>
@@ -225,7 +165,7 @@ const GuestPage = () => {
               <input
                 type="text"
                 name="username"
-                value={userData.username}
+                value={editForm.username}
                 onChange={handleInputChange}
               />
             </div>
@@ -234,7 +174,7 @@ const GuestPage = () => {
               <input
                 type="text"
                 name="phone_number"
-                value={userData.phone_number}
+                value={editForm.phone_number}
                 onChange={handleInputChange}
               />
             </div>
@@ -243,7 +183,7 @@ const GuestPage = () => {
               <input
                 type="password"
                 name="password"
-                value={userData.password}
+                value={editForm.password}
                 onChange={handleInputChange}
                 placeholder="변경하지 않으려면 비워두세요"
               />
