@@ -1,8 +1,28 @@
 // src/api/hosts.js
-// 실제 백엔드 API 연동
-
 import Cookies from 'js-cookie';
 const BASE_URL = 'http://localhost:8080';
+
+// 게스트하우스 상세 조회
+export async function getGuesthouseDetail(id) {
+  const res = await fetch(`${BASE_URL}/guesthouse/${id}`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('게스트하우스 상세 조회 실패');
+  return await res.json();
+}
+
+// 게스트하우스 방 목록 조회
+export async function getGuesthouseRooms(id) {
+  const res = await fetch(`${BASE_URL}/guesthouse/${id}/rooms`, {
+    method: 'GET',
+    headers: { 'Content-Type': 'application/json' },
+    credentials: 'include',
+  });
+  if (!res.ok) throw new Error('게스트하우스 방 목록 조회 실패');
+  return await res.json();
+}
 
 // 내 게스트하우스 목록 조회
 export async function getMyGuesthouses() {
