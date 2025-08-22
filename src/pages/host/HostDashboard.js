@@ -1,7 +1,8 @@
 // 내 게스트하우스 리스트
 // src/pages/host/HostDashboard.js
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
+import Cookies from 'js-cookie';
 import { getMyGuesthouses, createGuesthouse, updateGuesthouse, deleteGuesthouse } from '../../api/hosts';
 import GuesthouseForm from './GuesthouseForm';
 import './HostDashboard.css';
@@ -12,6 +13,15 @@ export default function HostDashboard() {
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null); // {id, name, ...}
+  const navigate = useNavigate();
+
+  // 로그아웃 함수 (GuestPage와 동일)
+  const logout = () => {
+    const keys = ['id', 'username', 'loginId', 'role', 'phoneNumber'];
+    keys.forEach((key) => Cookies.remove(key, { path: '/' }));
+    console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
+    navigate('/login');
+  };
 
   const load = async () => {
     try {
@@ -52,7 +62,10 @@ export default function HostDashboard() {
     <div className="host-wrap">
       <div className="host-header">
         <h1>내 게스트하우스</h1>
-        <button className="primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button className="primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
+          <button className="logout-btn" onClick={logout}>로그아웃</button>
+        </div>
       </div>
 
       {loading && <div className="muted">로딩 중…</div>}

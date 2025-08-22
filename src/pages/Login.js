@@ -24,12 +24,22 @@ const LoginPage = () => {
         body: JSON.stringify(bodyData),
       });
 
+      console.log("Hello world:", response);
       if (response.ok) {
         const result = await response.json();
-        Cookies.set('Id', result, { expires: 7 , path: '/'});
+        // const result = response.json();
+        console.log("Hello world:", result);
+        // 모든 필드를 각각 쿠키로 저장
+        Object.entries(result).forEach(([key, value]) => {
+          Cookies.set(key, value, { expires: 7, path: '/' });
+        });
 
-                // 로그인 성공 후 페이지 이동
-        navigate('/'); 
+        // 로그인 성공 후 role에 따라 페이지 이동
+        if (result.role === 'GUEST') {
+          navigate('/');
+        } else {
+          navigate('/host');
+        }
       } else {
         alert('로그인 실패: 아이디 또는 비밀번호를 확인해주세요.');
       }
