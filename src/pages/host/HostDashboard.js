@@ -15,7 +15,6 @@ export default function HostDashboard() {
   const [editing, setEditing] = useState(null); // {id, name, ...}
   const navigate = useNavigate();
 
-  // 로그아웃 함수 (GuestPage와 동일)
   const logout = () => {
     const keys = ['id', 'username', 'loginId', 'role', 'phoneNumber'];
     keys.forEach((key) => Cookies.remove(key, { path: '/' }));
@@ -63,7 +62,7 @@ export default function HostDashboard() {
       <div className="host-header">
         <h1>내 게스트하우스</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <button className="primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
+          <button className="btn primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
           <button className="logout-btn" onClick={logout}>로그아웃</button>
         </div>
       </div>
