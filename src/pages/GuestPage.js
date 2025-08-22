@@ -180,9 +180,9 @@ const GuestPage = () => {
 
 
   const logout = () => {
-    // 쿠키 삭제
-    Cookies.remove('userId');
-    Cookies.remove('authToken');
+    // UserInfoDto의 모든 필드 쿠키 삭제
+    const keys = ['id', 'username', 'loginId', 'role', 'phoneNumber'];
+    keys.forEach((key) => Cookies.remove(key, { path: '/' }));
     console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
     // 로그인 페이지로 이동
     navigate('/login');
