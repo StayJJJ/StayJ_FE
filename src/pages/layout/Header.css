@@ -1,0 +1,47 @@
+/* 헤더 전체 컨테이너 */
+.guest-page-container {
+  font-family: 'Noto Sans KR', sans-serif;
+  padding: 0 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* 헤더 */
+.guest-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px 0;
+}
+
+.guest-logo {
+  height: 80px;
+  cursor: pointer;
+}
+
+.guest-header-right {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+}
+
+.logout-btn {
+  background-color: transparent;
+  border: none;
+  color: #000000;
+  padding: 6px 0;
+  font-size: 14px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.logout-btn:hover {
+  color: #003bb3;
+  background-color: transparent;
+}
+
+.guest-profile-icon {
+  width: 32px;
+  height: 32px;
+  cursor: pointer;
+}

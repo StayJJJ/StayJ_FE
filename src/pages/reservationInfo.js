@@ -144,14 +144,6 @@ const ReservationInfo = () => {
 
   return (
     <div className="reservation-container">
-      {/* Header */}
-      <header className="reservation-header">
-        <button className="back-btn" onClick={handleBackClick}>
-          ← 뒤로가기
-        </button>
-        <img src="/images/logo.png" alt="StayJ 로고" className="logo" />
-      </header>
-
       {/* Main Image */}
       <div className="main-image-section">
         <img src={guesthouse.photos_url} alt={guesthouse.name} className="main-image" />

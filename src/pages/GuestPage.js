@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
-import { useNavigate } from 'react-router-dom';
 import './GuestPage.css';
 
 // Mock 데이터
@@ -60,8 +59,6 @@ const mockReservations = [
 ];
 
 const GuestPage = () => {
-
-  const navigate = useNavigate(); // Initialize the hook
 
   const [userData, setUserData] = useState(mockUserData);
   const [isEditing, setIsEditing] = useState(false);
@@ -179,26 +176,8 @@ const GuestPage = () => {
   };
 
 
-  const logout = () => {
-    // UserInfoDto의 모든 필드 쿠키 삭제
-    const keys = ['id', 'username', 'loginId', 'role', 'phoneNumber'];
-    keys.forEach((key) => Cookies.remove(key, { path: '/' }));
-    console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
-    // 로그인 페이지로 이동
-    navigate('/login');
-  };
-
   return (
     <div className="guest-page-container">
-      {/* Header */}
-      <header className="guest-header">
-        <img src="/images/logo.png" alt="StayJ 로고" className="guest-logo" />
-        
-        <div className="guest-header-right">
-          <button className="logout-btn" onClick={logout}>로그아웃</button>
-          <img src="/images/profile.png" alt="프로필" className="guest-profile-icon" />
-        </div>
-      </header>
 
       {/* 페이지 제목 */}
       <div className="page-title">

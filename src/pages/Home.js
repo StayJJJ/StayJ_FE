@@ -85,15 +85,6 @@ const Home = () => {
   };
   return (
     <div className="home-container">
-      {/* Header */}
-      <header className="header">
-        <img src="/images/logo.png" alt="StayJ 로고" className="logo" />
-        
-        <div className="header-right">
-          <button className="signup-btn">회원가입</button>
-          <img src="/images/profile.png" alt="프로필" className="profile-icon" onClick={() => navigate(`/guest`)}/>
-        </div>
-      </header>
 
       {/* Search Banner */}
       <div
