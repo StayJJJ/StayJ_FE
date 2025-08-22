@@ -2,21 +2,63 @@
 import { useState } from 'react';
 import './GuesthouseForm.css';
 
+const SIDO_LIST = ['제주특별자치도'];
+const DUMMY_GUGUN = {
+  '제주특별자치도': ['제주시', '서귀포시'],
+};
+const DUMMY_DONG = {
+  '제주시': ['이도이동', '노형동', '연동'],
+  '서귀포시': ['중문동', '대정읍', '남원읍'],
+};
 
 const EMPTY = {
-  name: '', description: '', address: '',
-  phone_number: '', rating: 0,
-  // rooms 최소 1개
-  rooms: [{ name: '', capacity: 2, price: 100000 }],
-  photo_id: 0, roomCount: 1,
+  name: '',
+  description: '',
+  address: '',
+  phone_number: '',
+  rooms: [{ name: ''}],
+  roomCount: 1,
 };
 
 export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCancel }) {
-  const [form, setForm] = useState({ ...EMPTY, ...initialValues });
+  // 최초 생성 시에는 EMPTY, 수정 시에는 initialValues가 반영됨
+  const [form, setForm] = useState(() => ({ ...EMPTY, ...initialValues }));
+  // 주소 선택식 상태
+  const [sido, setSido] = useState('');
+  const [gugun, setGugun] = useState('');
+  const [dong, setDong] = useState('');
+  const [detail, setDetail] = useState('');
+  const [addressType, setAddressType] = useState('select'); // select | manual
 
   const change = (e) => {
     const { name, value } = e.target;
-    setForm((s) => ({ ...s, [name]: name === 'rating' ? Number(value) : value }));
+    setForm((s) => ({ ...s, [name]: value }));
+  };
+
+  // 주소 선택 핸들러
+  const handleSido = (e) => {
+    setSido(e.target.value);
+    setGugun('');
+    setDong('');
+    setDetail('');
+  };
+  const handleGugun = (e) => {
+    setGugun(e.target.value);
+    setDong('');
+    setDetail('');
+  };
+  const handleDong = (e) => {
+    setDong(e.target.value);
+    setDetail('');
+  };
+  const handleDetail = (e) => setDetail(e.target.value);
+
+  // 주소 입력 방식 변경
+  const handleAddressType = (type) => {
+    setAddressType(type);
+    if (type === 'manual') {
+      setSido(''); setGugun(''); setDong(''); setDetail('');
+    }
   };
 
   const changeRoom = (idx, key, val) => {
@@ -27,7 +69,7 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
     });
   };
 
-  const addRoom = () => setForm((s) => ({ ...s, rooms: [...s.rooms, { name: '', capacity: 2, price: 100000 }], roomCount: s.rooms.length + 1 }));
+  const addRoom = () => setForm((s) => ({ ...s, rooms: [...s.rooms, { name: '' }], roomCount: s.rooms.length + 1 }));
   const removeRoom = (idx) => setForm((s) => {
     const rooms = s.rooms.slice();
     rooms.splice(idx, 1);
@@ -36,16 +78,19 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
 
   const submit = async (e) => {
     e.preventDefault();
-    const hostId = Number(localStorage.getItem('hostId')) || undefined; // 필요시 저장해두고 씀
+    const hostId = Number(localStorage.getItem('hostId')) || undefined;
+    let address = form.address;
+    if (addressType === 'select') {
+      address = [sido, gugun, dong, detail].filter(Boolean).join(' ');
+    }
     const payload = {
       name: form.name,
       description: form.description,
-      address: form.address,
-      rating: Number(form.rating) || 0,
+      address,
       photo_id: Number(form.photo_id) || 0,
       phone_number: form.phone_number,
       roomCount: form.rooms.length,
-      hostId, // 백엔드가 토큰으로 처리하면 undefined로 넘어가도 무방
+      hostId,
       rooms: form.rooms.map(r => ({
         name: r.name, capacity: Number(r.capacity) || 1, price: Number(r.price) || 0
       })),
@@ -55,29 +100,87 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
 
   return (
     <form className="gh-form" onSubmit={submit}>
-      <label>이름<input name="name" value={form.name} onChange={change} required /></label>
-      <label>소개<textarea name="description" value={form.description} onChange={change} rows={3} /></label>
-      <label>주소<input name="address" value={form.address} onChange={change} /></label>
-      <label>연락처(전화)<input name="phone_number" value={form.phone_number} onChange={change} /></label>
-      <label>초기 평점<input name="rating" type="number" step="0.1" min="0" max="5" value={form.rating} onChange={change} /></label>
-      <label>사진 ID<input name="photo_id" type="number" value={form.photo_id} onChange={change} /></label>
+      <div className="form-row">
+        <label className="input-label input-row">
+          <span>이름</span>
+          <input name="name" value={form.name} onChange={change} required placeholder="게스트하우스 이름" className="gray-placeholder" />
+        </label>
+        <label className="input-label input-row">
+          <span>연락처(전화)</span>
+          <input name="phone_number" value={form.phone_number} onChange={change} placeholder="010-1234-5678" className="gray-placeholder" />
+        </label>
+      </div>
 
-      <div style={{ marginTop: 8, fontWeight: 600 }}>방 정보</div>
+      <div className="form-row">
+        <label className="input-label input-row" style={{width:'100%'}}>
+          <span>주소</span>
+          <div className="address-row-flex">
+            <div className="address-selects-flex">
+              {addressType === 'select' ? (
+                <>
+                  <select value={sido} onChange={handleSido} className="gray-placeholder sido-select" required>
+                    <option value="">시/도</option>
+                    {SIDO_LIST.map(s => <option key={s} value={s}>{s}</option>)}
+                  </select>
+                  <select value={gugun} onChange={handleGugun} className="gray-placeholder" disabled={!sido} required style={{maxWidth:120}}>
+                    <option value="">시/군/구</option>
+                    {(DUMMY_GUGUN[sido]||[]).map(g => <option key={g} value={g}>{g}</option>)}
+                  </select>
+                  <select value={dong} onChange={handleDong} className="gray-placeholder" disabled={!gugun} required style={{maxWidth:120}}>
+                    <option value="">동/읍/면</option>
+                    {(DUMMY_DONG[gugun]||[]).map(d => <option key={d} value={d}>{d}</option>)}
+                  </select>
+                </>
+              ) : (
+                <input name="address" value={form.address} onChange={change} placeholder="전체 주소를 직접 입력" className="gray-placeholder" required style={{flex:1}} />
+              )}
+            </div>
+            <div className="address-type-toggle address-type-right">
+              <button type="button" className={addressType==='select' ? 'primary' : 'outline'} onClick={()=>handleAddressType('select')}>선택식</button>
+              <button type="button" className={addressType==='manual' ? 'primary' : 'outline'} onClick={()=>handleAddressType('manual')}>직접입력</button>
+            </div>
+          </div>
+        </label>
+      </div>
+      {addressType === 'select' && (
+        <div className="form-row">
+          <label className="input-label input-row" style={{width:'100%'}}>
+            <span>상세주소</span>
+            <input value={detail} onChange={handleDetail} placeholder="상세주소" className="gray-placeholder" disabled={!dong} required style={{flex:1}} />
+          </label>
+        </div>
+      )}
+
+      <div className="form-row">
+        <label className="input-label input-row">
+          <span>사진 ID</span>
+          <input name="photo_id" type="number" value={form.photo_id} onChange={change} placeholder="숫자만 입력" className="gray-placeholder" />
+        </label>
+      </div>
+
+      <div className="form-row">
+        <label className="input-label input-row">
+          <span>소개</span>
+          <textarea name="description" value={form.description} onChange={change} rows={3} placeholder="간단한 소개를 입력하세요" className="gray-placeholder" />
+        </label>
+      </div>
+
+  <div className="form-section" style={{ marginTop: 8, fontWeight: 600, color: '#0b2a3a' }}>방 정보</div>
       {form.rooms.map((r, i) => (
-        <div key={i} style={{ display: 'grid', gridTemplateColumns: '1fr 100px 120px auto', gap: 8, alignItems: 'center' }}>
-          <input placeholder="방 이름" value={r.name} onChange={(e)=>changeRoom(i,'name',e.target.value)} />
-          <input placeholder="정원" type="number" min="1" value={r.capacity} onChange={(e)=>changeRoom(i,'capacity',e.target.value)} />
-          <input placeholder="가격" type="number" min="0" value={r.price} onChange={(e)=>changeRoom(i,'price',e.target.value)} />
-          {form.rooms.length > 1 && <button type="button" onClick={()=>removeRoom(i)}>삭제</button>}
+        <div key={i} className="room-row">
+          <input placeholder="방 이름" value={r.name} onChange={(e)=>changeRoom(i,'name',e.target.value)} className="gray-placeholder" />
+          <input placeholder="정원" type="number" min="1" value={r.capacity} onChange={(e)=>changeRoom(i,'capacity',e.target.value)} className="gray-placeholder" />
+          <input placeholder="가격" type="number" min="0" value={r.price} onChange={(e)=>changeRoom(i,'price',e.target.value)} className="gray-placeholder" />
+          {form.rooms.length > 1 && <button type="button" className="remove" onClick={()=>removeRoom(i)}>삭제</button>}
         </div>
       ))}
       <div className="actions" style={{ marginTop: 6 }}>
-        <button type="button" onClick={addRoom}>+ 방 추가</button>
+        <button type="button" className="add" onClick={addRoom}>+ 방 추가</button>
       </div>
 
-      <div className="actions" style={{ marginTop: 8 }}>
-        <button type="button" onClick={onCancel}>취소</button>
-        <button className="primary">저장</button>
+      <div className="actions" style={{ marginTop: 16 }}>
+        <button type="button" className="outline close-btn" onClick={onCancel}>닫기</button>
+        <button className="primary" type="submit">저장</button>
       </div>
     </form>
   );

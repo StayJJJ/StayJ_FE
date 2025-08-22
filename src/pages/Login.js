@@ -35,7 +35,7 @@ const LoginPage = () => {
         });
 
         // 로그인 성공 후 role에 따라 페이지 이동
-        if (result.role === 'GUEST') {
+        if (result.role === 'GUEST' || result.role === 'guest') {
           navigate('/');
         } else {
           navigate('/host');
