@@ -46,7 +46,13 @@ const Home = () => {
   };
 
   const handleCardClick = (id) => {
-    navigate(`/detail/${id}`);
+    navigate(`/reservation/${id}`, {
+      state: {
+        checkIn: searchParams.check_in,
+        checkOut: searchParams.check_out,
+        guests: searchParams.people
+      }
+    }); 
   };
 
   return (

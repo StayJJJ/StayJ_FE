@@ -3,10 +3,8 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import './GuestPage.css';
 
-// API 기본 URL 설정
 const API_BASE_URL = 'http://localhost:8080';
 
-// 공통 에러 처리 함수
 const handleApiError = async (response) => {
   if (!response.ok) {
     const errorText = await response.text();
@@ -15,13 +13,11 @@ const handleApiError = async (response) => {
   return response;
 };
 
-// 공통 요청 헤더 생성
 const getHeaders = (userId) => ({
   'Content-Type': 'application/json',
   'user-id': userId.toString()
 });
 
-// API 서비스 객체
 const apiService = {
   createReservation: async (userId, reservationData) => {
     const response = await fetch(`${API_BASE_URL}/reservation`, {
@@ -79,7 +75,6 @@ const apiService = {
   }
 };
 
-// 쿠키에서 값 가져오기
 const getCookie = (name) => {
   const value = `; ${document.cookie}`;
   const parts = value.split(`; ${name}=`);
@@ -124,7 +119,7 @@ const GuestPage = () => {
       setLoading(true);
       const userInfo = await apiService.getUserInfo(userId);
       setUserData({
-        id: userInfo.id,
+        id: userInfo.userId,
         username: userInfo.username,
         login_id: userInfo.loginId,
         role: userInfo.role,
@@ -143,7 +138,12 @@ const GuestPage = () => {
       setLoading(true);
       setError(null);
       const data = await apiService.getMyReservations(userId);
-      setReservations(data);
+      // guesthouse가 없는 경우 기본값 처리
+      const normalizedData = data.map(r => ({
+        ...r,
+        guesthouse: r.guesthouse || { name: '숙소 정보 없음' }
+      }));
+      setReservations(normalizedData);
     } catch (err) {
       console.error('예약 목록 로드 실패:', err);
       setError('예약 정보를 불러오는 중 오류가 발생했습니다.');
@@ -217,22 +217,17 @@ const GuestPage = () => {
     navigate('/login');
   };
 
-  if (loading) {
-    return <div className="guest-page-container"><p>데이터를 불러오는 중...</p></div>;
-  }
-
-  if (error) {
-    return (
-      <div className="guest-page-container">
-        <p>오류: {error}</p>
-        {error.includes('로그인') ? (
-          <button onClick={() => navigate('/login')}>로그인하기</button>
-        ) : (
-          <button onClick={loadReservations}>다시 시도</button>
-        )}
-      </div>
-    );
-  }
+  if (loading) return <div className="guest-page-container"><p>데이터를 불러오는 중...</p></div>;
+  if (error) return (
+    <div className="guest-page-container">
+      <p>오류: {error}</p>
+      {error.includes('로그인') ? (
+        <button onClick={() => navigate('/login')}>로그인하기</button>
+      ) : (
+        <button onClick={loadReservations}>다시 시도</button>
+      )}
+    </div>
+  );
 
   return (
     <div className="guest-page-container">
@@ -301,7 +296,7 @@ const GuestPage = () => {
               <div key={r.id} className="reservation-card">
                 <div className="reservation-header">
                   <div>
-                    <h3 className="reservation-title">{r.guesthouse.name}</h3>
+                    <h3 className="reservation-title">{r.guesthouse?.name}</h3>
                     <p className="reservation-id">예약 번호: #{r.id}</p>
                   </div>
                   <div className="reservation-actions">

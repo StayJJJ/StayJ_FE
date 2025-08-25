@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './reservationInfo.css';
+import { useLocation } from 'react-router-dom';
 
 // 임시 API 데이터 (실제 구현시 fetch로 대체)
 const mockApiData = {
@@ -75,6 +76,12 @@ const ReservationInfo = () => {
   const [guestData, setGuestData] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const location = useLocation();
+  const { checkIn, checkOut, guests } = location.state || {};
+
+  const [selectedCheckIn] = useState(checkIn || '');
+  const [selectedCheckOut] = useState(checkOut || '');
+  const [selectedGuests] = useState(guests || 1);
 
   useEffect(() => {
     // 실제 구현시 API 호출로 대체
@@ -106,6 +113,17 @@ const ReservationInfo = () => {
 
   const handleRoomSelect = (room) => {
     setSelectedRoom(room);
+  };
+
+  const handleReserve = () => {
+    const reservationData = {
+      room_id: selectedRoom.id,
+      check_in: location.state.checkIn,
+      check_out: location.state.checkOut,
+      guests: location.state.guests
+    };
+    // API 호출
+    console.log(reservationData);
   };
 
   const formatDate = (dateString) => {
@@ -233,27 +251,7 @@ const ReservationInfo = () => {
               </div>
 
               <div className="booking-form">
-                <div className="date-inputs">
-                  <div className="input-group">
-                    <label>체크인</label>
-                    <input type="date" />
-                  </div>
-                  <div className="input-group">
-                    <label>체크아웃</label>
-                    <input type="date" />
-                  </div>
-                </div>
-                
-                <div className="input-group">
-                  <label>인원수</label>
-                  <select>
-                    {Array.from({length: selectedRoom.capacity}, (_, i) => (
-                      <option key={i + 1} value={i + 1}>{i + 1}명</option>
-                    ))}
-                  </select>
-                </div>
-
-                <button className="reserve-btn">예약하기</button>
+                <button className="reserve-btn" onClick={handleReserve}>예약하기</button>
               </div>
 
               <div className="contact-info">
