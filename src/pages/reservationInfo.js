@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import './reservationInfo.css';
 import { useLocation } from 'react-router-dom';
+import axios from 'axios';
 
 // 임시 API 데이터 (실제 구현시 fetch로 대체)
 const mockApiData = {
@@ -72,34 +73,30 @@ const mockApiData = {
 const ReservationInfo = () => {
   const { id } = useParams();
   const navigate = useNavigate();
+  const location = useLocation();
+  
+  // 🔥 수정된 부분: location.state에서 검색 정보 받아오기
+  const { checkIn, checkOut, guests } = location.state || {};
+  
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [guestData, setGuestData] = useState(null);
   const [loading, setLoading] = useState(true);
-
-  const location = useLocation();
-  const { checkIn, checkOut, guests } = location.state || {};
-
-  const [selectedCheckIn] = useState(checkIn || '');
-  const [selectedCheckOut] = useState(checkOut || '');
-  const [selectedGuests] = useState(guests || 1);
+  const [reservationLoading, setReservationLoading] = useState(false);
 
   useEffect(() => {
-    // 실제 구현시 API 호출로 대체
     const fetchData = async () => {
       try {
         setLoading(true);
-        // const guesthouseResponse = await fetch(`/api/guesthouses/${id}`);
-        // const roomsResponse = await fetch(`/api/guesthouses/${id}/rooms`);
-        // const reviewsResponse = await fetch(`/api/guesthouses/${id}/reviews`);
-        
+
         const data = mockApiData[parseInt(id)];
         if (data) {
           setGuestData(data);
-          setSelectedRoom(data.rooms[0]); // 첫 번째 방을 기본 선택
+          setSelectedRoom(data.rooms[0]); 
         }
+
         setLoading(false);
       } catch (error) {
-        console.error('데이터 로딩 실패:', error);
+        console.error("데이터 로딩 실패:", error);
         setLoading(false);
       }
     };
@@ -115,18 +112,135 @@ const ReservationInfo = () => {
     setSelectedRoom(room);
   };
 
-  const handleReserve = () => {
-    const reservationData = {
-      room_id: selectedRoom.id,
-      check_in: location.state.checkIn,
-      check_out: location.state.checkOut,
-      guests: location.state.guests
-    };
-    // API 호출
-    console.log(reservationData);
+  // 🔥 쿠키에서 user_id 가져오는 함수
+  const getCookieValue = (name) => {
+    const value = `; ${document.cookie}`;
+    const parts = value.split(`; ${name}=`);
+    if (parts.length === 2) return parts.pop().split(';').shift();
+    return null;
+  };
+
+  // 🔥 수정된 부분: 예약 API 호출
+  const handleReserve = async () => {
+    // 쿠키에서 user_id 가져오기
+    const userId = getCookieValue('user_id');
+    
+    if (!userId) {
+      alert('로그인이 필요합니다. 로그인 후 다시 시도해주세요.');
+      // 로그인 페이지로 리다이렉트하거나 로그인 모달 띄우기
+      return;
+    }
+
+    // 필수 정보 검증
+    if (!selectedRoom || !checkIn || !checkOut || !guests) {
+      console.log("selectedRoom:", selectedRoom);
+      console.log("checkIn:", checkIn);     
+      console.log("checkOut:", checkOut);
+      console.log("guests:", guests);
+
+      alert('예약에 필요한 정보가 부족합니다. 다시 검색해주세요.');
+      return;
+    }
+
+    // 인원수 검증
+    if (guests > selectedRoom.capacity) {
+      alert(`선택하신 객실의 최대 수용 인원은 ${selectedRoom.capacity}명입니다.`);
+      return;
+    }
+
+    // 날짜 검증
+    const checkInDate = new Date(checkIn);
+    const checkOutDate = new Date(checkOut);
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    if (checkInDate < today) {
+      alert('체크인 날짜는 오늘 이후로 선택해주세요.');
+      return;
+    }
+
+    if (checkInDate >= checkOutDate) {
+      alert('체크아웃 날짜는 체크인 날짜보다 늦어야 합니다.');
+      return;
+    }
+
+    try {
+      setReservationLoading(true);
+
+      const reservationData = {
+        user_id: parseInt(userId), // 쿠키에서 가져온 user_id 사용
+        room_id: selectedRoom.id,
+        check_in_date: checkIn,
+        check_out_date: checkOut,
+        people_count: guests
+      };
+
+      console.log("예약 요청 데이터:", reservationData);
+
+      const response = await axios.post(
+        'http://localhost:8080/reservation',
+        reservationData,
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            'user-id': userId // 쿠키에서 가져온 user_id를 헤더로 전송
+          }
+        }
+      );
+
+      console.log("예약 성공:", response.data);
+
+      // 예약 성공 시 확인 메시지와 함께 홈으로 이동
+      alert(`예약이 완료되었습니다!\n예약 번호: ${response.data.reservation_id || 'N/A'}`);
+      navigate('/', { 
+        state: { 
+          message: '예약이 성공적으로 완료되었습니다.' 
+        }
+      });
+
+    } catch (error) {
+      console.error("예약 실패:", error);
+      
+      // 에러 메시지 처리
+      let errorMessage = '예약 중 오류가 발생했습니다.';
+      
+      if (error.response?.data?.message) {
+        errorMessage = error.response.data.message;
+      } else if (error.response?.status === 400) {
+        errorMessage = '예약 정보가 올바르지 않습니다. 다시 확인해주세요.';
+      } else if (error.response?.status === 401) {
+        errorMessage = '로그인이 만료되었습니다. 다시 로그인해주세요.';
+      } else if (error.response?.status === 409) {
+        errorMessage = '선택하신 날짜에 이미 예약이 있습니다. 다른 날짜를 선택해주세요.';
+      } else if (error.response?.status === 500) {
+        errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
+      }
+      
+      alert(errorMessage);
+    } finally {
+      setReservationLoading(false);
+    }
+  };
+
+  // 🔥 추가된 부분: 총 숙박일수 계산
+  const calculateNights = () => {
+    if (!checkIn || !checkOut) return 0;
+    const start = new Date(checkIn);
+    const end = new Date(checkOut);
+    const diffTime = Math.abs(end - start);
+    const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
+    return diffDays;
+  };
+
+  // 🔥 추가된 부분: 총 가격 계산
+  const calculateTotalPrice = () => {
+    if (!selectedRoom) return 0;
+    const nights = calculateNights();
+    return selectedRoom.price * nights;
   };
 
   const formatDate = (dateString) => {
+    if (!dateString) return '';
     const date = new Date(dateString);
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
@@ -188,6 +302,19 @@ const ReservationInfo = () => {
             </div>
           </div>
 
+          {/* 🔥 추가된 부분: 검색 정보 표시 */}
+          {(checkIn || checkOut || guests) && (
+            <div className="search-info-display">
+              <h3>예약 정보</h3>
+              <div className="booking-details">
+                {checkIn && <p>체크인: {formatDate(checkIn)}</p>}
+                {checkOut && <p>체크아웃: {formatDate(checkOut)}</p>}
+                {guests && <p>투숙객: {guests}명</p>}
+                {checkIn && checkOut && <p>숙박일수: {calculateNights()}박</p>}
+              </div>
+            </div>
+          )}
+
           {/* Room Selection */}
           <div className="rooms-section">
             <h2>객실 선택</h2>
@@ -219,8 +346,6 @@ const ReservationInfo = () => {
           {/* Reviews Section */}
           <div className="reviews-section">
             <h2>후기 ({reviews.length}개)</h2>
-
-            {/* Reviews List */}
             <div className="reviews-list">
               {reviews.length === 0 ? (
                 <p className="no-reviews">아직 작성된 후기가 없습니다.</p>
@@ -250,8 +375,24 @@ const ReservationInfo = () => {
                 <small>1박 기준</small>
               </div>
 
+              {/* 🔥 추가된 부분: 총 가격 표시 */}
+              {checkIn && checkOut && (
+                <div className="total-price-section">
+                  <div className="price-breakdown">
+                    <p>₩{selectedRoom.price.toLocaleString()} × {calculateNights()}박</p>
+                    <p className="total-price">총 합계: ₩{calculateTotalPrice().toLocaleString()}</p>
+                  </div>
+                </div>
+              )}
+
               <div className="booking-form">
-                <button className="reserve-btn" onClick={handleReserve}>예약하기</button>
+                <button 
+                  className="reserve-btn" 
+                  onClick={handleReserve}
+                  disabled={reservationLoading}
+                >
+                  {reservationLoading ? '예약 중...' : '예약하기'}
+                </button>
               </div>
 
               <div className="contact-info">
