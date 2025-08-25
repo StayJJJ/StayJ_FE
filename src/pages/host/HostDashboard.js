@@ -1,24 +1,11 @@
 // 내 게스트하우스 리스트
 // src/pages/host/HostDashboard.js
+import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-import { getMyGuesthouses, createGuesthouse, updateGuesthouse, deleteGuesthouse } from '../../api/hosts';
+import Cookies from 'js-cookie';
+import { getMyGuesthouses, createGuesthouse, updateGuesthouse, deleteGuesthouse, getGuesthouseDetail, getGuesthouseRooms } from '../../api/hosts';
 import GuesthouseForm from './GuesthouseForm';
 import './HostDashboard.css';
-
-// const resetMock = () => {
-//   localStorage.removeItem('stayj_host_guesthouses');
-//   localStorage.removeItem('stayj_host_reservations');
-//   window.location.reload();
-// };
-
-// <div className="host-header">
-//   <h1>내 게스트하우스</h1>
-//   <div className="header-actions">
-//     <button className="btn outline" onClick={resetMock}>Mock 초기화</button>
-//     <button className="btn primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
-//   </div>
-// </div>
-
 
 export default function HostDashboard() {
   const [list, setList] = useState([]);
@@ -26,6 +13,16 @@ export default function HostDashboard() {
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
   const [editing, setEditing] = useState(null); // {id, name, ...}
+  const [editingRooms, setEditingRooms] = useState([]);
+  const [editingLoading, setEditingLoading] = useState(false);
+  const navigate = useNavigate();
+
+  const logout = () => {
+    const keys = ['id', 'username', 'loginId', 'role', 'phoneNumber'];
+    keys.forEach((key) => Cookies.remove(key, { path: '/' }));
+    console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
+    navigate('/login');
+  };
 
   const load = async () => {
     try {
@@ -62,35 +59,59 @@ export default function HostDashboard() {
     await load();
   };
 
+  // 수정 버튼 클릭 시 상세/방 정보 fetch
+  const handleEdit = async (gh) => {
+    setEditingLoading(true);
+    try {
+      const detail = await getGuesthouseDetail(gh.id);
+      const rooms = await getGuesthouseRooms(gh.id);
+      // setEditing({ ...detail });
+      // setEditingRooms(Array.isArray(rooms) ? rooms : (rooms.rooms || []));
+    } catch (e) {
+      alert('게스트하우스 상세 정보를 불러오지 못했습니다.');
+    } finally {
+      setEditingLoading(false);
+    }
+  };
+
   return (
     <div className="host-wrap">
       <div className="host-header">
         <h1>내 게스트하우스</h1>
-        <button className="primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
+        <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
+          <button className="btn primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
+          <button className="logout-btn" onClick={logout}>로그아웃</button>
+        </div>
       </div>
 
       {loading && <div className="muted">로딩 중…</div>}
       {error && <div className="error">{error}</div>}
 
-      <ul className="gh-grid">
-        {list.map((gh) => (
-          <li key={gh.id} className="gh-card">
-            <div className="gh-media" aria-hidden />
-            <div className="gh-title">{gh.name}</div>
-            <div className="gh-sub">
-              연락처: {gh.phone_number ?? '-'}
-            </div>
-            <div className="gh-meta">
-              <span className="badge">⭐ {gh.rating ?? '-'}</span>
-              <span className="badge">🛏️ {gh.room_count ?? 0} rooms</span>
-            </div>
-            <div className="gh-actions">
-              <button className="btn soft" onClick={() => setEditing(gh)} data-tip="정보 수정">수정</button>
-              <button className="btn danger" onClick={() => onDelete(gh.id)}>삭제</button>
-            </div>
-          </li>
-        ))}
-      </ul>
+      {list.length === 0 && !loading && !error ? (
+        <div className="muted" style={{textAlign:'center', margin:'30px 0 20px 0', fontSize:'1.15rem', lineHeight:'2.2'}}>
+          등록된 게스트하우스가 없습니다.<br />
+          <span style={{display:'inline-block', marginTop:'10px', color:'var(--primary)', fontWeight:700, fontSize:'1.25rem'}}>게스트하우스를 추가해주세요!</span>
+        </div>
+      ) : (
+        <ul className="gh-grid">
+          {list.map((gh) => (
+            <li key={gh.id} className="gh-card">
+              <div className="gh-title">{gh.name}</div>
+              <div className="gh-meta">
+                <span className="badge">⭐ {gh.rating ?? '-'}</span>
+                <span className="badge">🛏️ {gh.room_count ?? 0} rooms</span>
+              </div>
+              <div className="gh-actions">
+                <button className="btn soft" onClick={() => handleEdit(gh)}>수정</button>
+                <button className="btn danger" onClick={() => onDelete(gh.id)}>삭제</button>
+                <Link className="btn primary" to={`/host/${gh.id}/reservations`}>
+                  예약 관리
+                </Link>
+              </div>
+            </li>
+          ))}
+        </ul>
+      )}
 
       {/* 생성 모달 */}
       {showForm && (
@@ -114,13 +135,17 @@ export default function HostDashboard() {
           <div className="modal-body">
             <div className="modal-head">
               <h2>게스트하우스 수정</h2>
-              <button onClick={() => setEditing(null)}>닫기</button>
+              <button onClick={() => { setEditing(null); setEditingRooms([]); }}>닫기</button>
             </div>
-            <GuesthouseForm
-              initialValues={editing}
-              onSubmit={(values) => onUpdate(editing.id, values)}
-              onCancel={() => setEditing(null)}
-            />
+            {editingLoading ? (
+              <div style={{padding:'30px', textAlign:'center'}}>불러오는 중...</div>
+            ) : (
+              <GuesthouseForm
+                initialValues={{ ...editing, rooms: editingRooms }}
+                onSubmit={(values) => onUpdate(editing.id, values)}
+                onCancel={() => { setEditing(null); setEditingRooms([]); }}
+              />
+            )}
           </div>
         </div>
       )}

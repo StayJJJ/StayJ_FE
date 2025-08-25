@@ -1,5 +1,32 @@
 @import './theme.css';
 
+button.logout-btn, a.logout-btn {
+  padding: 8.5px 18px;
+  border: 1.5px solid var(--sky-300);
+  border-radius: 12px;
+  background: #fff;
+  color: var(--primary);
+  font-weight: 550;
+  font-family: inherit;
+  font-size: 1rem;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s, border 0.15s;
+  box-shadow: var(--shadow-soft);
+  outline: none;
+}
+button.logout-btn:hover, a.logout-btn:hover {
+  background: var(--sky-100);
+  color: var(--primary-2);
+  border-color: var(--primary-2);
+}
+
+a.btn {
+  text-decoration: none !important;
+  font-weight: 550;
+  font-family: inherit !important;
+  letter-spacing: inherit;
+}
+
 div.gh-media
 .host-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 80px; }
 
