@@ -121,7 +121,7 @@ const Home = () => {
 
         {accommodations.map((item) => {
           // 🔹 사진 경로 디버깅
-          const imagePath = `/images/guesthouses/${item.photoId}.png`;
+          const imagePath = `/images/guesthouses/${item.photo_id}.png`;
           console.log(`숙소: ${item.name}, 사진 경로: ${imagePath}`);
 
           return (
@@ -146,11 +146,11 @@ const Home = () => {
                 <p>⭐ {item.rating ? item.rating.toFixed(1) : "평점 없음"}</p>
                 <p>
                   가격:{" "}
-                  {item.roomAvailable.length > 0
-                    ? `${item.roomAvailable[0]}원~`
+                  {item.room_available.length > 0
+                    ? `${item.room_available[0]}원~`
                     : "예약 불가"}
                 </p>
-                <p>방 개수: {item.roomCount}</p>
+                <p>방 개수: {item.room_count}</p>
               </div>
             </div>
           );
