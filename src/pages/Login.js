@@ -1,36 +1,58 @@
 import React, { useState } from 'react';
-import './Login.css'; // CSS 파일 임포트
-
-// API 모듈을 임포트한다고 가정
-// import { login } from '../../api/authApi';
+import Cookies from 'js-cookie';
+import { useNavigate } from 'react-router-dom';
+import './Login.css';
 
 const LoginPage = () => {
-  // 아이디와 비밀번호 상태 관리
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate(); // useNavigate 훅 사용
 
-  // 로그인 버튼 클릭 핸들러
   const handleLogin = async () => {
-    // API 통신 로직 (주석 처리)
-    /*
     try {
-      const result = await login(loginId, password);
-      if (result.token) {
-        // 로그인 성공 시 로직
-        alert('로그인 성공!');
-        // 예: 토큰 저장, 페이지 이동
+      const url = 'http://localhost:8080/user/login';
+      const bodyData = {
+        login_id: loginId,
+        password: password,
+      };
+
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(bodyData),
+      });
+
+      console.log("Hello world:", response);
+      if (response.ok) {
+        const result = await response.json();
+        // const result = response.json();
+        console.log("Hello world:", result);
+        // 모든 필드를 각각 쿠키로 저장
+        Object.entries(result).forEach(([key, value]) => {
+          Cookies.set(key, value, { expires: 7, path: '/' });
+        });
+
+        // 로그인 성공 후 role에 따라 페이지 이동
+        if (result.role === 'GUEST' || result.role === 'guest') {
+          navigate('/');
+        } else {
+          navigate('/host');
+        }
       } else {
-        // 로그인 실패 시 로직
         alert('로그인 실패: 아이디 또는 비밀번호를 확인해주세요.');
       }
     } catch (error) {
-      alert('로그인 중 오류가 발생했습니다.');
+      console.error('로그인 중 오류 발생:', error);
+      alert('로그인 중 오류가 발생했습니다. 네트워크 상태를 확인해주세요.');
     }
-    */
-    
-    // 개발 테스트를 위한 임시 알림
-    console.log('로그인 시도:', { loginId, password });
-    alert('로그인 시도 중입니다. (API 연동 필요)');
+  };
+
+  // 폼(form) 제출 이벤트 핸들러
+  const handleFormSubmit = (e) => {
+    e.preventDefault(); // 페이지 새로고침 방지
+    handleLogin();
   };
 
   return (
@@ -42,7 +64,8 @@ const LoginPage = () => {
           <p className="slogan2">오늘의 쉼을 가장 제주답게</p>
         </div>
         
-        <div className="form-section">
+        {/* onSubmit 이벤트를 추가한 form 태그로 감싸기 */}
+        <form className="form-section" onSubmit={handleFormSubmit}>
           <input
             type="text"
             placeholder="아이디"
@@ -57,10 +80,10 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="login-input"
           />
-          <button className="login-button" onClick={handleLogin}>
+          <button className="login-button" type="submit"> {/* type="submit" 설정 */}
             로그인
           </button>
-        </div>
+        </form>
         
         <div className="links-section">
           <a href="/register-host" className="link-text">호스트 회원가입</a>
