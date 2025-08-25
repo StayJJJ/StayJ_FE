@@ -41,16 +41,21 @@ export async function getMyGuesthouses() {
 
 // 게스트하우스 생성
 export async function createGuesthouse(payload) {
-  const user_id = Cookies.get('id') || Cookies.get('Id');
+  // hostId는 localStorage에서 가져와 user-id 헤더로 보냄
+  const hostId = Cookies.get('id') || Cookies.get('Id');
+
+  console.log('hostId from localStorage:', hostId, " / payload: ", payload);
+
   const res = await fetch(`${BASE_URL}/guesthouse`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'user-id': user_id
+      'user-id': hostId
     },
     credentials: 'include',
-    body: JSON.stringify({ ...payload, user_id }),
+    body: JSON.stringify(payload),
   });
+
   if (!res.ok) throw new Error('게스트하우스 생성 실패');
   return await res.json();
 }
