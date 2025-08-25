@@ -1,6 +1,6 @@
-/* ===== Sky Theme Tokens ===== */
-:root{
-  --bg: #eef6ff;
+/* ===== Sky Theme Tokens (수정됨) ===== */
+:root {
+  --bg: #ffffff; /* 💡 배경색을 흰색으로 변경 */
   --panel: #ffffff;
   --text: #0f172a;
   --muted: #5b6b82;
@@ -24,23 +24,52 @@
   --radius-lg: 14px;
   --radius-md: 10px;
 
-  --shadow-soft: 0 8px 24px rgba(2,132,199,.16);
-  --shadow-strong: 0 16px 40px rgba(2,132,199,.22);
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.1);
+  --shadow-strong: 0 16px 40px rgba(0, 0, 0, 0.15);
 }
 
-html, body, #root { height: 100%; }
-body { margin:0; background: var(--bg); color: var(--text); overflow-y:auto; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; }
-.App { min-height:100vh; }
+html, body, #root {
+  height: 100%;
+}
 
-/* Custom Scrollbar */
-* { scrollbar-width: thin; scrollbar-color: var(--sky-300) transparent; }
-*::-webkit-scrollbar { height: 10px; width: 10px; }
-*::-webkit-scrollbar-thumb { background: linear-gradient(180deg, var(--sky-400), var(--sky-600)); border-radius: 999px; }
-*::-webkit-scrollbar-track { background: transparent; }
+body {
+  margin: 0;
+  background: var(--bg); /* 💡 변경된 흰색 배경 적용 */
+  color: var(--text);
+  overflow-y: auto;
+  font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial;
+}
 
-/* Tooltip helper */
-[data-tip] { position: relative; }
-[data-tip]::after{
+.App {
+  min-height: 100vh;
+}
+
+/* Custom Scrollbar (수정됨: 하늘색 → 회색 계열) */
+* {
+  scrollbar-width: thin;
+  scrollbar-color: #c0c0c0 transparent;
+}
+
+*::-webkit-scrollbar {
+  height: 10px;
+  width: 10px;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: #c0c0c0;
+  border-radius: 999px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+/* Tooltip helper (색상은 그대로 유지) */
+[data-tip] {
+  position: relative;
+}
+
+[data-tip]::after {
   content: attr(data-tip);
   position: absolute;
   bottom: calc(100% + 8px);
@@ -53,7 +82,11 @@ body { margin:0; background: var(--bg); color: var(--text); overflow-y:auto; fon
   padding: 6px 8px;
   border-radius: 8px;
   white-space: nowrap;
-  opacity: 0; pointer-events: none;
+  opacity: 0;
+  pointer-events: none;
   transition: opacity .15s ease;
 }
-[data-tip]:hover::after{ opacity: 1; }
+
+[data-tip]:hover::after {
+  opacity: 1;
+}
