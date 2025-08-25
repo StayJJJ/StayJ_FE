@@ -64,7 +64,7 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
   const changeRoom = (idx, key, val) => {
     setForm((s) => {
       const rooms = s.rooms.slice();
-      rooms[idx] = { ...rooms[idx], [key]: key === 'capacity' || key === 'price' ? Number(val) : val };
+      rooms[idx] = { ...rooms[idx], [key]: key === 'capacity' || key === 'price' || key === 'photo_id' ? Number(val) : val };
       return { ...s, rooms, roomCount: rooms.length };
     });
   };
@@ -78,7 +78,9 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
 
   const submit = async (e) => {
     e.preventDefault();
-    const hostId = Number(localStorage.getItem('hostId')) || undefined;
+    let hostIdRaw = localStorage.getItem('hostId');
+    let hostId = hostIdRaw !== null && hostIdRaw !== '' ? Number(hostIdRaw) : null;
+    console.log('hostId from localStorage:', hostIdRaw, '->', hostId);
     let address = form.address;
     if (addressType === 'select') {
       address = [sido, gugun, dong, detail].filter(Boolean).join(' ');
@@ -87,12 +89,15 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
       name: form.name,
       description: form.description,
       address,
+      rating: Number(form.rating) || 0,
       photo_id: Number(form.photo_id) || 0,
       phone_number: form.phone_number,
-      roomCount: form.rooms.length,
-      hostId,
+      room_count: form.rooms.length,
       rooms: form.rooms.map(r => ({
-        name: r.name, capacity: Number(r.capacity) || 1, price: Number(r.price) || 0
+        name: r.name,
+        capacity: Number(r.capacity) || 1,
+        price: Number(r.price) || 0,
+        photo_id: Number(r.photo_id) || 0
       })),
     };
     await onSubmit(payload);
@@ -151,10 +156,16 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
         </div>
       )}
 
+
+
       <div className="form-row">
         <label className="input-label input-row">
-          <span>사진 ID</span>
-          <input name="photo_id" type="number" value={form.photo_id} onChange={change} placeholder="숫자만 입력" className="gray-placeholder" />
+          <span>대표 이미지 ID</span>
+          <input name="photo_id" type="number" value={form.photo_id || ''} onChange={change} placeholder="게스트하우스 대표 이미지 ID" className="gray-placeholder" />
+        </label>
+        <label className="input-label input-row">
+          <span>평점</span>
+          <input name="rating" type="number" min="0" max="5" step="0.1" value={form.rating || ''} onChange={change} placeholder="0.0 ~ 5.0" className="gray-placeholder" />
         </label>
       </div>
 
@@ -168,10 +179,11 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
   <div className="form-section" style={{ marginTop: 8, fontWeight: 600, color: '#0b2a3a' }}>방 정보</div>
       {form.rooms.map((r, i) => (
         <div key={i} className="room-row">
-          <input placeholder="방 이름" value={r.name} onChange={(e)=>changeRoom(i,'name',e.target.value)} className="gray-placeholder" />
-          <input placeholder="정원" type="number" min="1" value={r.capacity} onChange={(e)=>changeRoom(i,'capacity',e.target.value)} className="gray-placeholder" />
-          <input placeholder="가격" type="number" min="0" value={r.price} onChange={(e)=>changeRoom(i,'price',e.target.value)} className="gray-placeholder" />
-          {form.rooms.length > 1 && <button type="button" className="remove" onClick={()=>removeRoom(i)}>삭제</button>}
+          <input placeholder="방 이름" value={r.name} onChange={(e)=>changeRoom(i,'name',e.target.value)} className="gray-placeholder" style={{width:110}} />
+          <input placeholder="정원" type="number" min="1" value={r.capacity} onChange={(e)=>changeRoom(i,'capacity',e.target.value)} className="gray-placeholder" style={{width:60}} />
+          <input placeholder="가격" type="number" min="0" value={r.price} onChange={(e)=>changeRoom(i,'price',e.target.value)} className="gray-placeholder" style={{width:80}} />
+          <input placeholder="방 이미지 ID" type="number" min="0" value={r.photo_id || ''} onChange={e => changeRoom(i, 'photo_id', e.target.value)} className="gray-placeholder" style={{width:110}} />
+          {form.rooms.length > 1 && <button type="button" className="remove room-remove-btn" onClick={()=>removeRoom(i)}>삭제</button>}
         </div>
       ))}
       <div className="actions" style={{ marginTop: 6 }}>

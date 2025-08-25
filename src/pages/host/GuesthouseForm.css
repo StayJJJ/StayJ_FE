@@ -115,12 +115,31 @@
 }
 
 /* Rooms inline row */
-.room-row{
-  display:grid; grid-template-columns: 1fr 110px 140px auto; gap: 8px; align-items:center;
+.room-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-bottom: 2px;
 }
-.room-row input{ text-align: left; }
-.room-row .remove { background: transparent; color: var(--danger); border: 1px solid #fecaca; }
-.room-row .remove:hover{ background: #fee2e2; }
+.room-row input {
+  text-align: left;
+}
+.room-remove-btn {
+  background: transparent;
+  color: var(--danger);
+  border: 1px solid #fecaca;
+  border-radius: 6px;
+  font-size: 13px;
+  padding: 3px 10px;
+  margin-left: 4px;
+  height: 28px;
+  min-width: 40px;
+  cursor: pointer;
+  transition: background 0.15s, color 0.15s;
+}
+.room-remove-btn:hover {
+  background: #fee2e2;
+}
 
 /* Footer actions */
 .gh-form .actions {
