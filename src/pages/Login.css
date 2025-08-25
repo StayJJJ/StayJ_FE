@@ -4,16 +4,16 @@
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #f7f7f7;
+  background-color: #053418;
 }
 
 /* 로그인 박스 */
 .login-box {
-  width: 400px;
+  width: 360px;
   padding: 50px;
-  background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+  background-color: #053418;
+  /*border-radius: 10px;
+  /*box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
   text-align: center;
 }
 
@@ -24,7 +24,7 @@
 
 .stayj-logo {
   width: 200px;
-  height: 120px;
+  height: 110px;
   vertical-align: top;
   margin-top: -20px;
   margin-left: 10px;
@@ -32,9 +32,10 @@
 }
 
 .slogan1, .slogan2 {
-  font-size: 14px;
-  color: #888;
-  margin: 0;
+  font-size: 17px;
+  font-weight: 500;
+  color: #cdd1d0;
+  margin: 5px;
 }
 
 /* 폼 섹션 */
@@ -46,17 +47,25 @@
 
 .login-input {
   width: 100%;
-  padding: 15px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 18px;
+  /*border: 1px solid #ddd;
+  border-radius: 5px;*/
   box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
   font-size: 16px;
+  background-color: rgba(255,255,255,0.2);
+  border: none;         /* 테두리 제거 */
+  outline: none;        /* 포커스 시 파란 외곽선 제거 */
+  box-shadow: none;     /* ✅ 기본 그림자 효과 제거 */
+  appearance: none;     /* ✅ 브라우저 기본 스타일 제거 (크롬/사파리) */
+  -webkit-appearance: none; /* 사파리(iOS) 대응 */
+  -moz-appearance: none; 
+  color: #fff;
 }
 
 .login-button {
   width: 100%;
   padding: 15px;
-  background-color: #6a96e6; /* 밝은 파란색 계열 */
+  background-color: #05a666; /* 밝은 파란색 계열 */
   color: white;
   border: none;
   border-radius: 5px;
@@ -66,27 +75,39 @@
   transition: background-color 0.3s;
 }
 
+.login-input::placeholder {
+  color: #cdd1d0; /* 연한 회색 */
+  font-size: 15px;
+  font-weight: 400;
+  opacity: 1;
+}
+
 .login-button:hover {
-  background-color: #4a7ad1;
+  background-color: #058954;
 }
 
 /* 링크 섹션 */
 .links-section {
-  margin-top: 20px;
+  margin-top: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
   gap: 10px;
+  
 }
 
 .link-text {
   font-size: 14px;
-  color: #666;
-  text-decoration: none;
+  color: #cdd1d0;
+  text-decoration: underline;
+
 }
 
 .divider {
   width: 1px;
   height: 15px;
-  background-color: #ccc;
+  background-color: #cdd1d0; /* 연한 회색 */
 }
+
+
+
