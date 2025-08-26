@@ -34,6 +34,9 @@ function App() {
 
         {/* fallback */}
         <Route path="*" element={<Home />} />
+
+        {/* 게스트 페이지 추가 */}
+        <Route path="/guest" element={<GuestPage />} />
       </Routes>
     </div>
   );

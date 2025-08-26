@@ -10,28 +10,23 @@ const Register = () => {
     login_id: '',
     password: '',
     phone_number: '',
-    role: 'HOST', // 기본값을 HOST로 설정하거나, 선택 UI를 추가할 수 있습니다.
+    role: 'HOST', // 기본값을 HOST로 설정
   });
 
   const { username, login_id, password, phone_number, role } = formData;
 
   const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value,
-    });
+    setFormData({ ...formData, [name]: value });
   };
 
-  // 아이디 중복 확인 함수 (실제 API 필요)
+  // 아이디 중복 확인 (임시)
   const handleCheckId = () => {
     if (!login_id) {
       alert('아이디를 입력해주세요.');
       return;
     }
-    // TODO: 아이디 중복 확인 API 호출
-    // 예: axios.get(`/api/check-id/${login_id}`).then(...)
-    alert(`아이디 '${login_id}'는 사용 가능합니다.`); // 임시 알림
+    alert(`아이디 '${login_id}'는 사용 가능합니다.`); // TODO: 실제 API 호출 필요
   };
 
   const handleSubmit = async (e) => {
@@ -44,8 +39,7 @@ const Register = () => {
     }
 
     try {
-      // API 명세에 따라 데이터 전송
-      const response = await axios.post('/api/register', {
+      const response = await axios.post('http://localhost:8080/user/sign-up', {
         username,
         login_id,
         password,
@@ -53,12 +47,11 @@ const Register = () => {
         phone_number,
       });
 
-      if (response.data.success) {
+      if (response.status === 200) {
         alert('회원가입이 완료되었습니다.');
-        // TODO: 회원가입 성공 후 로그인 페이지로 이동 등의 로직 추가
-        // window.location.href = '/login';
+        // 회원가입 성공 후 로그인 페이지 이동
+        window.location.href = '/login';
       } else {
-        // API에서 success: false를 반환했을 경우
         alert('회원가입에 실패했습니다: ' + (response.data.message || ''));
       }
     } catch (error) {
@@ -127,8 +120,7 @@ const Register = () => {
           />
         </div>
 
-        {/* 역할(Role) 선택이 필요하다면 아래 UI를 활용할 수 있습니다. */}
-        {/* <div className="form-group">
+        <div className="form-group">
           <label>역할</label>
           <div className="role-selector">
             <label>
@@ -152,7 +144,7 @@ const Register = () => {
               호스트
             </label>
           </div>
-        </div> */}
+        </div>
 
         <button type="submit" className="submit-button">
           회원가입
