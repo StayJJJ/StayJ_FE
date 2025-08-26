@@ -10,7 +10,6 @@ import HostDashboard from './pages/host/HostDashboard';
 import Reservations from './pages/host/Reservations';
 import './App.css';
 import ReviewModal from './pages/ReviewModal';
-import GuestPage from './pages/GuestPage';
 
 function App() {
   return (
