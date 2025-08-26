@@ -5,7 +5,7 @@ import Login from './pages/Login';
 import Register from './pages/Register';
 import Review from './pages/ReviewModal';
 import ReservationInfo from './pages/reservationInfo';
-
+import GuestPage from './pages/GuestPage';
 import HostDashboard from './pages/host/HostDashboard';
 import Reservations from './pages/host/Reservations';
 import './App.css';
@@ -36,6 +36,9 @@ function App() {
 
         {/* 404 페이지 - 일치하는 경로가 없을 때 홈으로 리다이렉트 */}
         <Route path="*" element={<Home />} />
+
+        {/* 게스트 페이지 추가 */}
+        <Route path="/guest" element={<GuestPage />} />
       </Routes>
     </div>
   );

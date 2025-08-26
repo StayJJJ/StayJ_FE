@@ -6,10 +6,22 @@ import "./Home.css";
 const Home = () => {
   const navigate = useNavigate();
   const [accommodations, setAccommodations] = useState([]);
+  
+  const today = new Date();
+  const tomorrow = new Date();
+  tomorrow.setDate(today.getDate() + 1);
+
+  const formatDate = (date) => {
+    const yyyy = date.getFullYear();
+    const mm = String(date.getMonth() + 1).padStart(2, "0");
+    const dd = String(date.getDate()).padStart(2, "0");
+    return `${yyyy}-${mm}-${dd}`;
+  };
+
   const [searchParams, setSearchParams] = useState({
     name: "",
-    check_in: "",
-    check_out: "",
+    check_in: formatDate(today),   // 오늘
+    check_out: formatDate(tomorrow), // 내일
     people: 1,
   });
 
@@ -46,7 +58,13 @@ const Home = () => {
   };
 
   const handleCardClick = (id) => {
-    navigate(`/detail/${id}`);
+    navigate(`/detail/${id}`, {
+      state: {
+        checkIn: searchParams.check_in,   // ✅ 키 이름 맞추기
+        checkOut: searchParams.check_out,
+        guests: searchParams.people,
+      },
+    });
   };
 
   return (
@@ -124,6 +142,7 @@ const Home = () => {
           const imagePath = `/images/guesthouses/${item.photo_id}.png`;
           console.log(`숙소: ${item.name}, 사진 경로: ${imagePath}`);
 
+          console.log("item.room_available:", item.room_available); // 🔹 room_available 확인
           return (
             <div
               className="card"
