@@ -5,7 +5,7 @@
   position: sticky; 
   top: 0;
   z-index: 999;
-  margin-bottom: 4px; /* 👈 아래쪽 여백 */
+  margin-bottom: 4px;
 }
 
 .header-container {
@@ -42,7 +42,7 @@
   transition: background 0.3s;
 }
 
-.mypage-button {
+.mypage-button:hover {
   background: white;
   color: #132213;
 }

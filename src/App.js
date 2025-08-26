@@ -7,10 +7,9 @@ import ReviewModal from './pages/ReviewModal';
 import ReservationInfo from './pages/reservationInfo';
 import HostDashboard from './pages/host/HostDashboard';
 import Reservations from './pages/host/Reservations';
-import './App.css';
-import ReviewModal from './pages/ReviewModal';
 import GuestPage from './pages/GuestPage';
 import Header from './components/Header';
+import './App.css';
 
 function App() {
   return (
