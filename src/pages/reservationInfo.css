@@ -91,7 +91,7 @@
   font-size: 22px;
   margin-bottom: 20px;
   color: #333;
-  border-bottom: 2px solid #ff385c;
+  border-bottom: 2px solid #5eb74a;
   padding-bottom: 8px;
 }
 
@@ -111,13 +111,13 @@
 }
 
 .room-card:hover {
-  border-color: #ff385c;
+  border-color: #5eb74a;
   transform: translateY(-2px);
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
 .room-card.selected {
-  border-color: #ff385c;
+  border-color: #5eb74a;
   box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2);
 }
 
@@ -146,14 +146,14 @@
 .room-price {
   font-size: 16px;
   font-weight: bold;
-  color: #ff385c;
+  color: #5eb74a;
 }
 
 .selected-badge {
   position: absolute;
   top: 10px;
   right: 10px;
-  background: #ff385c;
+  background: #5eb74a;
   color: white;
   padding: 5px 10px;
   border-radius: 15px;
@@ -166,7 +166,7 @@
   font-size: 22px;
   margin-bottom: 15px;
   color: #333;
-  border-bottom: 2px solid #ff385c;
+  border-bottom: 2px solid #5eb74a;
   padding-bottom: 8px;
 }
 
@@ -181,7 +181,7 @@
   font-size: 22px;
   margin-bottom: 20px;
   color: #333;
-  border-bottom: 2px solid #ff385c;
+  border-bottom: 2px solid #5eb74a;
   padding-bottom: 8px;
 }
 
@@ -214,7 +214,7 @@
 }
 
 .review-rating {
-  color: #ff385c;
+  color: #5eb74a;
   font-size: 16px;
 }
 
@@ -263,7 +263,7 @@
 .room-price-large {
   font-size: 24px;
   font-weight: bold;
-  color: #ff385c;
+  color: #5eb74a;
   margin-bottom: 5px;
 }
 
@@ -306,13 +306,13 @@
 .input-group input:focus,
 .input-group select:focus {
   outline: none;
-  border-color: #ff385c;
+  border-color: #5eb74a;
   box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2);
 }
 
 .reserve-btn {
   width: 100%;
-  background: #ff385c;
+  background: #5eb74a;
   color: white;
   border: none;
   padding: 15px;
@@ -325,7 +325,7 @@
 }
 
 .reserve-btn:hover {
-  background: #e31c42;
+  background: #5eb74a;
 }
 
 .contact-info {
@@ -342,8 +342,8 @@
 
 .contact-btn {
   background: none;
-  border: 1px solid #ff385c;
-  color: #ff385c;
+  border: 1px solid #5eb74a;
+  color: #5eb74a;
   padding: 10px 20px;
   border-radius: 8px;
   cursor: pointer;
@@ -352,7 +352,7 @@
 }
 
 .contact-btn:hover {
-  background: #ff385c;
+  background: #5eb74a;
   color: white;
 }
 
@@ -369,7 +369,7 @@
 }
 
 .not-found button {
-  background: #ff385c;
+  background: #5eb74a;
   color: white;
   border: none;
   padding: 12px 24px;

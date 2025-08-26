@@ -270,13 +270,6 @@ const ReservationInfo = () => {
 
   return (
     <div className="reservation-container">
-      {/* Header */}
-      <header className="reservation-header">
-        <button className="back-btn" onClick={handleBackClick}>
-          ← 뒤로가기
-        </button>
-        <img src="/images/logo.png" alt="StayJ 로고" className="logo" />
-      </header>
 
       {/* Main Image */}
       <div className="main-image-section">
@@ -344,8 +337,6 @@ const ReservationInfo = () => {
           {/* Reviews Section */}
           <div className="reviews-section">
             <h2>후기 ({Array.isArray(reviews) ? reviews.length : 0}개)</h2>
-            {/* Reviews List */}
-            <h2>후기 ({reviews.length}개)</h2>
             <div className="reviews-list">
               {!Array.isArray(reviews) || reviews.length === 0 ? (
                 <p className="no-reviews">아직 작성된 후기가 없습니다.</p>
