@@ -1,0 +1,66 @@
+.main-header {
+  background-color: #000000;
+  padding: 15px 30px;
+  color: white;
+  position: sticky; 
+  top: 0;
+  z-index: 999;
+  margin-bottom: 4px; /* 👈 아래쪽 여백 */
+}
+
+.header-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  position: relative;
+}
+
+/* 가운데 텍스트 */
+.center-text {
+  position: absolute;
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 24px;
+  font-weight: bold;
+  margin: 0;
+}
+
+/* 왼쪽 공간 유지용 */
+.left-space {
+  width: 80px;  /* 마이페이지 버튼과 균형 맞게 너비 설정 */
+}
+
+
+.mypage-button {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 8px 16px;
+  text-decoration: none;
+  font-weight: bold;
+  border-radius: 3px;
+  transition: background 0.3s;
+}
+
+.mypage-button {
+  background: white;
+  color: #132213;
+}
+
+.back-btn {
+  background: #000;
+  color: white;
+  border: 2px solid white;
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* hover 시 색상 반전 */
+.back-btn:hover {
+  background: #000;
+  color: white;
+  border: 2px solid white;
+}

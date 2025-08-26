@@ -25,7 +25,29 @@ const Home = () => {
     people: 1,
   });
 
-  // 검색 API 호출
+  // 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
+  const getFormattedDate = (date) => {
+    const year = date.getFullYear();
+    const month = String(date.getMonth() + 1).padStart(2, "0");
+    const day = String(date.getDate()).padStart(2, "0");
+    return `${year}-${month}-${day}`;
+  };
+
+  // 컴포넌트 마운트 시 오늘, 내일 날짜로 기본값 세팅
+  useEffect(() => {
+    const today = new Date();
+    const tomorrow = new Date();
+    tomorrow.setDate(today.getDate() + 1);
+
+    setSearchParams((prev) => ({
+      ...prev,
+      check_in: getFormattedDate(today),
+      check_out: getFormattedDate(tomorrow),
+    }));
+
+    fetchAccommodations();
+  }, []);
+
   const fetchAccommodations = async () => {
     try {
       const response = await axios.get(
@@ -35,17 +57,11 @@ const Home = () => {
           headers: { "user-id": 1 },
         }
       );
-
-      console.log("API 응답:", response.data); // 🔹 API 응답 확인
       setAccommodations(response.data);
     } catch (error) {
       console.error("숙소 불러오기 실패:", error);
     }
   };
-
-  useEffect(() => {
-    fetchAccommodations();
-  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -53,7 +69,6 @@ const Home = () => {
   };
 
   const handleSearch = () => {
-    console.log("검색 클릭:", searchParams);
     fetchAccommodations();
   };
 
@@ -69,63 +84,72 @@ const Home = () => {
 
   return (
     <div className="home-container">
-      {/* Header */}
-      <header className="header">
-        <img src="/images/logo.png" alt="StayJ 로고" className="logo" />
-        <div className="header-right">
-          <button className="signup-btn">회원가입</button>
-          <img
-            src="/images/profile.png"
-            alt="프로필"
-            className="profile-icon"
-            onClick={() => navigate("/guest")}
-          />
-        </div>
-      </header>
-
-      {/* Search Banner */}
+      {/* 🔹 배경 배너 (문구만 표시) */}
       <div
         className="search-banner"
         style={{
-          backgroundImage: "url(/images/jeju.png)",
+          backgroundImage: `url(/images/jeju.png)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
-          height: "300px",
+          width: "100%",
+          height: "500px",
           display: "flex",
           alignItems: "center",
           justifyContent: "center",
+          position: "relative",
         }}
       >
-        <div className="search-box">
-          <input
-            type="text"
-            name="name"
-            placeholder="게스트하우스 이름"
-            value={searchParams.name}
-            onChange={handleChange}
-          />
-          <input
-            type="date"
-            name="check_in"
-            value={searchParams.check_in}
-            onChange={handleChange}
-          />
-          <input
-            type="date"
-            name="check_out"
-            value={searchParams.check_out}
-            onChange={handleChange}
-          />
-          <input
-            type="number"
-            name="people"
-            placeholder="인원수"
-            value={searchParams.people}
-            onChange={handleChange}
-          />
-          <button onClick={handleSearch}>
-            <img src="/images/search.png" alt="검색" className="search-icon" />
-          </button>
+        <div
+          className="banner-overlay"
+          style={{
+            position: "absolute",
+            left: "30px",
+            bottom: "30px",
+            color: "white",
+            textAlign: "left",
+            display: "flex",
+            flexDirection: "column",
+            gap: "20px", // 제목과 검색박스 간 간격 조절
+            width: "400px", // 적절한 너비 조절 가능
+          }}
+        >
+          <h1 className="banner-title">제주 게스트하우스 예약</h1>
+          <p className="banner-subtitle">편리하고 간편한 예약 시스템</p>
+
+          {/* 여기에 search box 넣기 */}
+          <div className="search-box-container" style={{ width: "100%" }}>
+            <div className="search-box" style={{ display: "flex", gap: "10px" }}>
+              <input
+                type="text"
+                name="name"
+                placeholder="게스트하우스 이름"
+                value={searchParams.name}
+                onChange={handleChange}
+              />
+              <input
+                type="date"
+                name="check_in"
+                value={searchParams.check_in}
+                onChange={handleChange}
+              />
+              <input
+                type="date"
+                name="check_out"
+                value={searchParams.check_out}
+                onChange={handleChange}
+              />
+              <input
+                type="number"
+                name="people"
+                placeholder="인원수"
+                value={searchParams.people}
+                onChange={handleChange}
+              />
+              <button onClick={handleSearch}>
+                <img src="/images/search.png" alt="검색" className="search-icon" />
+              </button>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -138,9 +162,7 @@ const Home = () => {
         )}
 
         {accommodations.map((item) => {
-          // 🔹 사진 경로 디버깅
           const imagePath = `/images/guesthouses/${item.photo_id}.png`;
-          console.log(`숙소: ${item.name}, 사진 경로: ${imagePath}`);
 
           console.log("item.room_available:", item.room_available); // 🔹 room_available 확인
           return (
@@ -153,13 +175,10 @@ const Home = () => {
                 src={imagePath}
                 alt={item.name}
                 onError={(e) => {
-                  // 이미지 없으면 기본 이미지
                   e.target.src = "/images/guesthouses/default.png";
                 }}
               />
-              {item.isGuestPick && (
-                <div className="guest-pick">게스트 선호</div>
-              )}
+              {item.isGuestPick && <div className="guest-pick">게스트 선호</div>}
               <div className="card-info">
                 <h3>{item.name}</h3>
                 <p>⭐ {item.rating ? item.rating.toFixed(1) : "평점 없음"}</p>

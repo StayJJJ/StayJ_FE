@@ -4,104 +4,87 @@ import './reservationInfo.css';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
 
-// 임시 API 데이터 (실제 구현시 fetch로 대체)
-const mockApiData = {
-  1: {
-    guesthouse: {
-      id: 1,
-      name: "제주도의 한옥",
-      description: "전통 한옥의 아름다움과 제주도의 자연이 어우러진 특별한 숙소입니다. 제주도 구좌읍에 위치한 전통 한옥 게스트하우스입니다. 아름다운 정원과 함께 한국의 전통미를 느낄 수 있는 특별한 공간입니다.",
-      address: "제주시 구좌읍",
-      rating: 4.5,
-      photos_url: "/images/jeju.png",
-      room_count: 3
-    },
-    rooms: [
-      { id: 1, name: "대청마루방", capacity: 2, price: 100000 },
-      { id: 2, name: "사랑채방", capacity: 4, price: 130000 },
-      { id: 3, name: "별채방", capacity: 3, price: 120000 }
-    ],
-    reviews: [
-      { id: 1, reservation_id: 101, rating: 5, comment: "정말 아름다운 한옥이었습니다. 정원도 잘 가꿔져 있고 조용해서 힐링하기 좋았어요.", created_at: "2023-08-15T10:30:00Z" },
-      { id: 2, reservation_id: 102, rating: 4, comment: "전통 한옥의 매력을 느낄 수 있었습니다. 다만 화장실이 조금 불편했어요.", created_at: "2023-08-10T14:20:00Z" },
-      { id: 3, reservation_id: 103, rating: 5, comment: "가족 여행으로 방문했는데 아이들도 너무 좋아했어요. 사장님도 친절하시고!", created_at: "2023-08-05T09:15:00Z" }
-    ]
+// API 기본 URL 설정
+const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/';
+
+// axios 인스턴스 생성
+const api = axios.create({
+  baseURL: API_BASE_URL,
+  timeout: 10000,
+  headers: {
+    'Content-Type': 'application/json',
   },
-  2: {
-    guesthouse: {
-      id: 2,
-      name: "바닷가 전망 게스트하우스",
-      description: "탁 트인 바다 전망과 함께하는 낭만적인 휴식 공간입니다. 제주도 서쪽 애월읍에 위치한 오션뷰 게스트하우스입니다. 객실에서 바로 보이는 아름다운 바다 전망과 함께 일몰을 감상할 수 있습니다.",
-      address: "제주시 애월읍",
-      rating: 4.7,
-      photos_url: "/images/jeju.png",
-      room_count: 3
-    },
-    rooms: [
-      { id: 4, name: "오션뷰 더블룸", capacity: 2, price: 150000 },
-      { id: 5, name: "오션뷰 패밀리룸", capacity: 4, price: 180000 },
-      { id: 6, name: "스탠다드룸", capacity: 2, price: 120000 }
-    ],
-    reviews: [
-      { id: 4, reservation_id: 104, rating: 5, comment: "바다 전망이 정말 환상적이었어요! 일몰도 너무 아름다웠습니다.", created_at: "2023-08-20T16:45:00Z" },
-      { id: 5, reservation_id: 105, rating: 4, comment: "뷰는 좋았는데 방음이 조금 아쉬웠어요. 그래도 전반적으로 만족합니다.", created_at: "2023-08-18T11:30:00Z" }
-    ]
-  },
-  3: {
-    guesthouse: {
-      id: 3,
-      name: "도심 속 편안한 쉼터",
-      description: "제주시 중심가에 위치한 접근성이 뛰어난 게스트하우스입니다. 제주시 중심가에 위치하여 관광지 접근이 용이한 게스트하우스입니다. 깔끔하고 모던한 인테리어로 편안한 휴식을 제공합니다.",
-      address: "제주시 일도이동",
-      rating: 4.3,
-      photos_url: "/images/jeju.png",
-      room_count: 3
-    },
-    rooms: [
-      { id: 7, name: "스탠다드 싱글", capacity: 1, price: 80000 },
-      { id: 8, name: "스탠다드 더블", capacity: 2, price: 110000 },
-      { id: 9, name: "디럭스 트윈", capacity: 3, price: 130000 }
-    ],
-    reviews: [
-      { id: 6, reservation_id: 106, rating: 4, comment: "위치가 정말 좋아요. 시내 중심가라 이동하기 편했습니다.", created_at: "2023-08-25T13:20:00Z" },
-      { id: 7, reservation_id: 107, rating: 4, comment: "깔끔하고 직원분들이 친절해요. 다음에 또 이용하고 싶습니다.", created_at: "2023-08-22T08:45:00Z" },
-      { id: 8, reservation_id: 108, rating: 5, comment: "가성비 최고! 시설도 깔끔하고 서비스도 좋았어요.", created_at: "2023-08-20T19:30:00Z" }
-    ]
+});
+
+// API 응답 인터셉터 (에러 처리)
+api.interceptors.response.use(
+  (response) => response,
+  (error) => {
+    console.error('API 에러:', error);
+    return Promise.reject(error);
   }
-};
+);
 
 const ReservationInfo = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  
-  // 🔥 수정된 부분: location.state에서 검색 정보 받아오기
+
   const { checkIn, checkOut, guests } = location.state || {};
-  
+
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [guestData, setGuestData] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [reservationLoading, setReservationLoading] = useState(false);
 
   useEffect(() => {
     const fetchData = async () => {
       try {
         setLoading(true);
+        setError(null);
 
-        const data = mockApiData[parseInt(id)];
-        if (data) {
-          setGuestData(data);
-          setSelectedRoom(data.rooms[0]); 
+        // 병렬로 API 호출
+        const [guesthouseResponse, roomsResponse, reviewsResponse] = await Promise.all([
+          api.get(`/guesthouse/${id}`),
+          api.get(`/guesthouse/${id}/rooms`),
+          api.get(`/guesthouse/${id}/reviews`),
+        ]);
+
+        // API 응답 데이터 구조화 및 검증
+        console.log('API 응답 데이터:', {
+          guesthouse: guesthouseResponse.data,
+          rooms: roomsResponse.data,
+          reviews: reviewsResponse.data,
+        });
+
+        // rooms API는 특별한 구조: {"room_available": [1,2,...], "rooms": [{...}]}
+        const roomsData = roomsResponse.data.rooms || []; // 🔹 rooms 배열 추출
+        const availableRooms = Array.isArray(roomsData) ? roomsData : [];
+
+        const guestData = {
+          guesthouse: guesthouseResponse.data,
+          rooms: availableRooms,
+          reviews: Array.isArray(reviewsResponse.data) ? reviewsResponse.data : [],
+        };
+
+        setGuestData(guestData);
+
+        // 첫 번째 방을 기본 선택
+        if (guestData.rooms && guestData.rooms.length > 0) {
+          setSelectedRoom(guestData.rooms[0]);
         }
-
-        setLoading(false);
       } catch (error) {
-        console.error("데이터 로딩 실패:", error);
+        console.error('데이터 로딩 실패:', error);
+        setError(error.message || '데이터를 불러오는데 실패했습니다.');
+      } finally {
         setLoading(false);
       }
     };
 
-    fetchData();
+    if (id) {
+      fetchData();
+    }
   }, [id]);
 
   const handleBackClick = () => {
@@ -124,7 +107,7 @@ const ReservationInfo = () => {
   const handleReserve = async () => {
     // 쿠키에서 user_id 가져오기
     const userId = getCookieValue('user_id');
-    
+
     if (!userId) {
       alert('로그인이 필요합니다. 로그인 후 다시 시도해주세요.');
       // 로그인 페이지로 리다이렉트하거나 로그인 모달 띄우기
@@ -133,10 +116,10 @@ const ReservationInfo = () => {
 
     // 필수 정보 검증
     if (!selectedRoom || !checkIn || !checkOut || !guests) {
-      console.log("selectedRoom:", selectedRoom);
-      console.log("checkIn:", checkIn);     
-      console.log("checkOut:", checkOut);
-      console.log("guests:", guests);
+      console.log('selectedRoom:', selectedRoom);
+      console.log('checkIn:', checkIn);
+      console.log('checkOut:', checkOut);
+      console.log('guests:', guests);
 
       alert('예약에 필요한 정보가 부족합니다. 다시 검색해주세요.');
       return;
@@ -172,38 +155,33 @@ const ReservationInfo = () => {
         room_id: selectedRoom.id,
         check_in_date: checkIn,
         check_out_date: checkOut,
-        people_count: guests
+        people_count: guests,
       };
 
-      console.log("예약 요청 데이터:", reservationData);
+      console.log('예약 요청 데이터:', reservationData);
 
-      const response = await axios.post(
-        'http://localhost:8080/reservation',
-        reservationData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'user-id': userId // 쿠키에서 가져온 user_id를 헤더로 전송
-          }
-        }
-      );
+      const response = await axios.post('http://localhost:8080/reservation', reservationData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'user-id': userId, // 쿠키에서 가져온 user_id를 헤더로 전송
+        },
+      });
 
-      console.log("예약 성공:", response.data);
+      console.log('예약 성공:', response.data);
 
       // 예약 성공 시 확인 메시지와 함께 홈으로 이동
       alert(`예약이 완료되었습니다!\n예약 번호: ${response.data.reservation_id || 'N/A'}`);
-      navigate('/', { 
-        state: { 
-          message: '예약이 성공적으로 완료되었습니다.' 
-        }
+      navigate('/', {
+        state: {
+          message: '예약이 성공적으로 완료되었습니다.',
+        },
       });
-
     } catch (error) {
-      console.error("예약 실패:", error);
-      
+      console.error('예약 실패:', error);
+
       // 에러 메시지 처리
       let errorMessage = '예약 중 오류가 발생했습니다.';
-      
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.response?.status === 400) {
@@ -215,7 +193,7 @@ const ReservationInfo = () => {
       } else if (error.response?.status === 500) {
         errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
       }
-      
+
       alert(errorMessage);
     } finally {
       setReservationLoading(false);
@@ -245,14 +223,15 @@ const ReservationInfo = () => {
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
   const renderStars = (rating) => {
-    return '★'.repeat(rating) + '☆'.repeat(5 - rating);
+    return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
   };
 
+  // 로딩 상태
   if (loading) {
     return (
       <div className="reservation-container">
@@ -261,6 +240,21 @@ const ReservationInfo = () => {
     );
   }
 
+  // 에러 상태
+  if (error) {
+    return (
+      <div className="reservation-container">
+        <div className="error">
+          <h2>오류가 발생했습니다</h2>
+          <p>{error}</p>
+          <button onClick={() => window.location.reload()}>다시 시도</button>
+          <button onClick={handleBackClick}>홈으로 돌아가기</button>
+        </div>
+      </div>
+    );
+  }
+
+  // 데이터가 없는 경우
   if (!guestData) {
     return (
       <div className="reservation-container">
@@ -276,17 +270,10 @@ const ReservationInfo = () => {
 
   return (
     <div className="reservation-container">
-      {/* Header */}
-      <header className="reservation-header">
-        <button className="back-btn" onClick={handleBackClick}>
-          ← 뒤로가기
-        </button>
-        <img src="/images/logo.png" alt="StayJ 로고" className="logo" />
-      </header>
 
       {/* Main Image */}
       <div className="main-image-section">
-        <img src={guesthouse.photos_url} alt={guesthouse.name} className="main-image" />
+        <img src={`/images/guesthouses/${guesthouse.photo_id}.png`} alt={guesthouse.name} className="main-image" />
       </div>
 
       {/* Content */}
@@ -319,21 +306,25 @@ const ReservationInfo = () => {
           <div className="rooms-section">
             <h2>객실 선택</h2>
             <div className="rooms-grid">
-              {rooms.map((room) => (
-                <div
-                  key={room.id}
-                  className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''}`}
-                  onClick={() => handleRoomSelect(room)}
-                >
-                  <img src={guesthouse.photos_url} alt={room.name} className="room-image" />
-                  <div className="room-info">
-                    <h3>{room.name}</h3>
-                    <p className="room-capacity">👥 최대 {room.capacity}명</p>
-                    <p className="room-price">₩{room.price.toLocaleString()}/박</p>
+              {Array.isArray(rooms) && rooms.length > 0 ? (
+                rooms.map((room) => (
+                  <div
+                    key={room.id}
+                    className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''}`}
+                    onClick={() => handleRoomSelect(room)}
+                  >
+                    <img src={`/images/rooms/${room.photo_id}.png`} alt={room.name} className="room-image" />
+                    <div className="room-info">
+                      <h3>{room.name}</h3>
+                      <p className="room-capacity">👥 최대 {room.capacity}명</p>
+                      <p className="room-price">₩{room.price.toLocaleString()}/박</p>
+                    </div>
+                    {selectedRoom?.id === room.id && <div className="selected-badge">선택됨</div>}
                   </div>
-                  {selectedRoom?.id === room.id && <div className="selected-badge">선택됨</div>}
-                </div>
-              ))}
+                ))
+              ) : (
+                <p className="no-rooms">사용 가능한 객실이 없습니다.</p>
+              )}
             </div>
           </div>
 
@@ -345,9 +336,9 @@ const ReservationInfo = () => {
 
           {/* Reviews Section */}
           <div className="reviews-section">
-            <h2>후기 ({reviews.length}개)</h2>
+            <h2>후기 ({Array.isArray(reviews) ? reviews.length : 0}개)</h2>
             <div className="reviews-list">
-              {reviews.length === 0 ? (
+              {!Array.isArray(reviews) || reviews.length === 0 ? (
                 <p className="no-reviews">아직 작성된 후기가 없습니다.</p>
               ) : (
                 reviews.map((review) => (
@@ -375,22 +366,20 @@ const ReservationInfo = () => {
                 <small>1박 기준</small>
               </div>
 
-              {/* 🔥 추가된 부분: 총 가격 표시 */}
+              {/* 총 가격 표시 */}
               {checkIn && checkOut && (
                 <div className="total-price-section">
                   <div className="price-breakdown">
-                    <p>₩{selectedRoom.price.toLocaleString()} × {calculateNights()}박</p>
+                    <p>
+                      ₩{selectedRoom.price.toLocaleString()} × {calculateNights()}박
+                    </p>
                     <p className="total-price">총 합계: ₩{calculateTotalPrice().toLocaleString()}</p>
                   </div>
                 </div>
               )}
 
               <div className="booking-form">
-                <button 
-                  className="reserve-btn" 
-                  onClick={handleReserve}
-                  disabled={reservationLoading}
-                >
+                <button className="reserve-btn" onClick={handleReserve} disabled={reservationLoading}>
                   {reservationLoading ? '예약 중...' : '예약하기'}
                 </button>
               </div>

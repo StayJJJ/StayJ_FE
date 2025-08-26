@@ -20,7 +20,6 @@
   display: flex;
   gap: 8px;
 }
-@import './theme.css';
 
 /* Modal */
 .modal{
@@ -87,7 +86,7 @@
 
 .form-section{
   margin-top: 6px; padding-top: 10px;
-  border-top: 1px dashed var(--sky-200);
+  border-top: 0px dashed var(--sky-200);
   color: var(--muted); font-weight: 700; letter-spacing: .02em;
 }
 
