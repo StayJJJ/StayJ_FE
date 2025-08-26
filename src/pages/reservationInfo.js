@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
-import axios from 'axios';
 import './reservationInfo.css';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
@@ -14,7 +13,7 @@ const api = axios.create({
   timeout: 10000,
   headers: {
     'Content-Type': 'application/json',
-  }
+  },
 });
 
 // API 응답 인터셉터 (에러 처리)
@@ -30,10 +29,9 @@ const ReservationInfo = () => {
   const { id } = useParams();
   const navigate = useNavigate();
   const location = useLocation();
-  
-  // 🔥 수정된 부분: location.state에서 검색 정보 받아오기
+
   const { checkIn, checkOut, guests } = location.state || {};
-  
+
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [guestData, setGuestData] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -45,19 +43,19 @@ const ReservationInfo = () => {
       try {
         setLoading(true);
         setError(null);
-        
+
         // 병렬로 API 호출
         const [guesthouseResponse, roomsResponse, reviewsResponse] = await Promise.all([
           api.get(`/guesthouse/${id}`),
           api.get(`/guesthouse/${id}/rooms`),
-          api.get(`/guesthouse/${id}/reviews`)
+          api.get(`/guesthouse/${id}/reviews`),
         ]);
 
         // API 응답 데이터 구조화 및 검증
         console.log('API 응답 데이터:', {
           guesthouse: guesthouseResponse.data,
           rooms: roomsResponse.data,
-          reviews: reviewsResponse.data
+          reviews: reviewsResponse.data,
         });
 
         // rooms API는 특별한 구조: {"room_available": [1,2,...], "rooms": [{...}]}
@@ -67,30 +65,19 @@ const ReservationInfo = () => {
         const guestData = {
           guesthouse: guesthouseResponse.data,
           rooms: availableRooms,
-          reviews: Array.isArray(reviewsResponse.data) ? reviewsResponse.data : []
+          reviews: Array.isArray(reviewsResponse.data) ? reviewsResponse.data : [],
         };
 
         setGuestData(guestData);
-        
+
         // 첫 번째 방을 기본 선택
         if (guestData.rooms && guestData.rooms.length > 0) {
           setSelectedRoom(guestData.rooms[0]);
         }
-        
       } catch (error) {
         console.error('데이터 로딩 실패:', error);
         setError(error.message || '데이터를 불러오는데 실패했습니다.');
       } finally {
-
-        const data = mockApiData[parseInt(id)];
-        if (data) {
-          setGuestData(data);
-          setSelectedRoom(data.rooms[0]); 
-        }
-
-        setLoading(false);
-      } catch (error) {
-        console.error("데이터 로딩 실패:", error);
         setLoading(false);
       }
     };
@@ -120,7 +107,7 @@ const ReservationInfo = () => {
   const handleReserve = async () => {
     // 쿠키에서 user_id 가져오기
     const userId = getCookieValue('user_id');
-    
+
     if (!userId) {
       alert('로그인이 필요합니다. 로그인 후 다시 시도해주세요.');
       // 로그인 페이지로 리다이렉트하거나 로그인 모달 띄우기
@@ -129,10 +116,10 @@ const ReservationInfo = () => {
 
     // 필수 정보 검증
     if (!selectedRoom || !checkIn || !checkOut || !guests) {
-      console.log("selectedRoom:", selectedRoom);
-      console.log("checkIn:", checkIn);     
-      console.log("checkOut:", checkOut);
-      console.log("guests:", guests);
+      console.log('selectedRoom:', selectedRoom);
+      console.log('checkIn:', checkIn);
+      console.log('checkOut:', checkOut);
+      console.log('guests:', guests);
 
       alert('예약에 필요한 정보가 부족합니다. 다시 검색해주세요.');
       return;
@@ -168,38 +155,33 @@ const ReservationInfo = () => {
         room_id: selectedRoom.id,
         check_in_date: checkIn,
         check_out_date: checkOut,
-        people_count: guests
+        people_count: guests,
       };
 
-      console.log("예약 요청 데이터:", reservationData);
+      console.log('예약 요청 데이터:', reservationData);
 
-      const response = await axios.post(
-        'http://localhost:8080/reservation',
-        reservationData,
-        {
-          headers: {
-            'Content-Type': 'application/json',
-            'user-id': userId // 쿠키에서 가져온 user_id를 헤더로 전송
-          }
-        }
-      );
+      const response = await axios.post('http://localhost:8080/reservation', reservationData, {
+        headers: {
+          'Content-Type': 'application/json',
+          'user-id': userId, // 쿠키에서 가져온 user_id를 헤더로 전송
+        },
+      });
 
-      console.log("예약 성공:", response.data);
+      console.log('예약 성공:', response.data);
 
       // 예약 성공 시 확인 메시지와 함께 홈으로 이동
       alert(`예약이 완료되었습니다!\n예약 번호: ${response.data.reservation_id || 'N/A'}`);
-      navigate('/', { 
-        state: { 
-          message: '예약이 성공적으로 완료되었습니다.' 
-        }
+      navigate('/', {
+        state: {
+          message: '예약이 성공적으로 완료되었습니다.',
+        },
       });
-
     } catch (error) {
-      console.error("예약 실패:", error);
-      
+      console.error('예약 실패:', error);
+
       // 에러 메시지 처리
       let errorMessage = '예약 중 오류가 발생했습니다.';
-      
+
       if (error.response?.data?.message) {
         errorMessage = error.response.data.message;
       } else if (error.response?.status === 400) {
@@ -211,7 +193,7 @@ const ReservationInfo = () => {
       } else if (error.response?.status === 500) {
         errorMessage = '서버 오류가 발생했습니다. 잠시 후 다시 시도해주세요.';
       }
-      
+
       alert(errorMessage);
     } finally {
       setReservationLoading(false);
@@ -241,35 +223,12 @@ const ReservationInfo = () => {
     return date.toLocaleDateString('ko-KR', {
       year: 'numeric',
       month: 'long',
-      day: 'numeric'
+      day: 'numeric',
     });
   };
 
   const renderStars = (rating) => {
     return '★'.repeat(Math.floor(rating)) + '☆'.repeat(5 - Math.floor(rating));
-  };
-
-  // 예약 처리 함수 (필요시 추가)
-  const handleReservation = async () => {
-    try {
-      // 예약 데이터 수집
-      const reservationData = {
-        guesthouse_id: id,
-        room_id: selectedRoom.id,
-        // 체크인/체크아웃 날짜 등 추가 데이터
-      };
-
-      // 예약 API 호출
-      const response = await api.post('/reservations', reservationData);
-      
-      // 성공시 처리
-      console.log('예약 성공:', response.data);
-      // 예약 완료 페이지로 이동 등
-      
-    } catch (error) {
-      console.error('예약 실패:', error);
-      alert('예약 처리 중 오류가 발생했습니다.');
-    }
   };
 
   // 로딩 상태
@@ -416,23 +375,20 @@ const ReservationInfo = () => {
                 <small>1박 기준</small>
               </div>
 
-              {/* 🔥 추가된 부분: 총 가격 표시 */}
+              {/* 총 가격 표시 */}
               {checkIn && checkOut && (
                 <div className="total-price-section">
                   <div className="price-breakdown">
-                    <p>₩{selectedRoom.price.toLocaleString()} × {calculateNights()}박</p>
+                    <p>
+                      ₩{selectedRoom.price.toLocaleString()} × {calculateNights()}박
+                    </p>
                     <p className="total-price">총 합계: ₩{calculateTotalPrice().toLocaleString()}</p>
                   </div>
                 </div>
               )}
 
-                <button className="reserve-btn" onClick={handleReservation}>
               <div className="booking-form">
-                <button 
-                  className="reserve-btn" 
-                  onClick={handleReserve}
-                  disabled={reservationLoading}
-                >
+                <button className="reserve-btn" onClick={handleReserve} disabled={reservationLoading}>
                   {reservationLoading ? '예약 중...' : '예약하기'}
                 </button>
               </div>
