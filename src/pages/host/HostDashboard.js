@@ -3,7 +3,14 @@
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
-import { getMyGuesthouses, createGuesthouse, updateGuesthouse, deleteGuesthouse, getGuesthouseDetail, getGuesthouseRooms } from '../../api/hosts';
+import {
+  getMyGuesthouses,
+  createGuesthouse,
+  updateGuesthouse,
+  deleteGuesthouse,
+  getGuesthouseDetail,
+  getGuesthouseRooms,
+} from '../../api/hosts';
 import GuesthouseForm from './GuesthouseForm';
 import './HostDashboard.css';
 
@@ -79,8 +86,12 @@ export default function HostDashboard() {
       <div className="host-header">
         <h1>내 게스트하우스</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-          <button className="btn primary" onClick={() => setShowForm(true)}>+ 새로 만들기</button>
-          <button className="logout-btn" onClick={logout}>로그아웃</button>
+          <button className="btn primary" onClick={() => setShowForm(true)}>
+            + 새로 만들기
+          </button>
+          <button className="logout-btn" onClick={logout}>
+            로그아웃
+          </button>
         </div>
       </div>
 
@@ -88,9 +99,23 @@ export default function HostDashboard() {
       {error && <div className="error">{error}</div>}
 
       {list.length === 0 && !loading && !error ? (
-        <div className="muted" style={{textAlign:'center', margin:'30px 0 20px 0', fontSize:'1.15rem', lineHeight:'2.2'}}>
-          등록된 게스트하우스가 없습니다.<br />
-          <span style={{display:'inline-block', marginTop:'10px', color:'var(--primary)', fontWeight:700, fontSize:'1.25rem'}}>게스트하우스를 추가해주세요!</span>
+        <div
+          className="muted"
+          style={{ textAlign: 'center', margin: '30px 0 20px 0', fontSize: '1.15rem', lineHeight: '2.2' }}
+        >
+          등록된 게스트하우스가 없습니다.
+          <br />
+          <span
+            style={{
+              display: 'inline-block',
+              marginTop: '10px',
+              color: 'var(--primary)',
+              fontWeight: 700,
+              fontSize: '1.25rem',
+            }}
+          >
+            게스트하우스를 추가해주세요!
+          </span>
         </div>
       ) : (
         <ul className="gh-grid">
@@ -102,8 +127,12 @@ export default function HostDashboard() {
                 <span className="badge">🛏️ {gh.room_count ?? 0} rooms</span>
               </div>
               <div className="gh-actions">
-                <button className="btn soft" onClick={() => handleEdit(gh)}>수정</button>
-                <button className="btn danger" onClick={() => onDelete(gh.id)}>삭제</button>
+                <button className="btn soft" onClick={() => handleEdit(gh)}>
+                  수정
+                </button>
+                <button className="btn danger" onClick={() => onDelete(gh.id)}>
+                  삭제
+                </button>
                 <Link className="btn primary" to={`/host/${gh.id}/reservations`}>
                   예약 관리
                 </Link>
@@ -119,12 +148,8 @@ export default function HostDashboard() {
           <div className="modal-body">
             <div className="modal-head">
               <h2>게스트하우스 생성</h2>
-              <button onClick={() => setShowForm(false)}>닫기</button>
             </div>
-            <GuesthouseForm
-              onSubmit={onCreate}
-              onCancel={() => setShowForm(false)}
-            />
+            <GuesthouseForm onSubmit={onCreate} onCancel={() => setShowForm(false)} />
           </div>
         </div>
       )}
@@ -135,15 +160,25 @@ export default function HostDashboard() {
           <div className="modal-body">
             <div className="modal-head">
               <h2>게스트하우스 수정</h2>
-              <button onClick={() => { setEditing(null); setEditingRooms([]); }}>닫기</button>
+              <button
+                onClick={() => {
+                  setEditing(null);
+                  setEditingRooms([]);
+                }}
+              >
+                닫기
+              </button>
             </div>
             {editingLoading ? (
-              <div style={{padding:'30px', textAlign:'center'}}>불러오는 중...</div>
+              <div style={{ padding: '30px', textAlign: 'center' }}>불러오는 중...</div>
             ) : (
               <GuesthouseForm
                 initialValues={{ ...editing, rooms: editingRooms }}
                 onSubmit={(values) => onUpdate(editing.id, values)}
-                onCancel={() => { setEditing(null); setEditingRooms([]); }}
+                onCancel={() => {
+                  setEditing(null);
+                  setEditingRooms([]);
+                }}
               />
             )}
           </div>

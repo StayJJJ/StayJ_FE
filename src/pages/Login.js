@@ -24,11 +24,11 @@ const LoginPage = () => {
         body: JSON.stringify(bodyData),
       });
 
-      console.log("Hello world:", response);
+      console.log('Hello world:', response);
       if (response.ok) {
         const result = await response.json();
         // const result = response.json();
-        console.log("Hello world:", result);
+        console.log('Hello world:', result);
         // 모든 필드를 각각 쿠키로 저장
         Object.entries(result).forEach(([key, value]) => {
           Cookies.set(key, value, { expires: 7, path: '/' });
@@ -71,7 +71,7 @@ const LoginPage = () => {
           <p className="slogan1">스테이제이, 제주를 담다</p>
           <p className="slogan2">오늘의 쉼을 가장 제주답게</p>
         </div>
-        
+
         {/* onSubmit 이벤트를 추가한 form 태그로 감싸기 */}
         <form className="form-section" onSubmit={handleFormSubmit}>
           <input
@@ -88,14 +88,16 @@ const LoginPage = () => {
             onChange={(e) => setPassword(e.target.value)}
             className="login-input"
           />
-          <button className="login-button" type="submit"> {/* type="submit" 설정 */}
+          <button className="login-button" type="submit">
+            {' '}
+            {/* type="submit" 설정 */}
             로그인
           </button>
         </form>
-        
+
         <div className="links-section">
           <a href="/register" className="link-text">아직 회원이 아니신가요?</a>
-          
+     
         </div>
       </div>
     </div>

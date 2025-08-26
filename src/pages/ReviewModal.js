@@ -1,10 +1,28 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import styles from './ReviewModal.module.css';
 
-const ReviewModal = ({ isOpen, onClose }) => {
-  const [rating, setRating] = useState(0);
+const ReviewModal = ({ 
+  isOpen, 
+  onClose, 
+  mode = 'create', // 'create', 'edit', 'delete'
+  userId,
+  reservationId,
+  existingReview = null // 수정 시 기존 리뷰 데이터
+}) => {
+  const [rating, setRating] = useState(existingReview?.rating || 0);
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [error, setError] = useState('');
   const titleRef = useRef(null);
   const contentRef = useRef(null);
+
+  // 수정 모드일 때 기존 데이터로 초기화
+  useEffect(() => {
+    if (mode === 'edit' && existingReview) {
+      setRating(existingReview.rating);
+      if (titleRef.current) titleRef.current.value = existingReview.title || '';
+      if (contentRef.current) contentRef.current.value = existingReview.comment || '';
+    }
+  }, [mode, existingReview]);
 
   const handleOverlayClick = (e) => {
     if (e.target.classList.contains(styles.modalOverlay)) {
@@ -16,21 +34,170 @@ const ReviewModal = ({ isOpen, onClose }) => {
     setRating(value);
   };
 
-  const handleSubmit = (e) => {
+const API_BASE_URL = 'http://localhost:8080';
+
+// 리뷰 작성 API 호출
+const createReview = async (reviewData) => {
+  const response = await fetch(`${API_BASE_URL}/review`, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'user-id': userId
+    },
+    body: JSON.stringify({
+      reservationId: reservationId,
+      rating: reviewData.rating,
+      comment: reviewData.comment
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error('리뷰 작성에 실패했습니다.');
+  }
+
+  return response.json();
+};
+
+// 리뷰 수정 API 호출
+const updateReview = async (reviewData) => {
+  const response = await fetch(`/review/${existingReview.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'user-id': userId
+    },
+    body: JSON.stringify({
+      rating: reviewData.rating,
+      comment: reviewData.comment
+    })
+  });
+
+  if (!response.ok) {
+    throw new Error('리뷰 수정에 실패했습니다.');
+  }
+
+  return response.json();
+};
+
+// 리뷰 삭제 API 호출
+const deleteReview = async () => {
+  const response = await fetch(`${API_BASE_URL}/review/${existingReview.id}`, {
+    method: 'DELETE',
+    headers: {
+      'Content-Type': 'application/json',
+      'user-id': userId
+    }
+    // DELETE는 body 없이 헤더만 전달
+  });
+
+  if (!response.ok) {
+    throw new Error('리뷰 삭제에 실패했습니다.');
+  }
+
+  return response.json();
+};
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log("별점:", rating);
-    console.log("제목:", titleRef.current.value);
-    console.log("내용:", contentRef.current.value);
-    onClose(); // 모달 닫기
+    setError('');
+    setIsSubmitting(true);
+
+    try {
+      if (mode === 'delete') {
+        await deleteReview();
+        console.log('리뷰가 삭제되었습니다.');
+      } else {
+        const reviewData = {
+          rating,
+          comment: contentRef.current.value,
+          title: titleRef.current?.value || '' // 제목이 필요한 경우
+        };
+
+        // 별점 유효성 검사
+        if (rating === 0) {
+          setError('별점을 선택해주세요.');
+          return;
+        }
+
+        // 내용 유효성 검사
+        if (!reviewData.comment.trim()) {
+          setError('리뷰 내용을 입력해주세요.');
+          return;
+        }
+
+        let result;
+        if (mode === 'create') {
+          result = await createReview(reviewData);
+          console.log('리뷰가 작성되었습니다:', result);
+        } else if (mode === 'edit') {
+          result = await updateReview(reviewData);
+          console.log('리뷰가 수정되었습니다:', result);
+        }
+      }
+
+      onClose(); // 모달 닫기
+      
+      // 성공 시 부모 컴포넌트에 알림 (선택사항)
+      if (typeof onClose === 'function') {
+        onClose(true); // true를 전달하여 성공을 알림
+      }
+
+    } catch (err) {
+      console.error('API 오류:', err);
+      setError(err.message || '오류가 발생했습니다. 다시 시도해주세요.');
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  // 삭제 확인 모달
+  const handleDelete = () => {
+    if (window.confirm('정말로 이 리뷰를 삭제하시겠습니까?')) {
+      handleSubmit({ preventDefault: () => {} });
+    }
   };
 
   if (!isOpen) return null;
+
+  // 삭제 모드일 때는 다른 UI 표시
+  if (mode === 'delete') {
+    return (
+      <div className={styles.modalOverlay} onClick={handleOverlayClick}>
+        <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
+          <div className={styles.modalHeader}>
+            <h2>리뷰 삭제</h2>
+            <button className={styles.closeBtn} onClick={onClose}>×</button>
+          </div>
+          <div className={styles.deleteConfirm}>
+            <p>정말로 이 리뷰를 삭제하시겠습니까?</p>
+            <div className={styles.deleteButtons}>
+              <button 
+                className={styles.cancelBtn} 
+                onClick={onClose}
+                disabled={isSubmitting}
+              >
+                취소
+              </button>
+              <button 
+                className={styles.deleteBtn} 
+                onClick={handleDelete}
+                disabled={isSubmitting}
+              >
+                {isSubmitting ? '삭제 중...' : '삭제'}
+              </button>
+            </div>
+          </div>
+          {error && <div className={styles.error}>{error}</div>}
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.modalOverlay} onClick={handleOverlayClick}>
       <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
-          <h2>리뷰 작성하기</h2>
+          <h2>{mode === 'edit' ? '리뷰 수정하기' : '리뷰 작성하기'}</h2>
           <button className={styles.closeBtn} onClick={onClose}>×</button>
         </div>
 
@@ -46,19 +213,26 @@ const ReviewModal = ({ isOpen, onClose }) => {
           ))}
         </div>
 
+        {error && <div className={styles.error}>{error}</div>}
+
         <form className={styles.reviewForm} onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="리뷰 제목"
-            className={styles.input}
-            ref={titleRef}
-          />
           <textarea
             placeholder="리뷰 내용을 입력하세요"
             className={styles.textarea}
             ref={contentRef}
+            disabled={isSubmitting}
+            required
           ></textarea>
-          <button type="submit" className={styles.submitBtn}>저장하기</button>
+          <button 
+            type="submit" 
+            className={styles.submitBtn}
+            disabled={isSubmitting || rating === 0}
+          >
+            {isSubmitting 
+              ? (mode === 'edit' ? '수정 중...' : '저장 중...') 
+              : (mode === 'edit' ? '수정하기' : '저장하기')
+            }
+          </button>
         </form>
       </div>
     </div>

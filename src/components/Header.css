@@ -2,9 +2,10 @@
   background-color: #000000;
   padding: 15px 30px;
   color: white;
-  position: sticky;
+  position: sticky; 
   top: 0;
   z-index: 999;
+  margin-bottom: 4px;
 }
 
 .header-container {
@@ -44,4 +45,22 @@
 .mypage-button:hover {
   background: white;
   color: #132213;
+}
+
+.back-btn {
+  background: #000;
+  color: white;
+  border: 2px solid white;
+  padding: 6px 12px;
+  border-radius: 3px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+
+/* hover 시 색상 반전 */
+.back-btn:hover {
+  background: #000;
+  color: white;
+  border: 2px solid white;
 }
