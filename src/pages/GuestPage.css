@@ -4,6 +4,7 @@
   padding: 0 20px;
   max-width: 1200px;
   margin: 0 auto;
+  background-color: #fff;
 }
 
 /* 헤더 */
@@ -46,31 +47,45 @@
   cursor: pointer;
 }
 
-/* 페이지 제목 */
 .page-title {
   margin-bottom: 30px;
+  /* background-color: black;  ← 제거 */
+  /* padding: 20px;            ← 제거 */
 }
 
-.page-title h1 {
-  font-size: 28px;
-  font-weight: bold;
-  color: #333;
-  margin: 0;
+/* 텍스트 박스를 글자 크기만큼만 */
+.page-title h1{
+  background-color: #000;
+  color: #fff;
+  width: fit-content;      /* ✅ 내용 너비만큼 */
+  padding: 25px 30px;       /* 여백으로 위/아래/양옆 조절 */
+  margin: 0 auto 6px auto;       /* h1 아래 간격 */
+  display: block;          /* ✅ 각 줄로 떨어지게(가로로 안 붙음) */
+  font-weight: 700;
+  font-size: 50px !important ;     
+      /* 필요 시 조절 */
 }
-
 .page-title p {
-  color: #666;
-  margin: 5px 0 0 0;
+  color: #000000;
+  width: fit-content;      /* ✅ 내용 너비만큼 */
+  padding: 6px 10px;       /* 여백으로 위/아래/양옆 조절 */
+  margin: 0 auto 6px auto;       /* h1 아래 간격 */
+  display: block;          /* ✅ 각 줄로 떨어지게(가로로 안 붙음) */
+  font-weight: bold;        /* 필요 시 조절 */
 }
+
+/* 원래 크기 설정 유지 */
+.page-title h1 { font-size: 32px; }
+.page-title p  { font-size: 16px; font-weight: 300; margin-top: 0; }
 
 /* 정보 섹션 공통 스타일 */
 .info-section {
   background-color: white;
-  border: 1px solid #eee;
-  border-radius: 12px;
-  padding: 25px;
+  border: none;
+  border-bottom: 4px solid #0a5738;
+  padding: 30px;
   margin-bottom: 30px;
-  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+  
 }
 
 .section-header {
@@ -81,18 +96,19 @@
 }
 
 .section-title {
-  font-size: 20px;
+  font-size: 30px;
   font-weight: bold;
   margin: 0;
+  text-align: center;
 }
 
 /* 회원 정보 수정 버튼 */
 .edit-btn {
-  background-color: #007bff;
+  background-color: #05a666;
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 6px;
+  border-radius: 0px;
   cursor: pointer;
   font-size: 14px;
   transition: background-color 0.3s ease;
@@ -126,7 +142,7 @@
   width: 100%;
   padding: 10px;
   border: 1px solid #ddd;
-  border-radius: 4px;
+  border-radius: 0px;
   font-size: 14px;
   box-sizing: border-box;
 }
@@ -148,7 +164,7 @@
   background-color: #e8f4fd;
   color: #0066cc;
   padding: 4px 8px;
-  border-radius: 4px;
+  border-radius: 0px;
   font-size: 12px;
 }
 
@@ -163,7 +179,7 @@
   color: white;
   border: none;
   padding: 10px 20px;
-  border-radius: 6px;
+  border-radius: 0px;
   cursor: pointer;
   font-size: 14px;
   height: fit-content;
@@ -246,7 +262,7 @@
 .review-section {
   background-color: white;
   padding: 15px;
-  border-radius: 6px;
+  border-radius: 0px;
   border: 1px solid #e8e8e8;
 }
 
@@ -278,7 +294,7 @@
 .no-review {
   background-color: #f8f9fa;
   padding: 15px;
-  border-radius: 6px;
+  border-radius: 0px;
   text-align: center;
 }
 
@@ -289,17 +305,17 @@
 }
 
 .write-review-btn {
-  background-color: #007bff;
+  background-color: #05a666;
   color: white;
   border: none;
   padding: 8px 16px;
-  border-radius: 4px;
+  border-radius: 0px;
   cursor: pointer;
   font-size: 14px;
 }
 
 .write-review-btn:hover {
-  background-color: #0056b3;
+  background-color: #05a666;
 }
 
 /* 예약 취소 버튼 */
@@ -308,7 +324,7 @@
   color: white;
   border: none;
   padding: 6px 12px;
-  border-radius: 4px;
+  border-radius: 0px;
   cursor: pointer;
   font-size: 12px;
   transition: background-color 0.3s ease;

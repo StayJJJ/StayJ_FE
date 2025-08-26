@@ -65,7 +65,7 @@ const apiService = {
 
   updateUserInfo: async (userId, userInfo) => {
     const response = await fetch(`${API_BASE_URL}/user-info`, {
-      method: 'PUT',
+      method: 'PATCH',
       headers: getHeaders(userId),
       body: JSON.stringify(userInfo),
       credentials: 'include'

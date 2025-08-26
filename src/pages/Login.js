@@ -59,7 +59,7 @@ const LoginPage = () => {
     <div className="login-container">
       <div className="login-box">
         <div className="logo-section">
-          <img src="/images/logo.png" alt="StayJ 로고" className="stayj-logo" />
+          <img src="/images/logo_white.png" alt="StayJ 로고" className="stayj-logo" />
           <p className="slogan1">스테이제이, 제주를 담다</p>
           <p className="slogan2">오늘의 쉼을 가장 제주답게</p>
         </div>
@@ -86,9 +86,8 @@ const LoginPage = () => {
         </form>
         
         <div className="links-section">
-          <a href="/register-host" className="link-text">호스트 회원가입</a>
-          <span className="divider"></span>
-          <a href="/register-guest" className="link-text">게스트 회원가입</a>
+          <a href="/register-host" className="link-text">아직 회원이 아니신가요?</a>
+          
         </div>
       </div>
     </div>
