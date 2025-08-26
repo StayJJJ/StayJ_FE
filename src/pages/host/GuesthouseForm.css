@@ -20,7 +20,6 @@
   display: flex;
   gap: 8px;
 }
-@import './theme.css';
 
 /* Modal */
 .modal{
