@@ -1,20 +1,33 @@
-/* 전체 로그인 페이지 컨테이너 */
+/* 전체 로그인 컨테이너 */
 .login-container {
   display: flex;
   justify-content: center;
   align-items: center;
   min-height: 100vh;
-  background-color: #053418;
+}
+
+/* 어두운 배경 오버레이 (이미지만 어둡게) */
+.login-container::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5); /* 이미지 어둡게 */
+  z-index: 0;
 }
 
 /* 로그인 박스 */
 .login-box {
+  position: relative;
+  z-index: 1; /* 배경보다 위에 */
   width: 360px;
-  padding: 50px;
-  background-color: #053418;
-  /*border-radius: 10px;
-  /*box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); */
+  padding: 50px 40px;
+  /* background-color: rgba(255, 255, 255); /* 반투명 블랙 */
+  border-radius: 12px;
   text-align: center;
+  backdrop-filter: blur(4px); /* 배경 흐림 효과 */
 }
 
 /* 로고 및 슬로건 */
@@ -24,18 +37,16 @@
 
 .stayj-logo {
   width: 200px;
-  height: 110px;
-  vertical-align: top;
-  margin-top: -20px;
-  margin-left: 10px;
-  margin-right: 10px;
+  height: auto;
+  margin-bottom: 10px;
 }
 
-.slogan1, .slogan2 {
-  font-size: 17px;
+.slogan1,
+.slogan2 {
+  font-size: 16px;
   font-weight: 500;
-  color: #cdd1d0;
-  margin: 5px;
+  color: #e0e0e0;
+  margin: 4px 0;
 }
 
 /* 폼 섹션 */
@@ -47,67 +58,47 @@
 
 .login-input {
   width: 100%;
-  padding: 18px;
-  /*border: 1px solid #ddd;
-  border-radius: 5px;*/
-  box-sizing: border-box; /* 패딩이 너비에 포함되도록 설정 */
-  font-size: 16px;
-  background-color: rgba(255,255,255,0.2);
-  border: none;         /* 테두리 제거 */
-  outline: none;        /* 포커스 시 파란 외곽선 제거 */
-  box-shadow: none;     /* ✅ 기본 그림자 효과 제거 */
-  appearance: none;     /* ✅ 브라우저 기본 스타일 제거 (크롬/사파리) */
-  -webkit-appearance: none; /* 사파리(iOS) 대응 */
-  -moz-appearance: none; 
-  color: #fff;
-}
-
-.login-button {
-  width: 100%;
-  padding: 15px;
-  background-color: #05a666; /* 밝은 파란색 계열 */
-  color: white;
+  box-sizing: border-box; 
+  padding: 16px;
+  background-color: rgba(255, 255, 255, 0.1);
   border: none;
-  border-radius: 5px;
-  font-size: 18px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: background-color 0.3s;
+  border-radius: 6px;
+  font-size: 16px;
+  color: white;
+  outline: none;
 }
 
 .login-input::placeholder {
-  color: #cdd1d0; /* 연한 회색 */
-  font-size: 15px;
+  color: #bbb;
   font-weight: 400;
-  opacity: 1;
+}
+
+/* 로그인 버튼 */
+.login-button {
+  width: 100%;
+  padding: 15px;
+  background-color: #5eb74a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  font-size: 18px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
 }
 
 .login-button:hover {
-  background-color: #058954;
+  background-color: #4a9e3a;
 }
 
-/* 링크 섹션 */
+/* 회원가입 링크 섹션 */
 .links-section {
-  margin-top: 15px;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  gap: 10px;
-  
+  margin-top: 20px;
 }
 
 .link-text {
   font-size: 14px;
   color: #cdd1d0;
   text-decoration: underline;
-
+  cursor: pointer;
 }
-
-.divider {
-  width: 1px;
-  height: 15px;
-  background-color: #cdd1d0; /* 연한 회색 */
-}
-
-
-
