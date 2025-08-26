@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import './GuestPage.css';
+import ReviewModal from './ReviewModal';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -83,8 +84,16 @@ const getCookie = (name) => {
 };
 
 const GuestPage = () => {
+  // 체크아웃이 오늘 이전인지 확인
+  const isAfterCheckout = (checkOutDate) => {
+    if (!checkOutDate) return false;
+    const today = new Date();
+    const checkout = new Date(checkOutDate);
+    // 체크아웃 날짜가 오늘보다 이전이어야 리뷰 작성 가능
+    return checkout < today;
+  };
   const navigate = useNavigate();
-  const userId = getCookie('userId') ? parseInt(getCookie('userId')) : null;
+  const userId = getCookie('user_id') ? parseInt(getCookie('user_id')) : null;
 
   const [userData, setUserData] = useState({
     id: userId,
@@ -95,6 +104,33 @@ const GuestPage = () => {
   });
 
   const [reservations, setReservations] = useState([]);
+  const [reviewModalOpen, setReviewModalOpen] = useState(false);
+  const [reviewModalReservationId, setReviewModalReservationId] = useState(null);
+  const [reviewModalMode, setReviewModalMode] = useState('create');
+  const [reviewModalReviewId, setReviewModalReviewId] = useState(null);
+  // 리뷰 작성 모달 열기
+  const handleOpenReviewModal = (reservationId) => {
+    setReviewModalReservationId(reservationId);
+    setReviewModalMode('create');
+    setReviewModalReviewId(null);
+    setReviewModalOpen(true);
+  };
+
+  // 리뷰 삭제 모달 열기
+  const handleOpenDeleteReviewModal = (reviewId) => {
+    setReviewModalMode('delete');
+    setReviewModalReviewId(reviewId);
+    setReviewModalOpen(true);
+  };
+
+  // 리뷰 모달 닫기 핸들러
+  const handleCloseReviewModal = (success) => {
+    setReviewModalOpen(false);
+    setReviewModalReservationId(null);
+    setReviewModalMode('create');
+    setReviewModalReviewId(null);
+    if (success) loadReservations();
+  };
   const [isEditing, setIsEditing] = useState(false);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -117,13 +153,15 @@ const GuestPage = () => {
   const loadUserData = async () => {
     try {
       setLoading(true);
-      const userInfo = await apiService.getUserInfo(userId);
+      const data = await apiService.getUserInfo(userId);
+
+      // 백엔드 response를 userData로 세팅
       setUserData({
-        id: userInfo.userId,
-        username: userInfo.username,
-        login_id: userInfo.loginId,
-        role: userInfo.role,
-        phone_number: userInfo.phoneNumber
+        id: data.user_id,
+        username: data.username,
+        login_id: data.login_id,
+        role: data.role,
+        phone_number: data.phone_number
       });
     } catch (err) {
       console.error('사용자 정보 로드 실패:', err);
@@ -138,12 +176,22 @@ const GuestPage = () => {
       setLoading(true);
       setError(null);
       const data = await apiService.getMyReservations(userId);
-      // guesthouse가 없는 경우 기본값 처리
-      const normalizedData = data.map(r => ({
-        ...r,
-        guesthouse: r.guesthouse || { name: '숙소 정보 없음' }
-      }));
-      setReservations(normalizedData);
+        // 새로운 응답 구조에 맞게 데이터 가공
+        // snake_case -> camelCase 변환
+        console.log('예약 응답 데이터:', data);
+        const normalizedData = data.map(r => ({
+          id: r.id ?? '',
+          roomId: r.room_id ?? '',
+          guesthouseId: r.guesthouse_id ?? '',
+          guesthouseName: r.guesthouse_name ?? '숙소 정보 없음',
+          checkInDate: r.check_in_date ?? '',
+          checkOutDate: r.check_out_date ?? '',
+          peopleCount: r.people_count ?? 0,
+          reviewId: r.review_id,
+          reviewComment: r.review_comment ?? ''
+        }));
+        console.log('가공된 예약 데이터:', normalizedData);
+        setReservations(normalizedData);
     } catch (err) {
       console.error('예약 목록 로드 실패:', err);
       setError('예약 정보를 불러오는 중 오류가 발생했습니다.');
@@ -155,6 +203,7 @@ const GuestPage = () => {
   const handleEditToggle = () => {
     setIsEditing(!isEditing);
     if (!isEditing) {
+      // userData로 초기값 설정
       setEditForm({
         username: userData.username,
         phone_number: userData.phone_number,
@@ -231,6 +280,15 @@ const GuestPage = () => {
 
   return (
     <div className="guest-page-container">
+      {/* 리뷰 작성 모달 */}
+      <ReviewModal
+        isOpen={reviewModalOpen}
+        onClose={handleCloseReviewModal}
+        mode={reviewModalMode}
+        userId={userId}
+        reservationId={reviewModalReservationId}
+        existingReview={reviewModalMode === 'delete' ? { id: reviewModalReviewId } : null}
+      />
       {/* Header */}
       <header className="guest-header">
         <img src="/images/logo.png" alt="StayJ 로고" className="guest-logo" />
@@ -293,14 +351,14 @@ const GuestPage = () => {
         ) : (
           <div className="reservations-container">
             {reservations.map(r => (
-              <div key={r.id} className="reservation-card">
+              <div key={r.id || Math.random()} className="reservation-card">
                 <div className="reservation-header">
                   <div>
-                    <h3 className="reservation-title">{r.guesthouse?.name}</h3>
-                    <p className="reservation-id">예약 번호: #{r.id}</p>
+                    <h3 className="reservation-title">{r.guesthouseName || '숙소 정보 없음'}</h3>
+                    <p className="reservation-id">예약 번호: #{r.id || '-'}</p>
                   </div>
                   <div className="reservation-actions">
-                    <div className="people-count"><p>인원</p><p>{r.peopleCount}명</p></div>
+                    <div className="people-count"><p>인원</p><p>{r.peopleCount ? `${r.peopleCount}명` : '-'}</p></div>
                     <button
                       onClick={() => handleCancelReservation(r.id, r.checkInDate)}
                       className={`cancel-btn ${!isReservationCancelable(r.checkInDate) ? 'disabled' : ''}`}
@@ -311,13 +369,27 @@ const GuestPage = () => {
                   </div>
                 </div>
                 <div className="reservation-dates">
-                  <div className="date-item"><p>체크인</p><p>{formatDate(r.checkInDate)}</p></div>
-                  <div className="date-item"><p>체크아웃</p><p>{formatDate(r.checkOutDate)}</p></div>
+                  <div className="date-item"><p>체크인</p><p>{r.checkInDate ? formatDate(r.checkInDate) : '-'}</p></div>
+                  <div className="date-item"><p>체크아웃</p><p>{r.checkOutDate ? formatDate(r.checkOutDate) : '-'}</p></div>
                 </div>
-                {r.reviewed ? (
-                  <div className="review-section"><div className="review-header"><h4 className="review-title">리뷰 작성됨</h4><span className="review-status">✅ 완료</span></div></div>
+                {r.reviewId ? (
+                  <div className="review-section">
+                    <div className="review-header">
+                      <h4 className="review-title">리뷰 작성됨</h4>
+                      <span className="review-status">✅ 완료</span>
+                    </div>
+                    <div className="review-comment">{r.reviewComment || ''}</div>
+                    <button className="delete-review-btn" onClick={() => handleOpenDeleteReviewModal(r.reviewId)}>
+                      리뷰 삭제
+                    </button>
+                  </div>
                 ) : (
-                  <div className="no-review"><p>아직 리뷰를 작성하지 않았습니다.</p><button className="write-review-btn">리뷰 작성하기</button></div>
+                  isAfterCheckout(r.checkOutDate) ? (
+                    <div className="no-review">
+                      <p>아직 리뷰를 작성하지 않았습니다.</p>
+                      <button className="write-review-btn" onClick={() => handleOpenReviewModal(r.id)}>리뷰 작성하기</button>
+                    </div>
+                  ) : null
                 )}
               </div>
             ))}
