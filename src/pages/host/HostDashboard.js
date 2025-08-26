@@ -17,7 +17,7 @@ export default function HostDashboard() {
   const navigate = useNavigate();
 
   const logout = () => {
-    const keys = ['id', 'username', 'loginId', 'role', 'phoneNumber'];
+    const keys = ['user_id', 'username', 'login_id', 'role', 'phoneNumber'];
     keys.forEach((key) => Cookies.remove(key, { path: '/' }));
     console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
     navigate('/login');

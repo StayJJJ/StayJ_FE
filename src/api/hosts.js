@@ -26,7 +26,7 @@ export async function getGuesthouseRooms(id) {
 
 // 내 게스트하우스 목록 조회
 export async function getMyGuesthouses() {
-  const user_id = Cookies.get('user_id') || Cookies.get('userId');
+  const user_id = Cookies.get('id') || Cookies.get('Id') || Cookies.get('user_id') || Cookies.get('userId');
   const res = await fetch(`${BASE_URL}/guesthouse/mylist`, {
     method: 'GET',
     headers: {
@@ -42,7 +42,7 @@ export async function getMyGuesthouses() {
 // 게스트하우스 생성
 export async function createGuesthouse(payload) {
   // hostId는 localStorage에서 가져와 user-id 헤더로 보냄
-  const hostId = Cookies.get('user_id') || Cookies.get('userId');
+  const hostId = Cookies.get('id') || Cookies.get('Id') || Cookies.get('user_id') || Cookies.get('userId');
 
   console.log('hostId from localStorage:', hostId, " / payload: ", payload);
 
@@ -92,7 +92,7 @@ export async function deleteGuesthouse(id) {
 
 // 게스트하우스 예약 리스트 조회
 export async function getReservationsByGuesthouse(guesthouseId) {
-  const user_id = Cookies.get('user_id') || Cookies.get('userId');
+  const user_id = Cookies.get('id') || Cookies.get('Id') || Cookies.get('user_id') || Cookies.get('userId');
   const res = await fetch(`${BASE_URL}/guesthouse/${guesthouseId}/reservations`, {
     method: 'GET',
     headers: {
