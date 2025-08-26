@@ -1,35 +1,67 @@
-@import './theme.css';
+/* ===== Reservations.css (독립형) ===== */
+
+/* ==== 색상 / 토큰 ==== */
+:root {
+  --bg: #ffffff;
+  --panel: #ffffff;
+  --text: #1c2b19;
+  --muted: #6b7b66;
+
+  --green-50:  #f2f9f0;
+  --green-100: #e1f3dd;
+  --green-200: #c8e9c0;
+  --green-500: #5eb74a;
+  --green-600: #4a9b3b;
+  --green-700: #3c7e30;
+
+  --primary: var(--green-600);
+  --primary-2: var(--green-500);
+  --danger: #e74c3c;
+
+  --radius-xl: 18px;
+  --radius-lg: 14px;
+
+  --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.08);
+  --shadow-strong: 0 16px 40px rgba(0, 0, 0, 0.12);
+}
+
+/* 기본 구조 */
+html, body, #root { height: 100%; margin:0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial; background: var(--bg); color: var(--text); }
+.App { min-height: 100vh; }
 
 .host-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 80px; }
 
-.table{
+/* 테이블 */
+.table {
   width:100%; border-collapse: separate; border-spacing:0;
   background: var(--panel); border-radius: var(--radius-xl);
   box-shadow: var(--shadow-soft); overflow: hidden;
 }
-.table thead th{
-  background: var(--sky-100); color: #0c4a6e; padding: 14px 16px; text-align: left; font-weight: 800;
+.table thead th {
+  background: var(--green-100); color: var(--green-700); padding: 14px 16px; text-align: left; font-weight: 800;
 }
-.table tbody td{ padding: 14px 16px; border-top: 1px solid #eef7ff; }
-.table tbody tr:hover{ background: #f0f9ff; }
+.table tbody td { padding: 14px 16px; border-top: 1px solid var(--green-50); }
+.table tbody tr:hover { background: var(--green-50); }
 
 /* chip */
-.chip{
+.chip {
   display:inline-flex; align-items:center; gap: 6px;
-  background: #ecfeff; color: #155e75; padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
+  background: var(--green-100); color: var(--green-700); padding: 4px 10px; border-radius: 999px; font-size: 12px; font-weight: 700;
 }
 
+/* 상태 */
 .muted { color: var(--muted); }
 .error { color: var(--danger); font-weight:700; }
 
-/* mobile table -> stacked cards */
+/* 모바일 스택 카드 */
 @media (max-width: 640px) {
   .table { display: none; }
   .res-list { display:grid; gap: 12px; }
-  .res-card{
+  .res-card {
     background: var(--panel); border-radius: var(--radius-lg); box-shadow: var(--shadow-soft);
-    padding: 12px; display:grid; gap: 6px;
+    padding: 12px; display:grid; gap: 6px; border: 1px solid var(--green-100);
   }
-  .res-card .title{ font-weight: 800; }
-  .res-card .row{ display:flex; gap: 8px; color: var(--muted); }
+  .res-card:hover { border-color: var(--green-200); transform: translateY(-2px); box-shadow: var(--shadow-strong); }
+  .res-card .title { font-weight: 800; }
+  .res-card .row { display:flex; gap: 8px; color: var(--muted); }
 }
