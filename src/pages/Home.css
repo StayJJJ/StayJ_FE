@@ -1,9 +1,9 @@
 /* 홈 전체 컨테이너 */
 .home-container {
-  font-family: 'Noto Sans KR', sans-serif;
-  padding: 0 20px;
-  max-width: 1200px;
-  margin: 0 auto;
+  width: 100%; /* 뷰포트 너비에 꽉 차게 */
+  max-width: 100%;
+  margin: 0;
+  padding: 0;
 }
 
 /* 헤더 */
@@ -48,21 +48,45 @@
   cursor: pointer;
 }
 
-/* 검색 배너 안 검색박스 */
-.search-box {
+.banner-title {
+  font-size: 3rem;
+  font-weight: bold;
+  color: white;
+  white-space: nowrap; /* ✅ 줄바꿈 방지 */
+  margin-bottom: 5px;   /* ✅ 간격 조절 */
+}
+
+.banner-subtitle {
+  font-size: 1.5rem;
+  font-weight: bold;
+  color: white;
+}
+
+.banner-overlay {
   display: flex;
+  flex-direction: column;
+  gap: 20px;
+  position: absolute;
+  left: 30px;
+  bottom: 30px;
+  color: white;
+  z-index: 10;
+}
+
+.search-box {
+  width: 100%;  /* 부모 폭에 꽉 차도록 */
+  padding: 15px 20px; /* padding 축소 가능 */
   gap: 10px;
   background-color: rgba(255, 255, 255, 0.85);
-  padding: 20px 40px;
-  width: 80%;
   border-radius: 8px;
+  display: flex;
+  box-sizing: border-box;
 }
 
 .search-box input {
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  padding: 20px 30px;
-  width: 50%;
+  flex: 1;
+  min-width: 80px;
+  padding: 10px 15px;
   font-size: 14px;
 }
 
