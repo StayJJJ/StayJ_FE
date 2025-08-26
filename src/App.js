@@ -1,5 +1,5 @@
 import React from 'react';
-import { Routes, Route } from 'react-router-dom'; // ✅ Router 제거
+import { Routes, Route, useLocation } from 'react-router-dom'; // useLocation 추가
 import Home from './pages/Home';
 import Login from './pages/Login';
 import Register from './pages/Register';
@@ -12,9 +12,15 @@ import Header from './components/Header';
 import './App.css';
 
 function App() {
+  const location = useLocation();
+
+  // 로그인/회원가입 페이지일 때는 Header 숨김
+  const hideHeaderPaths = ['/login', '/register'];
+  const shouldHideHeader = hideHeaderPaths.includes(location.pathname);
+
   return (
     <div className="App">
-      <Header />
+      {!shouldHideHeader && <Header />}  {/* 로그인/회원가입 아니면 Header 보임 */}
       <Routes>
         {/* 기본 페이지들 */}
         <Route path="/" element={<Home />} />
@@ -34,9 +40,6 @@ function App() {
 
         {/* fallback */}
         <Route path="*" element={<Home />} />
-
-        {/* 게스트 페이지 추가 */}
-        <Route path="/guest" element={<GuestPage />} />
       </Routes>
     </div>
   );

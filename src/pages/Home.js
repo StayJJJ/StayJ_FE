@@ -88,7 +88,7 @@ const Home = () => {
       <div
         className="search-banner"
         style={{
-          backgroundImage: `url(/images/jeju.png)`,
+          backgroundImage: `url(/images/jeju  .png)`,
           backgroundSize: "cover",
           backgroundPosition: "center",
           width: "100%",
@@ -109,15 +109,14 @@ const Home = () => {
             textAlign: "left",
             display: "flex",
             flexDirection: "column",
-            gap: "20px", // 제목과 검색박스 간 간격 조절
-            width: "400px", // 적절한 너비 조절 가능
+            gap: "15px", // 제목과 검색박스 간 간격 조절
           }}
         >
           <h1 className="banner-title">제주 게스트하우스 예약</h1>
           <p className="banner-subtitle">편리하고 간편한 예약 시스템</p>
 
           {/* 여기에 search box 넣기 */}
-          <div className="search-box-container" style={{ width: "100%" }}>
+          <div className="search-box-container">
             <div className="search-box" style={{ display: "flex", gap: "10px" }}>
               <input
                 type="text"

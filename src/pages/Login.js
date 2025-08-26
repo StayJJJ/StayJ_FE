@@ -56,7 +56,15 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div
+      className="login-container"
+      style={{
+        backgroundImage: 'url("/images/background2.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        position: 'relative',
+      }}
+    >
       <div className="login-box">
         <div className="logo-section">
           <img src="/images/logo.png" alt="StayJ 로고" className="stayj-logo" />
@@ -88,13 +96,8 @@ const LoginPage = () => {
         </form>
 
         <div className="links-section">
-          <a href="/register-host" className="link-text">
-            호스트 회원가입
-          </a>
-          <span className="divider"></span>
-          <a href="/register-guest" className="link-text">
-            게스트 회원가입
-          </a>
+          <a href="/register" className="link-text">아직 회원이 아니신가요?</a>
+     
         </div>
       </div>
     </div>
