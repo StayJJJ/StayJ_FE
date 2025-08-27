@@ -3,6 +3,7 @@ import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
 import './GuestPage.css';
 import ReviewModal from './ReviewModal';
+import MyPage from './MyPage';
 
 const API_BASE_URL = 'http://localhost:8080';
 
@@ -295,80 +296,7 @@ const GuestPage = () => {
         reservationId={reviewModalReservationId}
         existingReview={reviewModalMode === 'delete' ? { id: reviewModalReviewId } : null}
       />
-      {/* Header */}
-      <header className="guest-header">
-        <img src="/images/logo.png" alt="StayJ 로고" className="guest-logo" />
-        <div className="guest-header-right">
-          <button className="logout-btn" onClick={logout}>
-            로그아웃
-          </button>
-          <img src="/images/profile.png" alt="프로필" className="guest-profile-icon" />
-        </div>
-      </header>
-
-      {/* 페이지 제목 */}
-      <div className="page-title">
-        <h1>게스트 페이지</h1>
-        <p>회원 정보와 예약 내역을 확인하세요</p>
-      </div>
-
-      {/* 회원 정보 섹션 */}
-      <div className="info-section">
-        <div className="section-header">
-          <h2 className="section-title">회원 정보</h2>
-          <button onClick={handleEditToggle} className={`edit-btn ${isEditing ? 'cancel' : ''}`}>
-            {isEditing ? '취소' : '수정'}
-          </button>
-        </div>
-        {isEditing ? (
-          <div className="user-info-grid">
-            <div className="info-item">
-              <label>이름</label>
-              <input name="username" value={editForm.username} onChange={handleInputChange} />
-            </div>
-            <div className="info-item">
-              <label>전화번호</label>
-              <input name="phone_number" value={editForm.phone_number} onChange={handleInputChange} />
-            </div>
-            <div className="info-item">
-              <label>새 비밀번호</label>
-              <input
-                type="password"
-                name="password"
-                value={editForm.password}
-                onChange={handleInputChange}
-                placeholder="변경하지 않으려면 비워두세요"
-              />
-            </div>
-            <div className="save-btn-container">
-              <button onClick={handleSave} className="save-btn">
-                저장
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="user-info-grid">
-            <div className="info-item">
-              <p className="label">이름</p>
-              <p className="value">{userData.username}</p>
-            </div>
-            <div className="info-item">
-              <p className="label">로그인 ID</p>
-              <p className="value">{userData.login_id}</p>
-            </div>
-            <div className="info-item">
-              <p className="label">전화번호</p>
-              <p className="value">{userData.phone_number}</p>
-            </div>
-            <div className="info-item">
-              <p className="label">회원 유형</p>
-              <p className="value">
-                <span className="role-badge">{userData.role === 'GUEST' ? '게스트' : '호스트'}</span>
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
+     <MyPage />
 
       {/* 예약 내역 섹션 */}
       <div className="info-section">

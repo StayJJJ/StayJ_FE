@@ -55,7 +55,7 @@ const Header = () => {
             로그아웃
           </button>
           <Link to="/guest" className="mypage-button">
-            마이페이지
+            <img src="/images/profile.png" alt="프로필" className="guest-profile-icon" />
           </Link>
         </div>
       </div>
