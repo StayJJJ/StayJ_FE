@@ -1,0 +1,163 @@
+.card {
+    background-color: #fcfcfc; /* 아주 연한 아이보리 또는 백색 계열 */
+    border-radius: 12px; /* 모서리를 좀 더 둥글게 */
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08); /* 부드럽고 넓게 퍼지는 그림자 */
+    padding: 30px; /* 내부 여백 증가 */
+    margin: 30px auto; /* 중앙 정렬 및 상하 마진 */
+    width: 380px; /* 카드 너비 조정 (원하는 대로) */
+    max-width: 90%; /* 너무 넓어지지 않도록 최대 너비 설정 */
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* 내부 요소들을 중앙 정렬 */
+    text-align: center; /* 텍스트 중앙 정렬 */
+    transition: all 0.3s ease; /* 부드러운 전환 효과 */
+    font-family: 'Noto Sans KR', sans-serif; /* 고급스러운 폰트 사용 (임시) */
+}
+/* 호버 시 애니메이션 효과 */
+.card:hover {
+    transform: translateY(-5px); /* 위로 살짝 이동 */
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2); /* 그림자 진하게 */
+}
+
+.card-avatar {
+    width: 10rem; /* 이미지 크기 조정 */
+    height: 10rem; /* 정사각형 유지 */
+    border-radius: 50%; /* 원형 유지 */
+    object-fit: cover;
+    margin-bottom: 25px; /* 이미지와 텍스트 사이 간격 */
+    border: 3px solid rgba(255, 255, 255, 0.8); /* 흰색 테두리 */
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1); /* 이미지 자체에 그림자 추가 */
+}
+
+
+/* 카드 본문 컨테이너 */
+.card-body {
+    padding: 15px 0;
+}
+
+/* 카드 제목 스타일 */
+.card-title {
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+    color: #333;
+}
+
+/* 카드 내용 텍스트 스타일 */
+.card-text {
+    font-size: 1em;
+    color: #666;
+    line-height: 1.5;
+    flex-direction: column;
+}
+
+.role-badge {
+    background-color: #e9ecef; /* 부드러운 회색 배경 */
+    color: #495057; /* 어두운 회색 글씨 */
+    padding: 6px 14px;
+    border-radius: 8px 8px 0 0;
+    font-size: 0.85em; /* 글씨 크기 약간 작게 */
+    font-weight: 500;
+    margin-bottom: 10px; /* 배지 아래 간격 */
+    display: inline-block; /* 중앙 정렬을 위해 */
+}
+
+/* 정보 항목 */
+.info-item {
+    display: flex;
+    font-family: 'Pretendard', sans-serif;
+    justify-content: space-between; /* 라벨과 값 좌우 정렬 */
+    width: 100%; /* 부모 컨테이너 너비 사용 */
+    margin-bottom: 12px; /* 항목별 간격 */
+    padding: 0 10px; /* 좌우 패딩으로 여백 주기 */
+}
+
+.info-item .label {
+    color: #777; /* 라벨 색상 연하게 */
+    margin: 0;
+    font-weight: 500;
+    text-align: left;
+    flex-basis: 30%; /* 라벨이 차지하는 비율 */
+}
+
+.info-item .value {
+    color: #333;
+    margin: 0;
+    font-weight: 600;
+    text-align: right;
+    flex-basis: 70%; /* 값이 차지하는 비율 */
+}
+
+
+/* 모든 input[type="text"], input[type="password"] 등에 적용 */
+input[type="text"],
+input[type="password"] {
+    width: 100%; /* 부모 요소에 맞춰 너비 조정 */
+    padding: 12px 15px; /* 내부 여백 */
+    margin-bottom: 15px; /* 아래쪽 여백 */
+    border: 1px solid #e0e0e0; /* 얇고 부드러운 테두리 */
+    border-radius: 8px; /* 모서리 둥글게 */
+    font-family: 'Pretendard', sans-serif; /* Pretendard 폰트 사용 (아까 설정한 폰트) */
+    font-size: 16px; /* 적절한 폰트 크기 */
+    color: #333; /* 텍스트 색상 */
+    background-color: #fcfcfc; /* 아주 연한 배경색 */
+    transition: all 0.3s ease-in-out; /* 모든 변화에 애니메이션 효과 */
+    box-sizing: border-box; /* 패딩과 테두리가 너비에 포함되도록 */
+}
+
+/* 포커스 시 디자인 (사용자가 현재 입력 중임을 명확히 시각화) */
+input[type="text"]:focus,
+input[type="password"]:focus {
+    border-color: #8ed0a5; /* 메인 Green 계열 색상으로 테두리 변경 */
+    box-shadow: 0 0 0 3px rgba(142, 208, 165, 0.3); /* 은은한 그림자 효과 */
+    outline: none; /* 기본 포커스 아웃라인 제거 */
+    background-color: #fff; /* 포커스 시 배경색 흰색으로 */
+}
+
+/* 플레이스홀더 텍스트 스타일 */
+input::placeholder {
+    color: #b0b0b0; /* 부드러운 회색 */
+    font-weight: 300; /* 얇은 폰트 두께 */
+}
+
+
+/* 저장 버튼 (메인 Green) */
+.save-button { /* 해당 버튼에 이 클래스를 적용했다고 가정 */
+    background-color: #4CAF50; /* 진한 Green */
+    color: white;
+    padding: 0.8rem 2rem; /* 크기 조정: 내부 여백 증가 */
+    border: none;
+    border-radius: 8px; /* 모서리 둥글게 */
+    font-family: 'Pretendard', sans-serif;
+    font-size: 17px; /* 폰트 크기 */
+    font-weight: 500; /* 폰트 두께 */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
+    margin-right: 2rem; /* 취소 버튼과의 간격 */
+}
+
+.save-button:hover {
+    background-color: #43A047; /* hover 시 약간 더 진한 Green */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15); /* 그림자 더 강조 */
+}
+
+/* 취소 버튼 (부드러운 회색 또는 옅은 Green) */
+.cancel-button { /* 해당 버튼에 이 클래스를 적용했다고 가정 */
+    background-color: #e0e0e0; /* 부드러운 회색 */
+    color: #555; /* 텍스트 색상 */
+    padding: 0.8rem 2rem; /* 저장 버튼과 동일한 크기 */
+    border: none;
+    border-radius: 8px;
+    font-family: 'Pretendard', sans-serif;
+    font-size: 17px;
+    font-weight: 500;
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.cancel-button:hover {
+    background-color: #d0d0d0; /* hover 시 약간 더 진한 회색 */
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}

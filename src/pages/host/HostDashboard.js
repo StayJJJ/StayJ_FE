@@ -1,7 +1,7 @@
 // src/pages/host/HostDashboard.js
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
-
+import MyPage from '../MyPage';
 import Cookies from 'js-cookie';
 import {
   getMyGuesthouses,
@@ -191,6 +191,9 @@ export default function HostDashboard() {
 
   return (
     <div className="host-wrap">
+
+      <MyPage />
+      
       <div className="info-section">
         <div className="section-header">
           <h2 className="section-title">회원 정보</h2>
@@ -247,7 +250,6 @@ export default function HostDashboard() {
           </div>
         )}
       </div>
-
       <div className="host-header">
         <h1>내 게스트하우스</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
