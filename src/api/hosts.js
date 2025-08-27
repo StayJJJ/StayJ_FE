@@ -31,7 +31,7 @@ export async function getMyGuesthouses() {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'user-id': user_id
+      'user-id': user_id,
     },
     credentials: 'include',
   });
@@ -44,13 +44,14 @@ export async function createGuesthouse(payload) {
   // hostId는 localStorage에서 가져와 user-id 헤더로 보냄
   const hostId = Cookies.get('id') || Cookies.get('Id') || Cookies.get('user_id') || Cookies.get('userId');
 
-  console.log('hostId from localStorage:', hostId, " / payload: ", payload);
+  console.log('hostId from localStorage:', hostId, ' / payload: ', payload);
+  console.log(JSON.stringify(payload));
 
   const res = await fetch(`${BASE_URL}/guesthouse`, {
     method: 'POST',
     headers: {
       'Content-Type': 'application/json',
-      'user-id': hostId
+      'user-id': hostId,
     },
     credentials: 'include',
     body: JSON.stringify(payload),
@@ -82,7 +83,7 @@ export async function deleteGuesthouse(id) {
     method: 'DELETE',
     headers: {
       'Content-Type': 'application/json',
-      'user-id': user_id
+      'user-id': user_id,
     },
     credentials: 'include',
   });
@@ -97,7 +98,7 @@ export async function getReservationsByGuesthouse(guesthouseId) {
     method: 'GET',
     headers: {
       'Content-Type': 'application/json',
-      'user-id': user_id
+      'user-id': user_id,
     },
     credentials: 'include',
   });

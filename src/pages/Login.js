@@ -96,8 +96,9 @@ const LoginPage = () => {
         </form>
 
         <div className="links-section">
-          <a href="/register" className="link-text">아직 회원이 아니신가요?</a>
-     
+          <a href="/register-host" className="link-text">
+            아직 회원이 아니신가요?
+          </a>
         </div>
       </div>
     </div>

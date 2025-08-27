@@ -170,10 +170,10 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
     const fd = new FormData();
     files.forEach((f) => fd.append('files', f));
     keys.forEach((k) => fd.append('keys', k));
-    const { data } = await axios.post('/api/images/upload-multi', fd, {
+    const res = await axios.post('http://127.0.0.1:8080/api/images/upload-multi', fd, {
       headers: { 'Content-Type': 'multipart/form-data' },
     });
-    return data; // [{ key, id, url }]
+    return res.data;
   };
 
   const submit = async (e) => {
@@ -188,6 +188,12 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
 
       // 1) 이미지 업로드
       const uploaded = await uploadAllImages();
+      if (!Array.isArray(uploaded)) {
+        console.error('upload API returned non-array:', uploaded);
+        setErrorMsg('이미지 업로드 응답 형식이 올바르지 않습니다.');
+        setSubmitting(false);
+        return;
+      }
       const uploadedMap = new Map(uploaded.map((item) => [item.key, item]));
 
       // 2) payload 생성 (rating=0 고정)
