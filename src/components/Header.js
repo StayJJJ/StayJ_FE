@@ -33,7 +33,9 @@ const Header = () => {
         </div>
 
         {/* 중앙 이미지 */}
-        <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo"/>
+        <Link to="/">
+          <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo"/>
+        </Link>
 
         {/* 오른쪽 영역: 로그아웃 + 마이페이지 */}
         <div className="right-space">
