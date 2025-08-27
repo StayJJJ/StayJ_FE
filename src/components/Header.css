@@ -17,7 +17,7 @@
 }
 
 .center-logo {
-  width: 100px; /* 원하는 크기 */
+  width: 120px; /* 원하는 크기 */
   height: auto; /* 비율 유지 */
   object-fit: contain;
   padding-left: 9%;
