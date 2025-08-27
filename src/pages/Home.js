@@ -146,9 +146,10 @@ const Home = () => {
         )}
 
         {accommodations.map((item) => {
+          console.log('Rendering accommodation item:', item);
+
           const imagePath = `http://localhost:8080/images/guesthouses/${item.photo_id}.png`;
 
-          console.log('item.room_available:', item.room_available); // 🔹 room_available 확인
           return (
             <div className="card" key={item.id} onClick={() => handleCardClick(item.id)}>
               <img
@@ -159,11 +160,13 @@ const Home = () => {
                 }}
               />
               {item.isGuestPick && <div className="guest-pick">게스트 선호</div>}
-              <div className="card-info">
-                <h3>{item.name}</h3>
-                <p>⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</p>
-                <p>가격: {item.room_available.length > 0 ? `${item.room_available[0]}원~` : '예약 불가'}</p>
-                <p>방 개수: {item.room_count}</p>
+              <div className="card-info card-info-row">
+                <span className="card-title">{item.name}</span>
+                <span className="card-rating">⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</span>
+                <span className="card-price">
+                  {item.room_available.length > 0 ? `💸 \\${Number(item.min_price).toLocaleString()} ~` : '예약 불가'}
+                </span>
+                <span className="card-room">🛏️ {item.room_count}개</span>
               </div>
             </div>
           );

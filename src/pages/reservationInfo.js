@@ -163,7 +163,7 @@ const ReservationInfo = () => {
       const response = await axios.post('http://localhost:8080/reservation', reservationData, {
         headers: {
           'Content-Type': 'application/json',
-          'user-id': userId, // 쿠키에서 가져온 user_id를 헤더로 전송
+          user_id: userId, // 쿠키에서 가져온 user_id를 헤더로 전송
         },
       });
 
@@ -270,7 +270,6 @@ const ReservationInfo = () => {
 
   return (
     <div className="reservation-container">
-
       {/* Main Image */}
       <div className="main-image-section">
         <img src={`/images/guesthouses/${guesthouse.photo_id}.png`} alt={guesthouse.name} className="main-image" />
