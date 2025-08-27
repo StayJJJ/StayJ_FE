@@ -85,7 +85,7 @@ const Home = () => {
       <div
         className="search-banner"
         style={{
-          backgroundImage: `url(/images/jeju  .png)`,
+          backgroundImage: `url(/images/background3.jpg)`,
           backgroundSize: 'cover',
           backgroundPosition: 'center',
           width: '100%',
