@@ -27,11 +27,11 @@ const LoginPage = () => {
       console.log('Hello world:', response);
       if (response.ok) {
         const result = await response.json();
-        // const result = response.json();
         console.log('Hello world:', result);
-        // 모든 필드를 각각 쿠키로 저장
+        // 모든 필드를 각각 쿠키로 저장 (id -> user_id로 변경)
         Object.entries(result).forEach(([key, value]) => {
-          Cookies.set(key, value, { expires: 7, path: '/' });
+          const cookieKey = key === 'id' ? 'user_id' : key;
+          Cookies.set(cookieKey, value, { expires: 7, path: '/' });
         });
 
         // 로그인 성공 후 role에 따라 페이지 이동
