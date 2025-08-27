@@ -1,26 +1,26 @@
-import React, { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
-import "./Home.css";
+import React, { useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import axios from 'axios';
+import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
   const [accommodations, setAccommodations] = useState([]);
-  
+
   const today = new Date();
   const tomorrow = new Date();
   tomorrow.setDate(today.getDate() + 1);
 
   const formatDate = (date) => {
     const yyyy = date.getFullYear();
-    const mm = String(date.getMonth() + 1).padStart(2, "0");
-    const dd = String(date.getDate()).padStart(2, "0");
+    const mm = String(date.getMonth() + 1).padStart(2, '0');
+    const dd = String(date.getDate()).padStart(2, '0');
     return `${yyyy}-${mm}-${dd}`;
   };
 
   const [searchParams, setSearchParams] = useState({
-    name: "",
-    check_in: formatDate(today),   // 오늘
+    name: '',
+    check_in: formatDate(today), // 오늘
     check_out: formatDate(tomorrow), // 내일
     people: 1,
   });
@@ -28,8 +28,8 @@ const Home = () => {
   // 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
   const getFormattedDate = (date) => {
     const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, "0");
-    const day = String(date.getDate()).padStart(2, "0");
+    const month = String(date.getMonth() + 1).padStart(2, '0');
+    const day = String(date.getDate()).padStart(2, '0');
     return `${year}-${month}-${day}`;
   };
 
@@ -50,16 +50,13 @@ const Home = () => {
 
   const fetchAccommodations = async () => {
     try {
-      const response = await axios.get(
-        "http://localhost:8080/guesthouse/search",
-        {
-          params: searchParams,
-          headers: { "user-id": 1 },
-        }
-      );
+      const response = await axios.get('http://localhost:8080/guesthouse/search', {
+        params: searchParams,
+        headers: { 'user-id': 1 },
+      });
       setAccommodations(response.data);
     } catch (error) {
-      console.error("숙소 불러오기 실패:", error);
+      console.error('숙소 불러오기 실패:', error);
     }
   };
 
@@ -75,7 +72,7 @@ const Home = () => {
   const handleCardClick = (id) => {
     navigate(`/detail/${id}`, {
       state: {
-        checkIn: searchParams.check_in,   // ✅ 키 이름 맞추기
+        checkIn: searchParams.check_in, // ✅ 키 이름 맞추기
         checkOut: searchParams.check_out,
         guests: searchParams.people,
       },
@@ -89,27 +86,27 @@ const Home = () => {
         className="search-banner"
         style={{
           backgroundImage: `url(/images/jeju  .png)`,
-          backgroundSize: "cover",
-          backgroundPosition: "center",
-          width: "100%",
-          height: "500px",
-          display: "flex",
-          alignItems: "center",
-          justifyContent: "center",
-          position: "relative",
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          width: '100%',
+          height: '500px',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          position: 'relative',
         }}
       >
         <div
           className="banner-overlay"
           style={{
-            position: "absolute",
-            left: "30px",
-            bottom: "30px",
-            color: "white",
-            textAlign: "left",
-            display: "flex",
-            flexDirection: "column",
-            gap: "15px", // 제목과 검색박스 간 간격 조절
+            position: 'absolute',
+            left: '30px',
+            bottom: '30px',
+            color: 'white',
+            textAlign: 'left',
+            display: 'flex',
+            flexDirection: 'column',
+            gap: '15px', // 제목과 검색박스 간 간격 조절
           }}
         >
           <h1 className="banner-title">제주 게스트하우스 예약</h1>
@@ -117,7 +114,7 @@ const Home = () => {
 
           {/* 여기에 search box 넣기 */}
           <div className="search-box-container">
-            <div className="search-box" style={{ display: "flex", gap: "10px" }}>
+            <div className="search-box" style={{ display: 'flex', gap: '10px' }}>
               <input
                 type="text"
                 name="name"
@@ -125,18 +122,8 @@ const Home = () => {
                 value={searchParams.name}
                 onChange={handleChange}
               />
-              <input
-                type="date"
-                name="check_in"
-                value={searchParams.check_in}
-                onChange={handleChange}
-              />
-              <input
-                type="date"
-                name="check_out"
-                value={searchParams.check_out}
-                onChange={handleChange}
-              />
+              <input type="date" name="check_in" value={searchParams.check_in} onChange={handleChange} />
+              <input type="date" name="check_out" value={searchParams.check_out} onChange={handleChange} />
               <input
                 type="number"
                 name="people"
@@ -155,38 +142,27 @@ const Home = () => {
       {/* 숙소 카드 리스트 */}
       <div className="card-list">
         {accommodations.length === 0 && (
-          <p style={{ textAlign: "center", marginTop: "50px" }}>
-            검색 조건에 맞는 숙소가 없습니다.
-          </p>
+          <p style={{ textAlign: 'center', marginTop: '50px' }}>검색 조건에 맞는 숙소가 없습니다.</p>
         )}
 
         {accommodations.map((item) => {
-          const imagePath = `/images/guesthouses/${item.photo_id}.png`;
+          const imagePath = `http://localhost:8080/images/guesthouses/${item.photo_id}.png`;
 
-          console.log("item.room_available:", item.room_available); // 🔹 room_available 확인
+          console.log('item.room_available:', item.room_available); // 🔹 room_available 확인
           return (
-            <div
-              className="card"
-              key={item.id}
-              onClick={() => handleCardClick(item.id)}
-            >
+            <div className="card" key={item.id} onClick={() => handleCardClick(item.id)}>
               <img
                 src={imagePath}
                 alt={item.name}
                 onError={(e) => {
-                  e.target.src = "/images/guesthouses/default.png";
+                  e.target.src = `http://localhost:8080/images/guesthouses/default.png`;
                 }}
               />
               {item.isGuestPick && <div className="guest-pick">게스트 선호</div>}
               <div className="card-info">
                 <h3>{item.name}</h3>
-                <p>⭐ {item.rating ? item.rating.toFixed(1) : "평점 없음"}</p>
-                <p>
-                  가격:{" "}
-                  {item.room_available.length > 0
-                    ? `${item.room_available[0]}원~`
-                    : "예약 불가"}
-                </p>
+                <p>⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</p>
+                <p>가격: {item.room_available.length > 0 ? `${item.room_available[0]}원~` : '예약 불가'}</p>
                 <p>방 개수: {item.room_count}</p>
               </div>
             </div>
