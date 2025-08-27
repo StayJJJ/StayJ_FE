@@ -20,6 +20,18 @@ const Header = () => {
     navigate('/login');
   };
 
+  // 🔹 로고 클릭 시 조건부 이동
+  const handleLogoClick = (e) => {
+    e.preventDefault(); // <Link> 기본 동작 방지
+    const role = Cookies.get('role'); // 쿠키에서 role 값 가져오기
+
+    if (role === 'HOST') {
+      navigate('/host'); // HOST이면 HostDashboard로 이동
+    } else {
+      navigate('/'); // 그 외는 Home으로 이동
+    }
+  };
+
   return (
     <header className="main-header">
       <div className="header-container">
@@ -33,7 +45,7 @@ const Header = () => {
         </div>
 
         {/* 중앙 이미지 */}
-        <Link to="/">
+        <Link to="/" onClick={handleLogoClick}>
           <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo"/>
         </Link>
 
