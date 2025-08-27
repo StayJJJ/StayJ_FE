@@ -97,7 +97,7 @@ const GuestPage = () => {
   const userId = getCookie('user_id') ? parseInt(getCookie('user_id')) : null;
 
   const [userData, setUserData] = useState({
-    id: userId,
+    user_id: userId,
     username: '',
     login_id: '',
     role: 'GUEST',
@@ -158,7 +158,7 @@ const GuestPage = () => {
 
       // 백엔드 response를 userData로 세팅
       setUserData({
-        id: data.user_id,
+        user_id: data.user_id,
         username: data.username,
         login_id: data.login_id,
         role: data.role,
