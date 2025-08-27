@@ -30,7 +30,7 @@ const MyPage = () => {
     const navigate = useNavigate();
     const userId = getCookie('user_id') ? parseInt(getCookie('user_id')) : null;
 
-    
+
     const [userData, setUserData] = useState({
         id: userId,
         username: "",
@@ -76,9 +76,13 @@ const MyPage = () => {
     };
 
 
-    const subMessage = isGuest
-        ? `${userData.username}님, 환영합니다!`
-        : `${userData.username}님, 성공적인 숙소 운영을 응원합니다!`;
+    const subMessage = isEditing
+        ? "회원정보를 수정합니다."
+        : isGuest
+            ? `${userData.username}님, 환영합니다!`
+            : `${userData.username}님, 성공적인 숙소 운영을 응원합니다!`;
+
+
 
     const handleEditToggle = () => {
         setIsEditing(!isEditing);
@@ -137,9 +141,11 @@ const MyPage = () => {
         <div className="guest-page-container">
             {/* 페이지 제목 */}
             <div className="card">
-                <img className='card-avatar' src='../images/jeju.png'></img>
-                <div><p className="role-badge">{userData.role === 'GUEST' ? '게스트' : '호스트'}</p></div>
-                <h3>{subMessage}</h3>
+                <div className='profile-container'>
+                    <img className='profile-image' src='../images/jeju.png'></img>
+                    <p className="role_badge">{userData.role === 'GUEST' ? '게스트' : '호스트'}</p>
+                </div>
+                <h3 className='welcome-msg'>{subMessage}</h3>
 
                 {/* 회원 정보 섹션 */}
                 <div className="card-body">
@@ -163,11 +169,11 @@ const MyPage = () => {
                             </div>
                         </div>
                     ) : (
-                        <div className="card-body">
+                        <div className=".info-body">
                             <div className="info-item"><p className="label">이름</p><p className="value">{userData.username}</p></div>
                             <div className="info-item"><p className="label">ID</p><p className="value">{userData.login_id}</p></div>
                             <div className="info-item"><p className="label">전화번호</p><p className="value">{userData.phone_number}</p></div>
-                            <button onClick={handleEditToggle} className={`edit-btn`}>
+                            <button onClick={handleEditToggle} className="button">
                                 변경하기
                             </button>
                         </div>
