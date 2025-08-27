@@ -118,7 +118,8 @@ export default function HostDashboard() {
       ) : (
         <ul className="gh-grid">
           {list.map((gh) => {
-            const imagePath = `/images/guesthouses/${gh.id}.png`;
+            // const imagePath = `http://localhost:8080/images/guesthouses/${gh.photo_id}.png`;
+            const imagePath = `/images/guesthouses/${gh.photo_id}.png`;
             return (
               <li key={gh.id} className="gh-card">
                 {/* 카드 이미지 */}
@@ -127,7 +128,9 @@ export default function HostDashboard() {
                     src={imagePath}
                     alt={gh.name}
                     style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
-                    onError={(e) => { e.target.style.display = 'none'; }}
+                    onError={(e) => {
+                      e.target.style.display = 'none';
+                    }}
                   />
                 </div>
 
@@ -138,9 +141,13 @@ export default function HostDashboard() {
                   <span className="badge">🛏️ {gh.room_count ?? 0}개</span>
                 </div>
                 <div className="gh-actions">
-//                   <button className="btn soft" onClick={() => handleEdit(gh)}>수정</button>
-                  <button className="btn soft" onClick={() => onDelete(gh.id)}>삭제</button>
-                  <Link className="btn soft" to={`/host/${gh.id}/reservations`}>예약 관리</Link>
+                  {/* <button className="btn soft" onClick={() => handleEdit(gh)}>수정</button> */}
+                  <button className="btn soft" onClick={() => onDelete(gh.id)}>
+                    삭제
+                  </button>
+                  <Link className="btn soft" to={`/host/${gh.id}/reservations`}>
+                    예약 관리
+                  </Link>
                 </div>
               </li>
             );
