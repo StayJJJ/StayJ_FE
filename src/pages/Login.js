@@ -56,10 +56,18 @@ const LoginPage = () => {
   };
 
   return (
-    <div className="login-container">
+    <div
+      className="login-container"
+      style={{
+        backgroundImage: 'url("/images/background2.jpg")',
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        position: 'relative',
+      }}
+    >
       <div className="login-box">
         <div className="logo-section">
-          <img src="/images/logo_white.png" alt="StayJ 로고" className="stayj-logo" />
+          <img src="/images/logo.png" alt="StayJ 로고" className="stayj-logo" />
           <p className="slogan1">스테이제이, 제주를 담다</p>
           <p className="slogan2">오늘의 쉼을 가장 제주답게</p>
         </div>

@@ -1,4 +1,3 @@
-// 내 게스트하우스 리스트
 // src/pages/host/HostDashboard.js
 import { Link, useNavigate } from 'react-router-dom';
 import { useEffect, useState } from 'react';
@@ -19,13 +18,13 @@ export default function HostDashboard() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
   const [showForm, setShowForm] = useState(false);
-  const [editing, setEditing] = useState(null); // {id, name, ...}
+  const [editing, setEditing] = useState(null);
   const [editingRooms, setEditingRooms] = useState([]);
   const [editingLoading, setEditingLoading] = useState(false);
   const navigate = useNavigate();
 
   const logout = () => {
-    const keys = ['id', 'username', 'loginId', 'role', 'phoneNumber'];
+    const keys = ['user_id', 'username', 'login_id', 'role', 'phoneNumber'];
     keys.forEach((key) => Cookies.remove(key, { path: '/' }));
     console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
     navigate('/login');
@@ -66,7 +65,6 @@ export default function HostDashboard() {
     await load();
   };
 
-  // 수정 버튼 클릭 시 상세/방 정보 fetch
   const handleEdit = async (gh) => {
     setEditingLoading(true);
     try {
@@ -119,26 +117,34 @@ export default function HostDashboard() {
         </div>
       ) : (
         <ul className="gh-grid">
-          {list.map((gh) => (
-            <li key={gh.id} className="gh-card">
-              <div className="gh-title">{gh.name}</div>
-              <div className="gh-meta">
-                <span className="badge">⭐ {gh.rating ?? '-'}</span>
-                <span className="badge">🛏️ {gh.room_count ?? 0} rooms</span>
-              </div>
-              <div className="gh-actions">
-                <button className="btn soft" onClick={() => handleEdit(gh)}>
-                  수정
-                </button>
-                <button className="btn danger" onClick={() => onDelete(gh.id)}>
-                  삭제
-                </button>
-                <Link className="btn primary" to={`/host/${gh.id}/reservations`}>
-                  예약 관리
-                </Link>
-              </div>
-            </li>
-          ))}
+          {list.map((gh) => {
+            const imagePath = `/images/guesthouses/${gh.id}.png`;
+            return (
+              <li key={gh.id} className="gh-card">
+                {/* 카드 이미지 */}
+                <div className="gh-media">
+                  <img
+                    src={imagePath}
+                    alt={gh.name}
+                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+                    onError={(e) => { e.target.style.display = 'none'; }}
+                  />
+                </div>
+
+                {/* 카드 정보 */}
+                <div className="gh-title">{gh.name}</div>
+                <div className="gh-meta">
+                  <span className="badge">⭐ {gh.rating ?? '-'}</span>
+                  <span className="badge">🛏️ {gh.room_count ?? 0}개</span>
+                </div>
+                <div className="gh-actions">
+//                   <button className="btn soft" onClick={() => handleEdit(gh)}>수정</button>
+                  <button className="btn soft" onClick={() => onDelete(gh.id)}>삭제</button>
+                  <Link className="btn soft" to={`/host/${gh.id}/reservations`}>예약 관리</Link>
+                </div>
+              </li>
+            );
+          })}
         </ul>
       )}
 
@@ -187,3 +193,5 @@ export default function HostDashboard() {
     </div>
   );
 }
+
+//<button className="logout-btn" onClick={logout}>로그아웃</button>

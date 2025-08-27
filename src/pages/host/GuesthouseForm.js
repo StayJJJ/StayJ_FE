@@ -194,7 +194,6 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
         setSubmitting(false);
         return;
       }
-
       const uploadedMap = new Map(uploaded.map((item) => [item.key, item]));
 
       // 2) payload 생성 (rating=0 고정)

@@ -1,122 +1,254 @@
-@import './theme.css';
+/* ===== HostDashboard.css (완전 새 디자인) ===== */
 
-button.logout-btn, a.logout-btn {
-  padding: 8.5px 18px;
-  border: 1.5px solid var(--sky-300);
+/* ==== 기본 구조 ==== */
+html, body, #root {
+  height: 100%;
+  margin: 0;
+  font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+  background-color: #f9faf6;
+  color: #1c2b19;
+}
+
+.App {
+  min-height: 100vh;
+}
+
+/* ==== 호스트 페이지 전체 래퍼 ==== */
+.host-wrap {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 24px 16px 80px;
+}
+
+/* ==== 헤더 ==== */
+.host-header {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  background: rgba(255, 255, 255, 0.95);
+  border-bottom: 1px solid #d7e6d9;
+  backdrop-filter: blur(10px);
+}
+
+.host-header h1 {
+  font-size: 2rem;
+  font-weight: 700;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+/* ==== 버튼 ==== */
+.btn {
+  border: none;
   border-radius: 12px;
-  background: #fff;
-  color: var(--primary);
-  font-weight: 550;
-  font-family: inherit;
-  font-size: 1rem;
-  cursor: pointer;
-  transition: background 0.15s, color 0.15s, border 0.15s;
-  box-shadow: var(--shadow-soft);
-  outline: none;
-}
-button.logout-btn:hover, a.logout-btn:hover {
-  background: var(--sky-100);
-  color: var(--primary-2);
-  border-color: var(--primary-2);
-}
-
-a.btn {
-  text-decoration: none !important;
-  font-weight: 550;
-  font-family: inherit !important;
-  letter-spacing: inherit;
-}
-
-div.gh-media
-.host-wrap { max-width: 1200px; margin: 0 auto; padding: 24px 20px 80px; }
-
-/* Glass header */
-.host-header{
-  position: sticky; top: 0; z-index: 10;
-  display:flex; align-items:center; justify-content:space-between;
-  margin: -24px -20px 24px; padding: 14px 16px;
-  background: rgba(224, 242, 254, .8); /* sky-100 with opacity */
-  backdrop-filter: blur(10px) saturate(140%);
-  border-bottom: 1px solid rgba(2,132,199,.15);
-}
-.host-header h1{ margin:0; font-size: 1.7rem; font-weight:800; letter-spacing: -.02em; }
-.header-actions{ display:flex; gap:10px; }
-
-/* Buttons */
-.btn{
-  border:0; border-radius: 12px; padding: 10px 14px; cursor:pointer;
-  transition: transform .08s ease, box-shadow .2s ease, filter .2s ease, background .2s ease;
+  padding: 10px 18px;
   font-weight: 600;
-}
-.btn:active { transform: translateY(1px); }
-
-.btn.primary{
-  color:#fff; background: linear-gradient(135deg, var(--primary), var(--primary-2));
-  box-shadow: var(--shadow-soft);
-}
-.btn.primary:hover{ filter: brightness(1.06); box-shadow: var(--shadow-strong); }
-
-.btn.outline{
-  color: var(--primary); background: transparent; border: 2px solid var(--sky-300);
-}
-.btn.outline:hover{ background: var(--sky-100); }
-
-.btn.soft{
-  color: var(--primary); background: var(--sky-100);
-}
-.btn.soft:hover{ background: var(--sky-200); }
-
-.btn.icon{
-  padding: 8px 10px; border-radius: 10px; background: transparent; color: var(--muted);
-}
-.btn.icon:hover{ background: rgba(2,132,199,.1); color: var(--primary); }
-
-.btn.danger{ background: var(--danger); color:#fff; }
-.btn.danger:hover{ filter: brightness(1.05); }
-
-/* Cards grid */
-.gh-grid{
-  display:grid; grid-template-columns: repeat(auto-fill, minmax(280px,1fr));
-  gap: 18px; margin:0; padding:0; list-style:none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  text-decoration: none;
 }
 
-.gh-card{
-  background: var(--panel); border-radius: var(--radius-xl);
-  box-shadow: var(--shadow-soft);
-  padding: 16px; display:grid; gap: 12px; transition: transform .18s, box-shadow .18s;
-}
-.gh-card:hover{ transform: translateY(-3px); box-shadow: var(--shadow-strong); }
-
-/* optional image placeholder stripe */
-.gh-media{
-  height: 140px; border-radius: 12px;
-  background: repeating-linear-gradient(
-      45deg,
-      #e0f2fe, #e0f2fe 10px,
-      #bae6fd 10px, #bae6fd 20px
-    );
+.btn:active {
+  transform: translateY(1px);
 }
 
-.gh-title{ font-weight: 800; font-size: 1.1rem; letter-spacing: -.01em; }
-.gh-sub { font-size: .92rem; color: var(--muted); }
-
-.gh-meta { display:flex; gap: 8px; flex-wrap: wrap; }
-.badge{
-  display:inline-flex; align-items:center; gap:6px; font-size: 12px; font-weight:700;
-  background: #e0f2fe; color: #075985; padding: 4px 10px; border-radius: 999px;
+/* 기본 버튼 */
+.btn.primary {
+  background-color: #4a9b3b;
+  color: #fff;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+}
+.btn.primary:hover {
+  background-color: #5eb74a;
 }
 
-.gh-actions { display:flex; gap: 8px; margin-top: 6px; }
+/* 소프트 버튼 */
+.btn.soft {
+  background-color: #f2f9f0;
+  color: #4a9b3b;
+}
+.btn.soft:hover {
+  background-color: #e6f3e6;
+}
 
-/* Empty / muted / error */
-.muted { color: var(--muted); }
-.error { color: var(--danger); font-weight: 700; }
+/* 위험 버튼 */
+.btn.danger {
+  background-color: #e06666;
+  color: #fff;
+}
+.btn.danger:hover {
+  background-color: #e74c3c;
+}
 
-/* Skeleton loader (로딩 중 카드 자리 표시) */
-.skel{
-  border-radius: var(--radius-xl);
-  background: linear-gradient(90deg, #e6f3ff 25%, #f2f9ff 37%, #e6f3ff 63%);
-  background-size: 400% 100%; animation: skel 1.2s ease-in-out infinite;
+/* 로그아웃 버튼 */
+.logout-btn {
+  padding: 8px 16px;
+  border: 1px solid #cce6c9;
+  border-radius: 12px;
+  background-color: #fff;
+  color: #4a9b3b;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+.logout-btn:hover {
+  background-color: #f2f9f0;
+  color: #5eb74a;
+  border-color: #5eb74a;
+}
+
+/* ==== 카드 그리드 ==== */
+.gh-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  gap: 20px;
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.gh-card {
+  background-color: #fff;
+  border-radius: 18px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
+.gh-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+}
+
+/* 카드 이미지 */
+.gh-media {
+  width: 100%;
+  height: 160px;
+  border-radius: 12px;
+  background-color: #f2f9f0;
+  margin-bottom: 16px;
+}
+
+/* 카드 제목 */
+.gh-title {
+  font-size: 1.3rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+}
+
+/* 카드 메타 (별점, 방 수) */
+.gh-meta {
+  display: flex;
+  gap: 16px;
+  font-size: 1.05rem;
+  color: #3c7e30;
+  margin-bottom: 12px;
+}
+
+/* 배지 스타일 제거, 글자 중심 */
+.badge {
+  padding: 0;
+  background: none;
+  border-radius: 0;
+  font-weight: 700;
+}
+
+/* 카드 버튼 그룹 */
+.gh-actions {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+/* 상태 메시지 */
+.muted {
+  color: #6b7b66;
+  text-align: center;
+  font-size: 1.1rem;
+  margin: 30px 0;
+}
+
+.error {
+  color: #e74c3c;
+  font-weight: 700;
+  text-align: center;
+  margin: 20px 0;
+}
+
+/* 모달 */
+.modal {
+  position: fixed;
+  top: 0; left: 0;
+  width: 100%; height: 100%;
+  background: rgba(0,0,0,0.3);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 999;
+}
+
+.modal-body {
+  background: #fff;
+  border-radius: 16px;
+  padding: 24px;
+  max-width: 600px;
+  width: 90%;
+  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+}
+
+.modal-head {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 16px;
+}
+
+.modal-head h2 {
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
+/* 스켈레톤 */
+.skel {
+  width: 100%;
   height: 220px;
+  border-radius: 18px;
+  background-color: #e6f3e6;
 }
-@keyframes skel { 0%{background-position: 100% 0} 100%{background-position: 0 0} }
+
+/* Tooltip */
+[data-tip] {
+  position: relative;
+}
+[data-tip]::after {
+  content: attr(data-tip);
+  position: absolute;
+  bottom: calc(100% + 8px);
+  left: 50%;
+  transform: translateX(-50%);
+  font-size: 12px;
+  color: #1c2b19;
+  background: #f2f9f0;
+  border: 1px solid #cce6c9;
+  padding: 6px 8px;
+  border-radius: 8px;
+  white-space: nowrap;
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity .15s ease;
+}
+[data-tip]:hover::after {
+  opacity: 1;
+}
