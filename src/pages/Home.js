@@ -146,8 +146,6 @@ const Home = () => {
         )}
 
         {accommodations.map((item) => {
-          console.log('Rendering accommodation item:', item);
-
           const imagePath = `http://localhost:8080/images/guesthouses/${item.photo_id}.png`;
 
           return (

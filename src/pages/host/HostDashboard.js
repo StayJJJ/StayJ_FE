@@ -67,11 +67,10 @@ export default function HostDashboard() {
     },
   };
 
-
   const userId = getCookie('user_id') ? parseInt(getCookie('user_id')) : null;
 
   const [userData, setUserData] = useState({
-    id: userId,
+    user_id: userId,
     username: '',
     login_id: '',
     role: 'GUEST',
@@ -89,7 +88,7 @@ export default function HostDashboard() {
     try {
       const data = await apiService.getUserInfo(userId);
       setUserData({
-        id: data.user_id,
+        user_id: data.user_id,
         username: data.username,
         login_id: data.login_id,
         role: data.role,
@@ -109,20 +108,20 @@ export default function HostDashboard() {
   }, [userId]);
 
   const handleEditToggle = () => {
-  setIsEditing(!isEditing);
-  if (!isEditing) {
-    setEditForm({
-      username: userData.username,
-      phone_number: userData.phone_number,
-      password: '',
-    });
-  }
-};
+    setIsEditing(!isEditing);
+    if (!isEditing) {
+      setEditForm({
+        username: userData.username,
+        phone_number: userData.phone_number,
+        password: '',
+      });
+    }
+  };
 
-const handleInputChange = (e) => {
-  const { name, value } = e.target;
-  setEditForm((prev) => ({ ...prev, [name]: value }));
-};
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setEditForm((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleSave = async () => {
     try {
@@ -248,7 +247,7 @@ const handleInputChange = (e) => {
           </div>
         )}
       </div>
-      
+
       <div className="host-header">
         <h1>내 게스트하우스</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
@@ -321,7 +320,6 @@ const handleInputChange = (e) => {
                   </div>
                 </li>
               </Link>
-
             );
           })}
         </ul>
