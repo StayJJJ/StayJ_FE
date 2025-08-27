@@ -145,10 +145,6 @@ html, body, #root {
   cursor: pointer;
 }
 
-.modal-head {
-  text-align: center;
-}
-
 /* 카드 이미지 */
 .gh-media {
   width: 100%;
