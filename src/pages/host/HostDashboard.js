@@ -118,8 +118,8 @@ export default function HostDashboard() {
       ) : (
         <ul className="gh-grid">
           {list.map((gh) => {
-            // const imagePath = `http://localhost:8080/images/guesthouses/${gh.photo_id}.png`;
-            const imagePath = `/images/guesthouses/${gh.photo_id}.png`;
+            const imagePath = `http://localhost:8080/images/guesthouses/${gh.photo_id}.png`;
+            // const imagePath = `/images/guesthouses/${gh.photo_id}.png`;
             return (
               <li key={gh.id} className="gh-card">
                 {/* 카드 이미지 */}
