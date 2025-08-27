@@ -1,35 +1,32 @@
 .main-header {
-  background-color: #000000;
-  padding: 15px 30px;
-  color: white;
-  position: sticky; 
+  background: white;
+  height: 60px;          /* 고정 높이: 너무 높지 않게 */
+  padding: 0 20px;       /* 좌우 여백만 */
+  color: black;
+  position: sticky;
   top: 0;
   z-index: 999;
-  margin-bottom: 4px; /* 👈 아래쪽 여백 */
+  margin-bottom: 4px;
+}
+
+.center-logo {
+  width: 100px;    /* 원하는 크기 */
+  height: auto;    /* 비율 유지 */
+  object-fit: contain;
 }
 
 .header-container {
   display: flex;
   justify-content: space-between;
   align-items: center;
+  height: 100%;
   position: relative;
-}
-
-/* 가운데 텍스트 */
-.center-text {
-  position: absolute;
-  left: 50%;
-  transform: translateX(-50%);
-  font-size: 24px;
-  font-weight: bold;
-  margin: 0;
 }
 
 /* 왼쪽 공간 유지용 */
 .left-space {
   width: 80px;  /* 마이페이지 버튼과 균형 맞게 너비 설정 */
 }
-
 
 .mypage-button {
   background: transparent;
@@ -48,19 +45,15 @@
 }
 
 .back-btn {
-  background: #000;
-  color: white;
+  background: white;
+  color: black;
   border: 2px solid white;
   padding: 6px 12px;
   border-radius: 3px;
-  font-weight: bold;
+  font-weight: 900;   /* 더 두꺼운 화살표 */
+  font-size: 30px;    /* 크기도 키우면 두껍게 보임 */
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
 }
 
-/* hover 시 색상 반전 */
-.back-btn:hover {
-  background: #000;
-  color: white;
-  border: 2px solid white;
-}
+

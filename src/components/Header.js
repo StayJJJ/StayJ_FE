@@ -25,8 +25,8 @@ const Header = () => {
           )}
         </div>
 
-        {/* 중앙 텍스트 */}
-        <h1 className="center-text">STAYJ</h1>
+        {/* 중앙 이미지 */}
+        <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo"/>
 
         {/* 오른쪽 마이페이지 */}
         <Link to="/guest" className="mypage-button">
