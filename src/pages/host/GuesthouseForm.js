@@ -224,11 +224,15 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
   };
 
   return (
+    <>
+    <h2 style={{textAlign: 'center', marginTop: 10, marginBottom: 25}}>
+      게스트하우스 생성
+    </h2>
     <form className="gh-form" onSubmit={submit}>
       {errorMsg && <div className="error-banner">{errorMsg}</div>}
 
       {/* 1) 이름 / 연락처 */}
-      <div className="form-row">
+      <div className="form-row" style={{marginBottom: 20}}>
         <label className="input-label input-column">
           <span>이름</span>
           <input
@@ -253,7 +257,7 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
       </div>
 
       {/* 2) 주소 / 상세주소 (이름/연락처 '바로 아래'로 이동) */}
-      <div className="form-row">
+      <div className="form-row" style={{marginBottom: 20}}>
         <label className="input-label input-column" style={{ width: '100%' }}>
           <span>주소</span>
           <div className="address-row-flex">
@@ -332,7 +336,7 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
       </div>
 
       {addressType === 'select' && (
-        <div className="form-row">
+        <div className="form-row" style={{marginBottom: 10}}>
           <label className="input-label input-column" style={{ width: '100%' }}>
             <span>상세주소</span>
             <input
@@ -352,7 +356,7 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
         <div className="input-label input-column" style={{ flex: '0 0 340px' }}>
           <span>대표 이미지</span>
           <div className="file-and-preview" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 4 }}>
+            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
               <input
                 id="cover-file"
                 type="file"
@@ -570,5 +574,6 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
         </div>
       )}
     </form>
+    </>
   );
 }

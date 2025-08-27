@@ -131,6 +131,24 @@ html, body, #root {
   box-shadow: 0 12px 36px rgba(0,0,0,0.12);
 }
 
+/* HostDashboard.css */
+.gh-card-link {
+  text-decoration: none;
+  color: inherit;
+  display: block;
+}
+
+.gh-card-link:hover .gh-card {
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  transform: scale(1.01);
+  transition: all 0.2s ease;
+  cursor: pointer;
+}
+
+.modal-head {
+  text-align: center;
+}
+
 /* 카드 이미지 */
 .gh-media {
   width: 100%;

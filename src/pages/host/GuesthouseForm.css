@@ -22,15 +22,11 @@
 }
 
 /* Modal */
-.modal{
-  position: fixed; inset:0; display:grid; place-items:center;
-  background: rgba(3,105,161,.4); z-index: 50; padding: 20px;
-}
+
 @keyframes modalIn{ from{opacity:0; transform: translateY(8px) scale(.98)} to{opacity:1; transform: none} }
 .modal-body{
   width: min(760px, 96vw); max-height: 80vh; overflow:auto;
   background: var(--panel); border-radius: 20px;
-  box-shadow: 0 30px 60px rgba(2,132,199,.35);
   padding: 18px; animation: modalIn .18s ease-out;
 }
 .modal-head{
@@ -71,7 +67,7 @@
 
 
 .gh-form input, .gh-form textarea, .gh-form select {
-  border: 1.5px solid #cfe8fb; border-radius: 12px; padding: 10px 12px;
+  border: 1.5px solid #0e2416; border-radius: 12px; padding: 10px 12px;
   font-size: 14px; background: #fff; transition: border .15s, box-shadow .15s, transform .05s;
 }
 .gh-form input:focus, .gh-form textarea:focus, .gh-form select:focus {

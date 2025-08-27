@@ -38,7 +38,7 @@ html, body, #root { height: 100%; margin:0; font-family: ui-sans-serif, system-u
   box-shadow: var(--shadow-soft); overflow: hidden;
 }
 .table thead th {
-  background: var(--green-100); color: var(--green-700); padding: 14px 16px; text-align: left; font-weight: 800;
+  background: var(--green-100); color: var(--green-700); padding: 14px 16px; text-align: center; font-weight: 800;
 }
 .table tbody td { padding: 14px 16px; border-top: 1px solid var(--green-50); }
 .table tbody tr:hover { background: var(--green-50); }

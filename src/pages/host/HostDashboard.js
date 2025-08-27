@@ -23,12 +23,6 @@ export default function HostDashboard() {
   const [editingLoading, setEditingLoading] = useState(false);
   const navigate = useNavigate();
 
-  const logout = () => {
-    const keys = ['user_id', 'username', 'login_id', 'role', 'phoneNumber'];
-    keys.forEach((key) => Cookies.remove(key, { path: '/' }));
-    console.log('로그아웃 되었습니다. 쿠키가 삭제되었습니다.');
-    navigate('/login');
-  };
 
   const load = async () => {
     try {
@@ -87,9 +81,6 @@ export default function HostDashboard() {
           <button className="btn primary" onClick={() => setShowForm(true)}>
             + 새로 만들기
           </button>
-          <button className="logout-btn" onClick={logout}>
-            로그아웃
-          </button>
         </div>
       </div>
 
@@ -121,35 +112,42 @@ export default function HostDashboard() {
             const imagePath = `http://localhost:8080/images/guesthouses/${gh.photo_id}.png`;
             // const imagePath = `/images/guesthouses/${gh.photo_id}.png`;
             return (
-              <li key={gh.id} className="gh-card">
-                {/* 카드 이미지 */}
-                <div className="gh-media">
-                  <img
-                    src={imagePath}
-                    alt={gh.name}
-                    style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
-                    onError={(e) => {
-                      e.target.style.display = 'none';
-                    }}
-                  />
-                </div>
+              <Link key={gh.id} to={`/host/${gh.id}/reservations`} className="gh-card-link">
+                <li className="gh-card">
+                  {/* 카드 이미지 */}
+                  <div className="gh-media">
+                    <img
+                      src={imagePath}
+                      alt={gh.name}
+                      style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: '12px' }}
+                      onError={(e) => {
+                        e.target.style.display = 'none';
+                      }}
+                    />
+                  </div>
 
-                {/* 카드 정보 */}
-                <div className="gh-title">{gh.name}</div>
-                <div className="gh-meta">
-                  <span className="badge">⭐ {gh.rating ?? '-'}</span>
-                  <span className="badge">🛏️ {gh.room_count ?? 0}개</span>
-                </div>
-                <div className="gh-actions">
-                  {/* <button className="btn soft" onClick={() => handleEdit(gh)}>수정</button> */}
-                  <button className="btn soft" onClick={() => onDelete(gh.id)}>
-                    삭제
-                  </button>
-                  <Link className="btn soft" to={`/host/${gh.id}/reservations`}>
-                    예약 관리
-                  </Link>
-                </div>
-              </li>
+                  {/* 카드 정보 */}
+                  <div className="gh-title">{gh.name}</div>
+                  <div className="gh-meta">
+                    <span className="badge">⭐ {gh.rating ?? '-'}</span>
+                    <span className="badge">🛏️ {gh.room_count ?? 0}개</span>
+                  </div>
+                  <div className="gh-actions">
+                    {/* <button className="btn soft" onClick={() => handleEdit(gh)}>수정</button> */}
+                    <button
+                      className="btn soft"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        e.preventDefault();
+                        onDelete(gh.id);
+                      }}
+                    >
+                      삭제
+                    </button>
+                  </div>
+                </li>
+              </Link>
+
             );
           })}
         </ul>
@@ -159,9 +157,6 @@ export default function HostDashboard() {
       {showForm && (
         <div className="modal">
           <div className="modal-body">
-            <div className="modal-head">
-              <h2>게스트하우스 생성</h2>
-            </div>
             <GuesthouseForm onSubmit={onCreate} onCancel={() => setShowForm(false)} />
           </div>
         </div>
