@@ -1,8 +1,15 @@
+/* 오른쪽 영역: 로그아웃 + 마이페이지 */
+.right-space {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
 .main-header {
   background-color: #000000;
   padding: 15px 30px;
   color: white;
-  position: sticky; 
+  position: sticky;
   top: 0;
   z-index: 999;
   margin-bottom: 4px; /* 👈 아래쪽 여백 */
@@ -27,13 +34,12 @@
 
 /* 왼쪽 공간 유지용 */
 .left-space {
-  width: 80px;  /* 마이페이지 버튼과 균형 맞게 너비 설정 */
+  width: 80px; /* 마이페이지 버튼과 균형 맞게 너비 설정 */
 }
 
-
 .mypage-button {
-  background: transparent;
-  color: white;
+  background: white;
+  color: #132213;
   border: 2px solid white;
   padding: 8px 16px;
   text-decoration: none;
@@ -42,7 +48,18 @@
   transition: background 0.3s;
 }
 
-.mypage-button {
+/* 로그아웃 버튼 스타일 */
+.logout-btn {
+  background: transparent;
+  color: white;
+  border: 2px solid white;
+  padding: 8px 16px;
+  font-weight: bold;
+  border-radius: 3px;
+  cursor: pointer;
+  transition: background 0.3s, color 0.3s;
+}
+.logout-btn:hover {
   background: white;
   color: #132213;
 }
