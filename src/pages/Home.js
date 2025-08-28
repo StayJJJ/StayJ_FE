@@ -186,7 +186,7 @@ const Home = () => {
                 <span className="card-rating">⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</span>
                 <div className="card-meta">
                   <span className="card-price">
-                    {item.room_available.length > 0 ? `💸 \\${Number(item.min_price).toLocaleString()} ~` : '예약 불가'}
+                    {item.room_available.length > 0 ? `💸 ₩${Number(item.min_price).toLocaleString()} ~` : '예약 불가'}
                   </span>
                   <span className="card-room">🛏️ {item.room_count}개</span>
                 </div>
