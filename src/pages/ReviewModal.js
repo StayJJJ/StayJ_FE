@@ -176,9 +176,18 @@ const ReviewModal = ({
         <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
           <div className={styles.modalHeader}>
             <h2>리뷰 삭제</h2>
-              <button type="button" className={styles.closeBtn} onClick={onClose}>
-                ×
-              </button>
+              <div className={styles.modalHeader}>
+                <button
+                  type="button"
+                  className={styles.closeBtn}
+                  onClick={(e) => {
+                    e.preventDefault(); // ✅ 새로고침 방지
+                    onClose();
+                  }}
+                >
+                  ×
+                </button>
+              </div>
           </div>
           <div className={styles.deleteConfirm}>
             <p>정말로 이 리뷰를 삭제하시겠습니까?</p>
