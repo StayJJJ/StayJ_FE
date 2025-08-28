@@ -1,4 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../util/auth';
 import styles from './ReviewModal.module.css';
 
 const ReviewModal = ({
@@ -14,6 +16,15 @@ const ReviewModal = ({
   const [error, setError] = useState('');
   const titleRef = useRef(null);
   const contentRef = useRef(null);
+  const navigate = useNavigate();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      navigate('/login');
+    } else if (role === 'HOST') {
+      navigate('/host');
+    }
+  }, [navigate]);
 
   // 수정 모드일 때 기존 데이터로 초기화
   useEffect(() => {
@@ -156,7 +167,7 @@ const ReviewModal = ({
       try {
         await deleteReview();
         console.log('리뷰가 삭제되었습니다.');
-        onClose(true);  // 모달 닫기 & 성공 알림
+        onClose(true); // 모달 닫기 & 성공 알림
       } catch (err) {
         console.error('삭제 중 오류:', err);
         setError(err.message || '삭제에 실패했습니다.');
@@ -165,7 +176,6 @@ const ReviewModal = ({
       }
     }
   };
-
 
   if (!isOpen) return null;
 
@@ -176,28 +186,23 @@ const ReviewModal = ({
         <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
           <div className={styles.modalHeader}>
             <h2>리뷰 삭제</h2>
-              <div className={styles.modalHeader}>
-                <button
-                  type="button"
-                  className={styles.closeBtn}
-                  onClick={(e) => {
-                    e.preventDefault(); // ✅ 새로고침 방지
-                    onClose();
-                  }}
-                >
-                  ×
-                </button>
-              </div>
+            <div className={styles.modalHeader}>
+              <button
+                type="button"
+                className={styles.closeBtn}
+                onClick={(e) => {
+                  e.preventDefault(); // ✅ 새로고침 방지
+                  onClose();
+                }}
+              >
+                ×
+              </button>
+            </div>
           </div>
           <div className={styles.deleteConfirm}>
             <p>정말로 이 리뷰를 삭제하시겠습니까?</p>
             <div className={styles.deleteButtons}>
-              <button
-                type="button"
-                className={styles.deleteBtn}
-                onClick={handleDelete}
-                disabled={isSubmitting}
-              >
+              <button type="button" className={styles.deleteBtn} onClick={handleDelete} disabled={isSubmitting}>
                 {isSubmitting ? '삭제 중...' : '삭제'}
               </button>
             </div>
@@ -214,16 +219,15 @@ const ReviewModal = ({
         <div className={styles.modalHeader}>
           <h2>{mode === 'edit' ? '리뷰 수정하기' : '리뷰 작성하기'}</h2>
           <button
-            type="button"              // 이걸 꼭 넣어야 기본 제출버튼이 아니게 됨
+            type="button" // 이걸 꼭 넣어야 기본 제출버튼이 아니게 됨
             className={styles.closeBtn}
             onClick={(e) => {
-              e.preventDefault();      // 기본 동작 막기
-              onClose();               // 모달 닫기 함수 호출
+              e.preventDefault(); // 기본 동작 막기
+              onClose(); // 모달 닫기 함수 호출
             }}
           >
             ×
           </button>
-
         </div>
 
         <div className={styles.starRating}>

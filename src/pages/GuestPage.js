@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
-import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../util/auth';
+import Cookies from 'js-cookie';
 import './GuestPage.css';
 import ReviewModal from './ReviewModal';
 import MyPage from './MyPage';
@@ -98,6 +99,16 @@ const getCookie = (name) => {
 };
 
 const GuestPage = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+    } else if (role !== 'GUEST') {
+      navigate('/host');
+    }
+  }, [navigate]);
   // 체크아웃이 오늘 이전인지 확인
   const isAfterCheckout = (checkOutDate) => {
     if (!checkOutDate) return false;
@@ -106,7 +117,6 @@ const GuestPage = () => {
     // 체크아웃 날짜가 오늘보다 이전이어야 리뷰 작성 가능
     return checkout < today;
   };
-  const navigate = useNavigate();
   const userId = getCookie('user_id') ? parseInt(getCookie('user_id')) : null;
 
   const [userData, setUserData] = useState({
@@ -310,7 +320,7 @@ const GuestPage = () => {
         reservationId={reviewModalReservationId}
         existingReview={reviewModalMode === 'delete' ? { id: reviewModalReviewId } : null}
       />
-     <MyPage />
+      <MyPage />
 
       {/* 예약 내역 섹션 */}
       <div className="info-section">

@@ -1,12 +1,21 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Cookies from 'js-cookie';
 import { useNavigate } from 'react-router-dom';
+import { getUserRoleFromCookie } from '../util/auth';
 import './Login.css';
 
 const LoginPage = () => {
   const [loginId, setLoginId] = useState('');
   const [password, setPassword] = useState('');
-  const navigate = useNavigate(); // useNavigate 훅 사용
+  const navigate = useNavigate();
+  useEffect(() => {
+    const role = getUserRoleFromCookie();
+    if (role === 'GUEST') {
+      navigate('/');
+    } else if (role === 'HOST') {
+      navigate('/host');
+    }
+  }, [navigate]);
 
   const handleLogin = async () => {
     try {

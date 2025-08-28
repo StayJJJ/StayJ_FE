@@ -1,5 +1,6 @@
 // src/pages/host/HostDashboard.js
 import { Link, useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../../util/auth';
 import { useEffect, useState } from 'react';
 import MyPage from '../MyPage';
 import Cookies from 'js-cookie';
@@ -15,6 +16,15 @@ import GuesthouseForm from './GuesthouseForm';
 import './HostDashboard.css';
 
 export default function HostDashboard() {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      navigate('/login');
+    } else if (role !== 'HOST') {
+      navigate('/');
+    }
+  }, [navigate]);
   const [list, setList] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -22,7 +32,6 @@ export default function HostDashboard() {
   const [editing, setEditing] = useState(null);
   const [editingRooms, setEditingRooms] = useState([]);
   const [editingLoading, setEditingLoading] = useState(false);
-  const navigate = useNavigate();
 
   const getCookie = (name) => {
     const value = `; ${document.cookie}`;

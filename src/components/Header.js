@@ -18,6 +18,8 @@ const Header = () => {
   const logout = () => {
     const keys = ['user_id', 'username', 'login_id', 'role', 'phone_number'];
     keys.forEach((k) => Cookies.remove(k, { path: '/' }));
+    // 검색 상태 localStorage에서 삭제
+    localStorage.removeItem('stayj_search');
     navigate('/login');
   };
 
@@ -38,7 +40,7 @@ const Header = () => {
       <div className="header-container">
         {/* 왼쪽 영역 */}
         <div className="left-space">
-          {!isHome && !isHostPage &&(
+          {!isHome && !isHostPage && (
             <button className="back-btn" onClick={handleBackClick}>
               ←
             </button>
@@ -47,7 +49,7 @@ const Header = () => {
 
         {/* 중앙 이미지 */}
         <Link to="/" onClick={handleLogoClick}>
-          <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo"/>
+          <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo" />
         </Link>
 
         {/* 오른쪽 영역: 로그아웃 + 마이페이지 */}
