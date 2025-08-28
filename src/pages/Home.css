@@ -1,3 +1,7 @@
+body, * {
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
+}
+
 /* 홈 전체 컨테이너 */
 .home-container {
   width: 100%;
@@ -138,8 +142,6 @@
   font-size: 14px;
   color: #f5b301;
   font-weight: 500;
-  margin-left: 15px;
-  margin-bottom: 8px;
 }
 
 .card-meta {
