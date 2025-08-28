@@ -1,11 +1,20 @@
 // src/pages/Home.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../util/auth';
 import axios from 'axios';
 import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      navigate('/login');
+    } else if (role === 'HOST') {
+      navigate('/host');
+    }
+  }, [navigate]);
   const [accommodations, setAccommodations] = useState({
     jeju: [],
     seogwipo: [],
@@ -149,7 +158,6 @@ const Home = () => {
     fetchAccommodations();
   };
 
-
   const handleCardClick = (id, roomAvailable) => {
     navigate(`/detail/${id}`, {
       state: {
@@ -202,10 +210,7 @@ const Home = () => {
     <section className="region-section">
       <div className="region-header">
         <h2>{title}</h2>
-        <select
-          value={sortTypes[regionKey]}
-          onChange={(e) => handleSortChange(regionKey, e.target.value)}
-        >
+        <select value={sortTypes[regionKey]} onChange={(e) => handleSortChange(regionKey, e.target.value)}>
           <option value="default">추천순</option>
           <option value="rating">평점순</option>
           <option value="review">리뷰순</option>

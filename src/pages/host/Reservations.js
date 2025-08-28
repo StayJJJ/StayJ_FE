@@ -2,13 +2,22 @@
 
 // src/pages/host/Reservations.js
 import { useEffect, useState } from 'react';
+import { getUserInfo } from '../../util/auth';
 import { useParams, useNavigate } from 'react-router-dom';
 import { getReservationsByGuesthouse } from '../../api/hosts';
 import './Reservations.css';
 
 export default function Reservations() {
-  const { guesthouseId } = useParams();
   const navigate = useNavigate();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      navigate('/login');
+    } else if (role !== 'HOST') {
+      navigate('/');
+    }
+  }, [navigate]);
+  const { guesthouseId } = useParams();
   const [rows, setRows] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');

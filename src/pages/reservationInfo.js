@@ -3,6 +3,7 @@ import { useParams, useNavigate } from 'react-router-dom';
 import './reservationInfo.css';
 import { useLocation } from 'react-router-dom';
 import axios from 'axios';
+import { getUserInfo } from '../util/auth';
 
 // API 기본 URL 설정
 const API_BASE_URL = process.env.REACT_APP_API_URL || 'http://localhost:8080/';
@@ -26,9 +27,25 @@ api.interceptors.response.use(
 );
 
 const ReservationInfo = () => {
-  const { id } = useParams();
   const navigate = useNavigate();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      navigate('/login');
+    } else if (role !== 'GUEST') {
+      navigate('/host');
+    }
+  }, [navigate]);
+  const { id } = useParams();
   const location = useLocation();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      navigate('/login');
+    } else if (role !== 'GUEST') {
+      navigate('/host');
+    }
+  }, [navigate]);
 
   const { checkIn, checkOut, guests, roomAvailable } = location.state || {};
 
@@ -430,10 +447,7 @@ const ReservationInfo = () => {
 
               <div className="contact-info">
                 <h4>문의사항이 있으신가요?</h4>
-                <button
-                  className="contact-btn"
-                  onClick={() => alert('문의는 인스타그램 @bswbsw_00으로 DM 주세요 !')}
-                >
+                <button className="contact-btn" onClick={() => alert('문의는 인스타그램 @bswbsw_00으로 DM 주세요 !')}>
                   호스트에게 문의하기
                 </button>
               </div>

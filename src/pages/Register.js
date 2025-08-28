@@ -1,8 +1,19 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getUserRoleFromCookie } from '../util/auth';
 import axios from 'axios';
 import './Register.css';
 
 const Register = () => {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const role = getUserRoleFromCookie();
+    if (role === 'GUEST') {
+      navigate('/');
+    } else if (role === 'HOST') {
+      navigate('/host');
+    }
+  }, [navigate]);
   const [formData, setFormData] = useState({
     username: '',
     login_id: '',

@@ -18,6 +18,8 @@ const Header = () => {
   const logout = () => {
     const keys = ['user_id', 'username', 'login_id', 'role', 'phone_number'];
     keys.forEach((k) => Cookies.remove(k, { path: '/' }));
+    // 검색 상태 localStorage에서 삭제
+    localStorage.removeItem('stayj_search');
     navigate('/login');
   };
 
@@ -48,7 +50,6 @@ const Header = () => {
           </Link>
         </div>
 
-        {/* 오른쪽 영역 */}
         <div className="right-space">
           <button className="logout-btn" onClick={logout}>
             로그아웃

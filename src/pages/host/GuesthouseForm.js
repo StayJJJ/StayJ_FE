@@ -1,5 +1,7 @@
 // src/pages/host/GuesthouseForm.js
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../../util/auth';
 import axios from 'axios';
 import './GuesthouseForm.css';
 
@@ -24,6 +26,15 @@ const EMPTY = {
 };
 
 export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCancel }) {
+  const navigate = useNavigate();
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      navigate('/login');
+    } else if (role !== 'HOST') {
+      navigate('/');
+    }
+  }, [navigate]);
   const [form, setForm] = useState(() => ({ ...EMPTY, ...initialValues, rating: 0 }));
 
   // 주소 상태
@@ -225,355 +236,360 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
 
   return (
     <>
-    <h2 style={{textAlign: 'center', marginTop: 10, marginBottom: 25}}>
-      게스트하우스 생성
-    </h2>
-    <form className="gh-form" onSubmit={submit}>
-      {errorMsg && <div className="error-banner">{errorMsg}</div>}
+      <h2 style={{ textAlign: 'center', marginTop: 10, marginBottom: 25 }}>게스트하우스 생성</h2>
+      <form className="gh-form" onSubmit={submit}>
+        {errorMsg && <div className="error-banner">{errorMsg}</div>}
 
-      {/* 1) 이름 / 연락처 */}
-      <div className="form-row" style={{marginBottom: 20}}>
-        <label className="input-label input-column">
-          <span>이름</span>
-          <input
-            name="name"
-            value={form.name}
-            onChange={change}
-            required
-            placeholder="게스트하우스 이름"
-            className="gray-placeholder"
-          />
-        </label>
-        <label className="input-label input-column">
-          <span>연락처(전화)</span>
-          <input
-            name="phone_number"
-            value={form.phone_number}
-            onChange={change}
-            placeholder="010-1234-5678"
-            className="gray-placeholder"
-          />
-        </label>
-      </div>
-
-      {/* 2) 주소 / 상세주소 (이름/연락처 '바로 아래'로 이동) */}
-      <div className="form-row" style={{marginBottom: 20}}>
-        <label className="input-label input-column" style={{ width: '100%' }}>
-          <span>주소</span>
-          <div className="address-row-flex">
-            <div className="address-selects-flex">
-              {addressType === 'select' ? (
-                <>
-                  <select value={sido} onChange={handleSido} className="gray-placeholder sido-select" required>
-                    <option value="">시/도</option>
-                    {SIDO_LIST.map((s) => (
-                      <option key={s} value={s}>
-                        {s}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={gugun}
-                    onChange={handleGugun}
-                    className="gray-placeholder"
-                    disabled={!sido}
-                    required
-                    style={{ maxWidth: 120 }}
-                  >
-                    <option value="">시/군/구</option>
-                    {(DUMMY_GUGUN[sido] || []).map((g) => (
-                      <option key={g} value={g}>
-                        {g}
-                      </option>
-                    ))}
-                  </select>
-                  <select
-                    value={dong}
-                    onChange={handleDong}
-                    className="gray-placeholder"
-                    disabled={!gugun}
-                    required
-                    style={{ maxWidth: 120 }}
-                  >
-                    <option value="">동/읍/면</option>
-                    {(DUMMY_DONG[gugun] || []).map((d) => (
-                      <option key={d} value={d}>
-                        {d}
-                      </option>
-                    ))}
-                  </select>
-                </>
-              ) : (
-                <input
-                  name="address"
-                  value={form.address}
-                  onChange={change}
-                  placeholder="전체 주소를 직접 입력"
-                  className="gray-placeholder"
-                  required
-                  style={{ flex: 1 }}
-                />
-              )}
-            </div>
-            <div className="address-type-toggle address-type-right">
-              <button
-                type="button"
-                className={addressType === 'select' ? 'primary' : 'outline'}
-                onClick={() => handleAddressType('select')}
-              >
-                선택식
-              </button>
-              <button
-                type="button"
-                className={addressType === 'manual' ? 'primary' : 'outline'}
-                onClick={() => handleAddressType('manual')}
-              >
-                직접입력
-              </button>
-            </div>
-          </div>
-        </label>
-      </div>
-
-      {addressType === 'select' && (
-        <div className="form-row" style={{marginBottom: 10}}>
-          <label className="input-label input-column" style={{ width: '100%' }}>
-            <span>상세주소</span>
+        {/* 1) 이름 / 연락처 */}
+        <div className="form-row" style={{ marginBottom: 20 }}>
+          <label className="input-label input-column">
+            <span>이름</span>
             <input
-              value={detail}
-              onChange={handleDetail}
-              placeholder="상세주소"
-              className="gray-placeholder"
-              disabled={!dong}
+              name="name"
+              value={form.name}
+              onChange={change}
               required
+              placeholder="게스트하우스 이름"
+              className="gray-placeholder"
+            />
+          </label>
+          <label className="input-label input-column">
+            <span>연락처(전화)</span>
+            <input
+              name="phone_number"
+              value={form.phone_number}
+              onChange={change}
+              placeholder="010-1234-5678"
+              className="gray-placeholder"
             />
           </label>
         </div>
-      )}
 
-      {/* 3) 대표 이미지(왼쪽) | 소개(오른쪽) - 라벨을 각 입력 '위'에 배치 */}
-      <div className="form-row two-col" style={{ alignItems: 'flex-start', gap: 16 }}>
-        <div className="input-label input-column" style={{ flex: '0 0 340px' }}>
-          <span>대표 이미지</span>
-          <div className="file-and-preview" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
-            <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
-              <input
-                id="cover-file"
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onClick={(e) => {
-                  e.currentTarget.value = '';
-                }}
-                onChange={onCoverPick}
-              />
-              <button
-                type="button"
-                onClick={() => document.getElementById('cover-file').click()}
-                style={{
-                  padding: '8px 16px',
-                  background: '#f5f6fa',
-                  borderRadius: 6,
-                  border: '1px solid #dbe2ef',
-                  color: '#222',
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                }}
-              >
-                {coverFile ? '사진 재업로드' : '사진 업로드'}
-              </button>
-              <span className = "file-placeholder" style={{ color: '#666', fontSize: 14 }}>{coverFile ? coverFile.name : '선택된 파일 없음'}</span>
+        {/* 2) 주소 / 상세주소 (이름/연락처 '바로 아래'로 이동) */}
+        <div className="form-row" style={{ marginBottom: 20 }}>
+          <label className="input-label input-column" style={{ width: '100%' }}>
+            <span>주소</span>
+            <div className="address-row-flex">
+              <div className="address-selects-flex">
+                {addressType === 'select' ? (
+                  <>
+                    <select value={sido} onChange={handleSido} className="gray-placeholder sido-select" required>
+                      <option value="">시/도</option>
+                      {SIDO_LIST.map((s) => (
+                        <option key={s} value={s}>
+                          {s}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={gugun}
+                      onChange={handleGugun}
+                      className="gray-placeholder"
+                      disabled={!sido}
+                      required
+                      style={{ maxWidth: 120 }}
+                    >
+                      <option value="">시/군/구</option>
+                      {(DUMMY_GUGUN[sido] || []).map((g) => (
+                        <option key={g} value={g}>
+                          {g}
+                        </option>
+                      ))}
+                    </select>
+                    <select
+                      value={dong}
+                      onChange={handleDong}
+                      className="gray-placeholder"
+                      disabled={!gugun}
+                      required
+                      style={{ maxWidth: 120 }}
+                    >
+                      <option value="">동/읍/면</option>
+                      {(DUMMY_DONG[gugun] || []).map((d) => (
+                        <option key={d} value={d}>
+                          {d}
+                        </option>
+                      ))}
+                    </select>
+                  </>
+                ) : (
+                  <input
+                    name="address"
+                    value={form.address}
+                    onChange={change}
+                    placeholder="전체 주소를 직접 입력"
+                    className="gray-placeholder"
+                    required
+                    style={{ flex: 1 }}
+                  />
+                )}
+              </div>
+              <div className="address-type-toggle address-type-right">
+                <button
+                  type="button"
+                  className={addressType === 'select' ? 'primary' : 'outline'}
+                  onClick={() => handleAddressType('select')}
+                >
+                  선택식
+                </button>
+                <button
+                  type="button"
+                  className={addressType === 'manual' ? 'primary' : 'outline'}
+                  onClick={() => handleAddressType('manual')}
+                >
+                  직접입력
+                </button>
+              </div>
             </div>
-            {coverPreview && (
-              <img
-                src={coverPreview}
-                alt="대표 미리보기"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  e.preventDefault();
-                  openLightbox(coverPreview, '대표 이미지');
-                }}
-                style={{
-                  width: 340,
-                  height: 220,
-                  objectFit: 'cover',
-                  borderRadius: 10,
-                  boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
-                  cursor: 'zoom-in',
-                }}
-              />
-            )}
-            {form.photo_id ? <span className="muted">현재 photo_id: {form.photo_id}</span> : null}
-          </div>
+          </label>
         </div>
 
-        <label className="input-label input-column" style={{ flex: 1 }}>
-          <span>소개</span>
-          <textarea
-            name="description"
-            value={form.description}
-            onChange={change}
-            rows={8}
-            placeholder="간단한 소개를 입력하세요"
-            className="gray-placeholder"
-            style={{ minHeight: 220 }}
-          />
-        </label>
-      </div>
-
-      {/* 4) 방 정보: 이미지 클릭 확대 + 삭제 버튼 항상 보이도록 정렬 */}
-      <div className="form-section" style={{ marginTop: 8, fontWeight: 600, color: '#0b2a3a' }}>
-        방 정보
-      </div>
-      {form.rooms.map((r, i) => (
-        <div
-          key={i}
-          className="room-row"
-          style={{
-            display: 'flex',
-            alignItems: 'flex-start',
-            gap: 12,
-            flexWrap: 'wrap',
-            border: '1px solid #eef1f3',
-            borderRadius: 10,
-            padding: 10,
-            marginBottom: 8,
-          }}
-        >
-          <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
-            <input
-              placeholder="방 이름"
-              value={r.name}
-              onChange={(e) => changeRoom(i, 'name', e.target.value)}
-              className="gray-placeholder"
-              style={{ width: 140 }}
-            />
-            <input
-              placeholder="정원"
-              type="number"
-              min="1"
-              value={r.capacity || ''}
-              onChange={(e) => changeRoom(i, 'capacity', e.target.value)}
-              className="gray-placeholder"
-              style={{ width: 80 }}
-            />
-            <input
-              placeholder="가격"
-              type="number"
-              min="0"
-              value={r.price || ''}
-              onChange={(e) => changeRoom(i, 'price', e.target.value)}
-              className="gray-placeholder"
-              style={{ width: 110 }}
-            />
-          </div>
-
-          {/* 이미지 업로드 & 미리보기 */}
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto' }}>
-            <div className="file-and-preview" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+        {addressType === 'select' && (
+          <div className="form-row" style={{ marginBottom: 10 }}>
+            <label className="input-label input-column" style={{ width: '100%' }}>
+              <span>상세주소</span>
               <input
-                id={`room-file-${i}`}
-                type="file"
-                accept="image/*"
-                style={{ display: 'none' }}
-                onClick={(e) => {
-                  e.currentTarget.value = '';
-                }}
-                onChange={(e) => onRoomPick(i, e)}
+                value={detail}
+                onChange={handleDetail}
+                placeholder="상세주소"
+                className="gray-placeholder"
+                disabled={!dong}
+                required
               />
-              <button
-                type="button"
-                onClick={() => document.getElementById(`room-file-${i}`).click()}
-                style={{
-                  padding: '6px 14px',
-                  background: '#f5f6fa',
-                  borderRadius: 6,
-                  border: '1px solid #dbe2ef',
-                  color: '#222',
-                  cursor: 'pointer',
-                  fontWeight: 500,
-                }}
-              >
-                {roomFiles[i] ? '사진 재업로드' : '사진 업로드'}
-              </button>
-              <span className = "file-placeholder" style={{ color: '#666', fontSize: 14 }}>
-                {roomFiles[i] ? roomFiles[i].name : '선택된 파일 없음'}
-              </span>
-              {roomPreviews[i] && (
+            </label>
+          </div>
+        )}
+
+        {/* 3) 대표 이미지(왼쪽) | 소개(오른쪽) - 라벨을 각 입력 '위'에 배치 */}
+        <div className="form-row two-col" style={{ alignItems: 'flex-start', gap: 16 }}>
+          <div className="input-label input-column" style={{ flex: '0 0 340px' }}>
+            <span>대표 이미지</span>
+            <div className="file-and-preview" style={{ display: 'flex', flexDirection: 'column', gap: 8 }}>
+              <div style={{ display: 'flex', alignItems: 'center', gap: 8, marginBottom: 2 }}>
+                <input
+                  id="cover-file"
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onClick={(e) => {
+                    e.currentTarget.value = '';
+                  }}
+                  onChange={onCoverPick}
+                />
+                <button
+                  type="button"
+                  onClick={() => document.getElementById('cover-file').click()}
+                  style={{
+                    padding: '8px 16px',
+                    background: '#f5f6fa',
+                    borderRadius: 6,
+                    border: '1px solid #dbe2ef',
+                    color: '#222',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                  }}
+                >
+                  {coverFile ? '사진 재업로드' : '사진 업로드'}
+                </button>
+                <span className="file-placeholder" style={{ color: '#666', fontSize: 14 }}>
+                  {coverFile ? coverFile.name : '선택된 파일 없음'}
+                </span>
+              </div>
+              {coverPreview && (
                 <img
-                  src={roomPreviews[i]}
-                  alt={`방${i + 1} 미리보기`}
+                  src={coverPreview}
+                  alt="대표 미리보기"
                   onClick={(e) => {
                     e.stopPropagation();
                     e.preventDefault();
-                    openLightbox(roomPreviews[i], `방 ${i + 1} 이미지`);
+                    openLightbox(coverPreview, '대표 이미지');
                   }}
                   style={{
-                    width: 96,
-                    height: 96,
+                    width: 340,
+                    height: 220,
                     objectFit: 'cover',
-                    borderRadius: 8,
+                    borderRadius: 10,
                     boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
                     cursor: 'zoom-in',
                   }}
                 />
               )}
-              {r.photo_id ? <span className="muted">photo_id: {r.photo_id}</span> : null}
+              {form.photo_id ? <span className="muted">현재 photo_id: {form.photo_id}</span> : null}
+            </div>
+          </div>
+
+          <label className="input-label input-column" style={{ flex: 1 }}>
+            <span>소개</span>
+            <textarea
+              name="description"
+              value={form.description}
+              onChange={change}
+              rows={8}
+              placeholder="간단한 소개를 입력하세요"
+              className="gray-placeholder"
+              style={{ minHeight: 220 }}
+            />
+          </label>
+        </div>
+
+        {/* 4) 방 정보: 이미지 클릭 확대 + 삭제 버튼 항상 보이도록 정렬 */}
+        <div className="form-section" style={{ marginTop: 8, fontWeight: 600, color: '#0b2a3a' }}>
+          방 정보
+        </div>
+        {form.rooms.map((r, i) => (
+          <div
+            key={i}
+            className="room-row"
+            style={{
+              display: 'flex',
+              alignItems: 'flex-start',
+              gap: 12,
+              flexWrap: 'wrap',
+              border: '1px solid #eef1f3',
+              borderRadius: 10,
+              padding: 10,
+              marginBottom: 8,
+            }}
+          >
+            <div style={{ display: 'flex', gap: 8, flexWrap: 'wrap', alignItems: 'center' }}>
+              <input
+                placeholder="방 이름"
+                value={r.name}
+                onChange={(e) => changeRoom(i, 'name', e.target.value)}
+                className="gray-placeholder"
+                style={{ width: 140 }}
+              />
+              <input
+                placeholder="정원"
+                type="number"
+                min="1"
+                value={r.capacity || ''}
+                onChange={(e) => changeRoom(i, 'capacity', e.target.value)}
+                className="gray-placeholder"
+                style={{ width: 80 }}
+              />
+              <input
+                placeholder="가격"
+                type="number"
+                min="0"
+                value={r.price || ''}
+                onChange={(e) => changeRoom(i, 'price', e.target.value)}
+                className="gray-placeholder"
+                style={{ width: 110 }}
+              />
             </div>
 
-            {/* 삭제 버튼: 항상 보이도록 컨테이너 오른쪽에 배치 */}
-            {form.rooms.length > 1 && (
-              <button
-                type="button"
-                className="remove room-remove-btn"
-                onClick={() => removeRoom(i)}
-                style={{ alignSelf: 'center' }}
-              >
-                삭제
-              </button>
-            )}
+            {/* 이미지 업로드 & 미리보기 */}
+            <div style={{ display: 'flex', alignItems: 'center', gap: 10, marginLeft: 'auto' }}>
+              <div className="file-and-preview" style={{ display: 'flex', alignItems: 'center', gap: 8 }}>
+                <input
+                  id={`room-file-${i}`}
+                  type="file"
+                  accept="image/*"
+                  style={{ display: 'none' }}
+                  onClick={(e) => {
+                    e.currentTarget.value = '';
+                  }}
+                  onChange={(e) => onRoomPick(i, e)}
+                />
+                <button
+                  type="button"
+                  onClick={() => document.getElementById(`room-file-${i}`).click()}
+                  style={{
+                    padding: '6px 14px',
+                    background: '#f5f6fa',
+                    borderRadius: 6,
+                    border: '1px solid #dbe2ef',
+                    color: '#222',
+                    cursor: 'pointer',
+                    fontWeight: 500,
+                  }}
+                >
+                  {roomFiles[i] ? '사진 재업로드' : '사진 업로드'}
+                </button>
+                <span className="file-placeholder" style={{ color: '#666', fontSize: 14 }}>
+                  {roomFiles[i] ? roomFiles[i].name : '선택된 파일 없음'}
+                </span>
+                {roomPreviews[i] && (
+                  <img
+                    src={roomPreviews[i]}
+                    alt={`방${i + 1} 미리보기`}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      e.preventDefault();
+                      openLightbox(roomPreviews[i], `방 ${i + 1} 이미지`);
+                    }}
+                    style={{
+                      width: 96,
+                      height: 96,
+                      objectFit: 'cover',
+                      borderRadius: 8,
+                      boxShadow: '0 1px 6px rgba(0,0,0,0.1)',
+                      cursor: 'zoom-in',
+                    }}
+                  />
+                )}
+                {r.photo_id ? <span className="muted">photo_id: {r.photo_id}</span> : null}
+              </div>
+
+              {/* 삭제 버튼: 항상 보이도록 컨테이너 오른쪽에 배치 */}
+              {form.rooms.length > 1 && (
+                <button
+                  type="button"
+                  className="remove room-remove-btn"
+                  onClick={() => removeRoom(i)}
+                  style={{ alignSelf: 'center' }}
+                >
+                  삭제
+                </button>
+              )}
+            </div>
           </div>
+        ))}
+
+        <div className="actions" style={{ marginTop: 6 }}>
+          <button type="button" className="add" onClick={addRoom}>
+            + 방 추가
+          </button>
         </div>
-      ))}
 
-      <div className="actions" style={{ marginTop: 6 }}>
-        <button type="button" className="add" onClick={addRoom}>
-          + 방 추가
-        </button>
-      </div>
-
-      <div className="actions" style={{ marginTop: 16 }}>
-        <button type="button" className="outline close-btn" onClick={onCancel}>
-          닫기
-        </button>
-        <button className="primary" type="submit" disabled={submitting}>
-          {submitting ? '저장 중...' : '저장'}
-        </button>
-      </div>
-
-      {/* 라이트박스(이미지 확대) */}
-      {lightbox.open && (
-        <div
-          onClick={closeLightbox}
-          style={{
-            position: 'fixed',
-            inset: 0,
-            background: 'rgba(0,0,0,0.6)',
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center',
-            zIndex: 9999,
-            cursor: 'zoom-out',
-          }}
-        >
-          <img
-            src={lightbox.src}
-            alt={lightbox.alt}
-            style={{ maxWidth: '90vw', maxHeight: '85vh', borderRadius: 10, boxShadow: '0 10px 30px rgba(0,0,0,0.3)' }}
-          />
+        <div className="actions" style={{ marginTop: 16 }}>
+          <button type="button" className="outline close-btn" onClick={onCancel}>
+            닫기
+          </button>
+          <button className="primary" type="submit" disabled={submitting}>
+            {submitting ? '저장 중...' : '저장'}
+          </button>
         </div>
-      )}
-    </form>
+
+        {/* 라이트박스(이미지 확대) */}
+        {lightbox.open && (
+          <div
+            onClick={closeLightbox}
+            style={{
+              position: 'fixed',
+              inset: 0,
+              background: 'rgba(0,0,0,0.6)',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center',
+              zIndex: 9999,
+              cursor: 'zoom-out',
+            }}
+          >
+            <img
+              src={lightbox.src}
+              alt={lightbox.alt}
+              style={{
+                maxWidth: '90vw',
+                maxHeight: '85vh',
+                borderRadius: 10,
+                boxShadow: '0 10px 30px rgba(0,0,0,0.3)',
+              }}
+            />
+          </div>
+        )}
+      </form>
     </>
   );
 }

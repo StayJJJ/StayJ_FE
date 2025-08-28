@@ -1,6 +1,7 @@
 import Cookies from 'js-cookie';
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { getUserInfo } from '../util/auth';
 import './MyPage.css';
 
 const API_BASE_URL = 'http://localhost:8080';
@@ -27,7 +28,16 @@ const getCookie = (name) => {
 
 const MyPage = () => {
   const navigate = useNavigate();
-  const userId = getCookie('user_id') ? parseInt(getCookie('user_id')) : null;
+  useEffect(() => {
+    const { user_id, role } = getUserInfo();
+    if (!user_id) {
+      alert('로그인이 필요합니다.');
+      navigate('/login');
+    } else if (role !== 'GUEST') {
+      navigate('/host');
+    }
+  }, [navigate]);
+  const userId = Cookies.get('user_id') ? parseInt(Cookies.get('user_id')) : null;
 
   const [userData, setUserData] = useState({
     id: userId,
