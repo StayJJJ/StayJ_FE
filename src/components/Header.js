@@ -38,19 +38,17 @@ const Header = () => {
       <div className="header-container">
         {/* 왼쪽 영역 */}
         <div className="left-space">
-          {!isHome && !isHostPage &&(
+          {!isHome && !isHostPage && (
             <button className="back-btn" onClick={handleBackClick}>
               ←
             </button>
           )}
+          <Link to="/" onClick={handleLogoClick}>
+            <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo" />
+          </Link>
         </div>
 
-        {/* 중앙 이미지 */}
-        <Link to="/" onClick={handleLogoClick}>
-          <img src="/images/logo_r.png" alt="STAYJ Logo" className="center-logo"/>
-        </Link>
-
-        {/* 오른쪽 영역: 로그아웃 + 마이페이지 */}
+        {/* 오른쪽 영역 */}
         <div className="right-space">
           <button className="logout-btn" onClick={logout}>
             로그아웃

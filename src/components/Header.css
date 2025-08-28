@@ -20,8 +20,7 @@
   width: 120px; /* 원하는 크기 */
   height: auto; /* 비율 유지 */
   object-fit: contain;
-  padding-left: 50%;
-  padding-top: 5%;
+  margin-top: 10px;
 }
 
 .header-container {
@@ -34,7 +33,9 @@
 
 /* 왼쪽 공간 유지용 */
 .left-space {
-  width: 80px; /* 마이페이지 버튼과 균형 맞게 너비 설정 */
+  display: flex;
+  align-items: center;
+  gap: 16px; /* 화살표와 로고 간격 */
 }
 
 .mypage-button {

@@ -30,7 +30,7 @@ const ReservationInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { checkIn, checkOut, guests } = location.state || {};
+  const { checkIn, checkOut, guests, roomAvailable } = location.state || {};
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [guestData, setGuestData] = useState(null);
@@ -45,9 +45,14 @@ const ReservationInfo = () => {
         setError(null);
 
         // 병렬로 API 호출
+        // roomAvailable이 있으면 쿼리로 넘김
+        const roomsUrl =
+          roomAvailable && Array.isArray(roomAvailable) && roomAvailable.length > 0
+            ? `/guesthouse/${id}/rooms?` + roomAvailable.map((rid) => `room_available=${rid}`).join('&')
+            : `/guesthouse/${id}/rooms`;
         const [guesthouseResponse, roomsResponse, reviewsResponse] = await Promise.all([
           api.get(`/guesthouse/${id}`),
-          api.get(`/guesthouse/${id}/rooms`),
+          api.get(roomsUrl),
           api.get(`/guesthouse/${id}/reviews`),
         ]);
 
@@ -162,14 +167,21 @@ const ReservationInfo = () => {
       const response = await axios.post('http://localhost:8080/reservation', reservationData, {
         headers: {
           'Content-Type': 'application/json',
-          "user-id": userId, // 쿠키에서 가져온 user_id를 헤더로 전송
+          'user-id': userId, // 쿠키에서 가져온 user_id를 헤더로 전송
         },
       });
 
       console.log('예약 성공:', response.data);
 
-      // 예약 성공 시 확인 메시지와 함께 홈으로 이동
-      alert(`예약이 완료되었습니다!\n예약 번호: ${response.data.reservation_id || 'N/A'}`);
+      // 예약 성공 시 상세 정보 안내 메시지와 함께 홈으로 이동
+      const nights = calculateNights();
+      const infoMsg =
+        `예약이 완료되었습니다!\n\n` +
+        `체크인: ${formatDate(checkIn)}\n` +
+        `체크아웃: ${formatDate(checkOut)}\n` +
+        `투숙객: ${guests}명\n` +
+        `숙박일수: ${nights}박`;
+      alert(infoMsg);
       navigate('/', {
         state: {
           message: '예약이 성공적으로 완료되었습니다.',
@@ -199,7 +211,7 @@ const ReservationInfo = () => {
     }
   };
 
-  // 🔥 추가된 부분: 총 숙박일수 계산
+  // 총 숙박일수 계산
   const calculateNights = () => {
     if (!checkIn || !checkOut) return 0;
     const start = new Date(checkIn);
@@ -209,7 +221,7 @@ const ReservationInfo = () => {
     return diffDays;
   };
 
-  // 🔥 추가된 부분: 총 가격 계산
+  // 총 가격 계산
   const calculateTotalPrice = () => {
     if (!selectedRoom) return 0;
     const nights = calculateNights();
@@ -271,7 +283,11 @@ const ReservationInfo = () => {
     <div className="reservation-container">
       {/* Main Image */}
       <div className="main-image-section">
-        <img src={`/images/guesthouses/${guesthouse.photo_id}.png`} alt={guesthouse.name} className="main-image" />
+        <img
+          src={`http://localhost:8080/images/guesthouses/${guesthouse.photo_id}.png`}
+          alt={guesthouse.name}
+          className="main-image"
+        />
       </div>
 
       {/* Content */}
@@ -305,21 +321,51 @@ const ReservationInfo = () => {
             <h2>객실 선택</h2>
             <div className="rooms-grid">
               {Array.isArray(rooms) && rooms.length > 0 ? (
-                rooms.map((room) => (
-                  <div
-                    key={room.id}
-                    className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''}`}
-                    onClick={() => handleRoomSelect(room)}
-                  >
-                    <img src={`/images/rooms/${room.photo_id}.png`} alt={room.name} className="room-image" />
-                    <div className="room-info">
-                      <h3>{room.name}</h3>
-                      <p className="room-capacity">👥 최대 {room.capacity}명</p>
-                      <p className="room-price">₩{room.price.toLocaleString()}/박</p>
+                rooms.map((room) => {
+                  // 예약 불가 여부: roomAvailable이 있고, room.id가 포함되어 있지 않으면 불가
+                  const isAvailable = !roomAvailable || roomAvailable.includes(room.id);
+                  return (
+                    <div
+                      key={room.id}
+                      className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''} ${
+                        !isAvailable ? 'unavailable' : ''
+                      }`}
+                      onClick={() => isAvailable && handleRoomSelect(room)}
+                      style={{ cursor: isAvailable ? 'pointer' : 'not-allowed', position: 'relative' }}
+                    >
+                      <img
+                        src={`http://localhost:8080/images/rooms/${room.photo_id}.png`}
+                        alt={room.name}
+                        className="room-image"
+                        style={{ filter: isAvailable ? 'none' : 'grayscale(80%)', opacity: isAvailable ? 1 : 0.5 }}
+                      />
+                      <div className="room-info">
+                        <h3>{room.name}</h3>
+                        <p className="room-capacity">👥 최대 {room.capacity}명</p>
+                        <p className="room-price">₩{room.price.toLocaleString()}/박</p>
+                      </div>
+                      {!isAvailable && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 8,
+                            color: 'red',
+                            fontWeight: 'bold',
+                            background: 'white',
+                            padding: '2px 8px',
+                            borderRadius: '8px',
+                            fontSize: '0.9em',
+                            border: '1px solid #f55',
+                          }}
+                        >
+                          예약 불가
+                        </div>
+                      )}
+                      {selectedRoom?.id === room.id && isAvailable && <div className="selected-badge">선택됨</div>}
                     </div>
-                    {selectedRoom?.id === room.id && <div className="selected-badge">선택됨</div>}
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p className="no-rooms">사용 가능한 객실이 없습니다.</p>
               )}
@@ -384,7 +430,12 @@ const ReservationInfo = () => {
 
               <div className="contact-info">
                 <h4>문의사항이 있으신가요?</h4>
-                <button className="contact-btn">호스트에게 문의하기</button>
+                <button
+                  className="contact-btn"
+                  onClick={() => alert('문의는 인스타그램 @bswbsw_00으로 DM 주세요 !')}
+                >
+                  호스트에게 문의하기
+                </button>
               </div>
             </>
           )}
