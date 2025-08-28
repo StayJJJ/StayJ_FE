@@ -151,7 +151,6 @@ const ReservationInfo = () => {
       setReservationLoading(true);
 
       const reservationData = {
-        user_id: parseInt(userId), // 쿠키에서 가져온 user_id 사용
         room_id: selectedRoom.id,
         check_in_date: checkIn,
         check_out_date: checkOut,
@@ -163,7 +162,7 @@ const ReservationInfo = () => {
       const response = await axios.post('http://localhost:8080/reservation', reservationData, {
         headers: {
           'Content-Type': 'application/json',
-          user_id: userId, // 쿠키에서 가져온 user_id를 헤더로 전송
+          "user-id": userId, // 쿠키에서 가져온 user_id를 헤더로 전송
         },
       });
 
