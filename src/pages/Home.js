@@ -1,3 +1,4 @@
+// src/pages/Home.js
 import React, { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
@@ -5,7 +6,11 @@ import './Home.css';
 
 const Home = () => {
   const navigate = useNavigate();
-  const [accommodations, setAccommodations] = useState([]);
+  const [accommodations, setAccommodations] = useState({
+    jeju: [],
+    seogwipo: [],
+    other: [],
+  });
 
   const today = new Date();
   const tomorrow = new Date();
@@ -20,31 +25,12 @@ const Home = () => {
 
   const [searchParams, setSearchParams] = useState({
     name: '',
-    check_in: formatDate(today), // 오늘
-    check_out: formatDate(tomorrow), // 내일
+    check_in: formatDate(today),
+    check_out: formatDate(tomorrow),
     people: 1,
   });
 
-  // 날짜를 YYYY-MM-DD 형식으로 포맷팅하는 함수
-  const getFormattedDate = (date) => {
-    const year = date.getFullYear();
-    const month = String(date.getMonth() + 1).padStart(2, '0');
-    const day = String(date.getDate()).padStart(2, '0');
-    return `${year}-${month}-${day}`;
-  };
-
-  // 컴포넌트 마운트 시 오늘, 내일 날짜로 기본값 세팅
   useEffect(() => {
-    const today = new Date();
-    const tomorrow = new Date();
-    tomorrow.setDate(today.getDate() + 1);
-
-    setSearchParams((prev) => ({
-      ...prev,
-      check_in: getFormattedDate(today),
-      check_out: getFormattedDate(tomorrow),
-    }));
-
     fetchAccommodations();
   }, []);
 
@@ -54,7 +40,23 @@ const Home = () => {
         params: searchParams,
         headers: { 'user-id': 1 },
       });
-      setAccommodations(response.data);
+
+      // ✅ 지역별 분류
+      const jeju = [];
+      const seogwipo = [];
+      const other = [];
+
+      response.data.forEach((item) => {
+        if (item.address?.includes('제주시')) {
+          jeju.push(item);
+        } else if (item.address?.includes('서귀포시')) {
+          seogwipo.push(item);
+        } else {
+          other.push(item);
+        }
+      });
+
+      setAccommodations({ jeju, seogwipo, other });
     } catch (error) {
       console.error('숙소 불러오기 실패:', error);
     }
@@ -72,16 +74,55 @@ const Home = () => {
   const handleCardClick = (id) => {
     navigate(`/detail/${id}`, {
       state: {
-        checkIn: searchParams.check_in, // ✅ 키 이름 맞추기
+        checkIn: searchParams.check_in,
         checkOut: searchParams.check_out,
         guests: searchParams.people,
       },
     });
   };
 
+  // ✅ 카드 UI (재사용)
+  const renderCards = (list) => {
+    if (list.length === 0) {
+      return <p className="no-result">검색 조건에 맞는 숙소가 없습니다.</p>;
+    }
+
+    return (
+      <div className="card-scroll-container">
+        {list.map((item) => {
+          const imagePath = `http://localhost:8080/images/guesthouses/${item.photo_id}.png`;
+          return (
+            <div className="card" key={item.id} onClick={() => handleCardClick(item.id)}>
+              <img
+                src={imagePath}
+                alt={item.name}
+                onError={(e) => {
+                  e.target.src = `http://localhost:8080/images/guesthouses/default.png`;
+                }}
+              />
+              {item.isGuestPick && <div className="guest-pick">게스트 선호</div>}
+              <div className="card-info">
+                <span className="card-title">{item.name}</span>
+                <span className="card-rating">⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</span>
+                <div className="card-meta">
+                  <span className="card-price">
+                    {item.room_available.length > 0
+                      ? `💸 \\${Number(item.min_price).toLocaleString()} ~`
+                      : '예약 불가'}
+                  </span>
+                  <span className="card-room">🛏️ {item.room_count}개</span>
+                </div>
+              </div>
+            </div>
+          );
+        })}
+      </div>
+    );
+  };
+
   return (
     <div className="home-container">
-      {/* 🔹 배경 배너 (문구만 표시) */}
+      {/* 🔹 배경 배너 */}
       <div
         className="search-banner"
         style={{
@@ -106,13 +147,13 @@ const Home = () => {
             textAlign: 'left',
             display: 'flex',
             flexDirection: 'column',
-            gap: '15px', // 제목과 검색박스 간 간격 조절
+            gap: '15px',
           }}
         >
           <h1 className="banner-title">제주 게스트하우스 예약</h1>
           <p className="banner-subtitle">편리하고 간편한 예약 시스템</p>
 
-          {/* 여기에 search box 넣기 */}
+          {/* 검색 박스 */}
           <div className="search-box-container">
             <div className="search-box" style={{ display: 'flex', gap: '10px' }}>
               <input
@@ -139,37 +180,21 @@ const Home = () => {
         </div>
       </div>
 
-      {/* 숙소 카드 리스트 */}
-      <div className="card-list">
-        {accommodations.length === 0 && (
-          <p style={{ textAlign: 'center', marginTop: '50px' }}>검색 조건에 맞는 숙소가 없습니다.</p>
-        )}
+      {/* 지역별 섹션 */}
+      <section className="region-section">
+        <h2>🏙 제주시</h2>
+        {renderCards(accommodations.jeju)}
+      </section>
 
-        {accommodations.map((item) => {
-          const imagePath = `http://localhost:8080/images/guesthouses/${item.photo_id}.png`;
-
-          return (
-            <div className="card" key={item.id} onClick={() => handleCardClick(item.id)}>
-              <img
-                src={imagePath}
-                alt={item.name}
-                onError={(e) => {
-                  e.target.src = `http://localhost:8080/images/guesthouses/default.png`;
-                }}
-              />
-              {item.isGuestPick && <div className="guest-pick">게스트 선호</div>}
-              <div className="card-info card-info-row">
-                <span className="card-title">{item.name}</span>
-                <span className="card-rating">⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</span>
-                <span className="card-price">
-                  {item.room_available.length > 0 ? `💸 \\${Number(item.min_price).toLocaleString()} ~` : '예약 불가'}
-                </span>
-                <span className="card-room">🛏️ {item.room_count}개</span>
-              </div>
-            </div>
-          );
-        })}
-      </div>
+      <section className="region-section">
+        <h2>🌊 서귀포시</h2>
+        {renderCards(accommodations.seogwipo)}
+      </section>
+      
+      <section className="region-section">
+        <h2>🏝 기타 지역</h2>
+        {renderCards(accommodations.other)}
+      </section>
     </div>
   );
 };
