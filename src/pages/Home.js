@@ -238,16 +238,15 @@ const Home = () => {
           style={{
             position: 'absolute',
             left: '30px',
-            bottom: '30px',
+            bottom: '20px',
             color: 'white',
-            textAlign: 'left',
+            textAlign: 'middle',
             display: 'flex',
             flexDirection: 'column',
-            gap: '15px',
           }}
         >
-          <h1 className="banner-title">제주 게스트하우스 예약</h1>
-          <p className="banner-subtitle">편리하고 간편한 예약 시스템</p>
+          <h1 className="banner-title" style={{ fontFamily: 'Sweet' }}>낯선 제주에서 만나는 가장 따뜻한 집</h1>
+          <p className="banner-subtitle" style={{ fontFamily: 'Sweet' }}>당신의 자리를 지금 여기서 준비하세요</p>
 
           <div className="search-box-container">
             <form

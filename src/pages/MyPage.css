@@ -35,8 +35,8 @@
 .profile-image {
     width: 100%; /* 부모 요소에 맞춰 이미지 크기 설정 */
     display: block; /* 이미지 하단의 기본 여백 제거 */
-    border-radius: 50%;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1)
+    /* border-radius: 50%; */
+    /* box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1) */
 }
 
 .role_badge {

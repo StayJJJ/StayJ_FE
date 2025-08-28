@@ -170,8 +170,12 @@ const MyPage = () => {
     <div className="guest-page-container">
       <div className="card">
         <div className="profile-container">
-          <img className="profile-image" src="../images/jeju.png" alt="프로필" />
-          <p className="role_badge">{userData.role === 'GUEST' ? '게스트' : '호스트'}</p>
+                        <img
+                            className='profile-image'
+                            src={userData.role === 'GUEST' ? '../images/guest.png' : '../images/host.png'}
+                            alt={userData.role === 'GUEST' ? '게스트 프로필' : '호스트 프로필'}
+                        />          
+                              <p className="role_badge">{userData.role === 'GUEST' ? '게스트' : '호스트'}</p>
         </div>
         <h3 className="welcome-msg">{subMessage}</h3>
 
