@@ -21,12 +21,24 @@ const Register = () => {
   };
 
   // 아이디 중복 확인 (임시)
-  const handleCheckId = () => {
+  // 아이디 중복 확인 (API 호출)
+  const handleCheckId = async () => {
     if (!login_id) {
       alert('아이디를 입력해주세요.');
       return;
     }
-    alert(`아이디 '${login_id}'는 사용 가능합니다.`); // TODO: 실제 API 호출 필요
+    try {
+      const response = await axios.get('http://localhost:8080/user/check-id', {
+        params: { login_id },
+      });
+      if (response.data.available) {
+        alert(`아이디 '${login_id}'는 사용 가능합니다.`);
+      } else {
+        alert(`아이디 '${login_id}'는 이미 사용 중입니다.`);
+      }
+    } catch (error) {
+      alert('아이디 중복 확인 중 오류가 발생했습니다.');
+    }
   };
 
   const handleSubmit = async (e) => {
@@ -84,14 +96,7 @@ const Register = () => {
 
         <div className="form-group">
           <label htmlFor="password">비밀번호</label>
-          <input
-            type="password"
-            id="password"
-            name="password"
-            value={password}
-            onChange={handleChange}
-            required
-          />
+          <input type="password" id="password" name="password" value={password} onChange={handleChange} required />
         </div>
 
         <div className="form-group">
@@ -124,23 +129,11 @@ const Register = () => {
           <label>역할</label>
           <div className="role-selector">
             <label>
-              <input
-                type="radio"
-                name="role"
-                value="GUEST"
-                checked={role === 'GUEST'}
-                onChange={handleChange}
-              />
+              <input type="radio" name="role" value="GUEST" checked={role === 'GUEST'} onChange={handleChange} />
               게스트
             </label>
             <label>
-              <input
-                type="radio"
-                name="role"
-                value="HOST"
-                checked={role === 'HOST'}
-                onChange={handleChange}
-              />
+              <input type="radio" name="role" value="HOST" checked={role === 'HOST'} onChange={handleChange} />
               호스트
             </label>
           </div>
