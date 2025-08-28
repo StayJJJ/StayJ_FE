@@ -191,10 +191,9 @@ export default function HostDashboard() {
 
   return (
     <div className="host-wrap">
-
       <MyPage />
-      
-      <div className="info-section">
+
+      {/* <div className="info-section">
         <div className="section-header">
           <h2 className="section-title">회원 정보</h2>
           <button onClick={handleEditToggle} className={`edit-btn ${isEditing ? 'cancel' : ''}`}>
@@ -249,7 +248,7 @@ export default function HostDashboard() {
             </div>
           </div>
         )}
-      </div>
+      </div> */}
       <div className="host-header">
         <h1>내 게스트하우스</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
