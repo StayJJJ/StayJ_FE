@@ -34,7 +34,6 @@ export default function Reservations() {
   return (
     <div className="host-wrap">
       <div style={{ display: 'flex', alignItems: 'center', gap: '12px', marginBottom: '16px' }}>
-        <button className="btn outline" onClick={() => navigate(-1)}>뒤로가기</button>
         <h2 style={{ margin: 0 }}>예약 내역</h2>
       </div>
       {loading && <div className="muted">로딩 중…</div>}
