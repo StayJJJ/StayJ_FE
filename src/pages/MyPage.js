@@ -30,7 +30,6 @@ const MyPage = () => {
     const navigate = useNavigate();
     const userId = getCookie('user_id') ? parseInt(getCookie('user_id')) : null;
 
-
     const [userData, setUserData] = useState({
         id: userId,
         username: "",
@@ -81,7 +80,6 @@ const MyPage = () => {
         : isGuest
             ? `${userData.username}님, 환영합니다!`
             : `${userData.username}님, 성공적인 숙소 운영을 응원합니다!`;
-
 
 
     const handleEditToggle = () => {
@@ -174,6 +172,7 @@ const MyPage = () => {
                             <div className="info-item"><p className="label">ID</p><p className="value">{userData.login_id}</p></div>
                             <div className="info-item"><p className="label">전화번호</p><p className="value">{userData.phone_number}</p></div>
                             <button onClick={handleEditToggle} className="button">
+
                                 변경하기
                             </button>
                         </div>

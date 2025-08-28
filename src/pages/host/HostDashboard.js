@@ -193,7 +193,7 @@ export default function HostDashboard() {
     <div className="host-wrap">
 
       <MyPage />
-     
+    
       <div className="host-header">
         <h1>내 게스트하우스</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>

@@ -12,6 +12,7 @@
     text-align: center; /* 텍스트 중앙 정렬 */
     transition: all 0.3s ease; /* 부드러운 전환 효과 */
     font-family: 'Sweet', 'Noto Sans KR', sans-serif; /* 고급스러운 폰트 사용 (임시) */
+
 }
 /* 호버 시 애니메이션 효과 */
 .card:hover {
@@ -174,4 +175,5 @@ input::placeholder {
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
+
 }
