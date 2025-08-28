@@ -1,3 +1,7 @@
+body, * {
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
+}
+
 /* 홈 전체 컨테이너 */
 .home-container {
   width: 100%;
