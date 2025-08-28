@@ -65,6 +65,10 @@
   flex: 1;
 }
 
+.input-label {
+  font-size: 14px; font-weight: 700; color: #0b2a3a;
+  margin-bottom: 6px;
+}
 
 .gh-form input, .gh-form textarea, .gh-form select {
   border: 1.5px solid #0e2416; border-radius: 12px; padding: 10px 12px;
@@ -78,6 +82,8 @@
 .gray-placeholder::placeholder {
   color: #b0b8c1 !important;
   opacity: 1;
+  font-family: 'Pretendard', sans-serif;
+  font-weight: 400;
 }
 
 .form-section{
@@ -134,6 +140,15 @@
 }
 .room-remove-btn:hover {
   background: #fee2e2;
+}
+
+.file-placeholder {
+  font-size: 14px;
+  color: #b0b8c1;
+  margin-left: 12px;
+  font-family: 'Pretendard', sans-serif;
+  user-select: none;
+  font-weight: 500;
 }
 
 /* Footer actions */
