@@ -12,6 +12,7 @@ const Register = () => {
   });
   const [passwordCheck, setPasswordCheck] = useState('');
   const [passwordMatch, setPasswordMatch] = useState(null); // null | true | false
+  const [passwordValid, setPasswordValid] = useState(true); // 비밀번호 길이 검증
   const [idAvailable, setIdAvailable] = useState(false);
   const [idChecked, setIdChecked] = useState(false);
   const [idInputError, setIdInputError] = useState('');
@@ -23,7 +24,6 @@ const Register = () => {
   const phoneRegex = /^010-\d{4}-\d{4}$/;
 
   const formatPhone = (value) => {
-    // 숫자만 추출
     const digits = value.replace(/\D/g, '').slice(0, 11);
     if (digits.length === 0) return '';
     if (digits.length <= 3) return digits;
@@ -34,7 +34,6 @@ const Register = () => {
   const handleChange = (e) => {
     const { name, value } = e.target;
 
-    // 공통: 값 변경
     if (name === 'phone_number') {
       const formatted = formatPhone(value);
       setFormData((prev) => ({ ...prev, phone_number: formatted }));
@@ -49,7 +48,9 @@ const Register = () => {
       setIdAvailable(false);
       setIdChecked(false);
     }
+
     if (name === 'password') {
+      setPasswordValid(value.length >= 4 && value.length <= 10); // 길이 검증
       setPasswordMatch(value === passwordCheck && passwordCheck.length > 0);
     }
   };
@@ -95,6 +96,10 @@ const Register = () => {
     }
     if (!idAvailable) {
       alert('아이디 중복확인을 해주세요.');
+      return;
+    }
+    if (!passwordValid) {
+      alert('비밀번호는 4자 이상 10자 이하로 입력해주세요.');
       return;
     }
     if (!passwordMatch) {
@@ -167,10 +172,24 @@ const Register = () => {
         <div className="form-group">
           <div className="form-row">
             <label htmlFor="password">비밀번호</label>
-            {/* 비번은 실시간 안내 필요 없음 → 빈 자리로 높이 고정 */}
-            <span className="right-hint">&nbsp;</span>
+            <span className={`right-hint ${password.length > 0 ? (passwordValid ? 'ok' : 'err') : ''}`}>
+              {password.length > 0
+                ? passwordValid
+                  ? '사용 가능한 비밀번호입니다.'
+                  : '4~10자 사이로 입력해주세요.'
+                : ''}
+            </span>
           </div>
-          <input type="password" id="password" name="password" value={password} onChange={handleChange} required />
+          <input
+            type="password"
+            id="password"
+            name="password"
+            value={password}
+            onChange={handleChange}
+            minLength={4}
+            maxLength={10}
+            required
+          />
         </div>
 
         {/* 비밀번호 확인 */}
@@ -195,6 +214,8 @@ const Register = () => {
             name="passwordCheck"
             value={passwordCheck}
             onChange={handlePasswordCheck}
+            minLength={4}
+            maxLength={10}
             required
           />
         </div>
@@ -260,7 +281,11 @@ const Register = () => {
           </div>
         </div>
 
-        <button type="submit" className="submit-button" disabled={!(idAvailable && passwordMatch && phoneValid)}>
+        <button
+          type="submit"
+          className="submit-button"
+          disabled={!(idAvailable && passwordMatch && passwordValid && phoneValid)}
+        >
           회원가입
         </button>
       </form>
