@@ -23,12 +23,42 @@ const Home = () => {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  const [searchParams, setSearchParams] = useState({
-    name: '',
-    check_in: formatDate(today),
-    check_out: formatDate(tomorrow),
-    people: 1,
-  });
+  // localStorage에서 검색 조건 불러오기
+  const getInitialParams = () => {
+    const saved = localStorage.getItem('stayj_search');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // 날짜 유효성 체크 (오늘 이전이면 오늘/내일로)
+        const todayStr = formatDate(today);
+        const tomorrowStr = formatDate(tomorrow);
+        return {
+          name: parsed.name || '',
+          check_in: parsed.check_in >= todayStr ? parsed.check_in : todayStr,
+          check_out: parsed.check_out >= todayStr ? parsed.check_out : tomorrowStr,
+          people: parsed.people > 0 ? parsed.people : 1,
+        };
+      } catch {
+        // 파싱 실패 시 기본값
+        return {
+          name: '',
+          check_in: formatDate(today),
+          check_out: formatDate(tomorrow),
+          people: 1,
+        };
+      }
+    }
+    return {
+      name: '',
+      check_in: formatDate(today),
+      check_out: formatDate(tomorrow),
+      people: 1,
+    };
+  };
+
+  const [searchParams, setSearchParams] = useState(getInitialParams);
+  // 검색 버튼을 눌렀을 때의 값만 저장
+  const [confirmedParams, setConfirmedParams] = useState(getInitialParams);
 
   const [sortTypes, setSortTypes] = useState({
     jeju: 'default',
@@ -97,14 +127,37 @@ const Home = () => {
     setSearchParams((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSearch = () => fetchAccommodations();
+  const handleSearch = () => {
+    const checkInDate = new Date(searchParams.check_in);
+    const checkOutDate = new Date(searchParams.check_out);
+    const todayDate = new Date(formatDate(new Date()));
+    if (Number(searchParams.people) < 1) {
+      alert('인원수는 1명 이상이어야 합니다. \n다시 입력해주세요.');
+      return;
+    }
+    if (checkInDate < todayDate || checkOutDate < todayDate) {
+      alert('체크인과 체크아웃 날짜는 오늘 또는 오늘 이후만 선택할 수 있습니다.');
+      return;
+    }
+    if (checkInDate >= checkOutDate) {
+      alert('체크아웃 날짜는 체크인 날짜보다 반드시 늦어야 합니다.\n\n체크인/체크아웃 날짜를 다시 선택해 주세요.');
+      return;
+    }
+    setConfirmedParams({ ...searchParams });
+    // localStorage에 저장
+    localStorage.setItem('stayj_search', JSON.stringify(searchParams));
+    fetchAccommodations();
+  };
 
-  const handleCardClick = (id) => {
+
+  const handleCardClick = (id, roomAvailable) => {
     navigate(`/detail/${id}`, {
       state: {
-        checkIn: searchParams.check_in,
-        checkOut: searchParams.check_out,
-        guests: searchParams.people,
+        checkIn: confirmedParams.check_in,
+        checkOut: confirmedParams.check_out,
+        guests: confirmedParams.people,
+        name: confirmedParams.name,
+        roomAvailable: roomAvailable,
       },
     });
   };
@@ -121,7 +174,7 @@ const Home = () => {
         {list.map((item) => {
           const imagePath = `http://localhost:8080/images/guesthouses/${item.photo_id}.png`;
           return (
-            <div className="card" key={item.id} onClick={() => handleCardClick(item.id)}>
+            <div className="card" key={item.id} onClick={() => handleCardClick(item.id, item.room_available)}>
               <img
                 src={imagePath}
                 alt={item.name}
@@ -133,9 +186,7 @@ const Home = () => {
                 <span className="card-rating">⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</span>
                 <div className="card-meta">
                   <span className="card-price">
-                    {item.room_available.length > 0
-                      ? `💸 \\${Number(item.min_price).toLocaleString()} ~`
-                      : '예약 불가'}
+                    {item.room_available.length > 0 ? `💸 \\${Number(item.min_price).toLocaleString()} ~` : '예약 불가'}
                   </span>
                   <span className="card-room">🛏️ {item.room_count}개</span>
                 </div>
@@ -199,23 +250,65 @@ const Home = () => {
           <p className="banner-subtitle">편리하고 간편한 예약 시스템</p>
 
           <div className="search-box-container">
-            <div className="search-box" style={{ display: 'flex', gap: '10px' }}>
-              <input type="text" name="name" placeholder="게스트하우스 이름" value={searchParams.name} onChange={handleChange} />
-              <input type="date" name="check_in" value={searchParams.check_in} onChange={handleChange} />
-              <input type="date" name="check_out" value={searchParams.check_out} onChange={handleChange} />
-              <input type="number" name="people" placeholder="인원수" value={searchParams.people} onChange={handleChange} />
-              <button onClick={handleSearch}>
+            <form
+              className="search-box"
+              style={{ display: 'flex', gap: '10px' }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSearch();
+              }}
+            >
+              <input
+                type="text"
+                name="name"
+                placeholder="게스트하우스 이름"
+                value={searchParams.name}
+                onChange={handleChange}
+              />
+              <input
+                type="date"
+                name="check_in"
+                value={searchParams.check_in}
+                onChange={handleChange}
+                min={formatDate(today)}
+              />
+              <input
+                type="date"
+                name="check_out"
+                value={searchParams.check_out}
+                onChange={handleChange}
+                min={formatDate(today)}
+              />
+              <input
+                type="number"
+                name="people"
+                placeholder="인원수"
+                value={searchParams.people}
+                onChange={handleChange}
+              />
+              <button type="submit">
                 <img src="/images/search.png" alt="검색" className="search-icon" />
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
 
       {/* 지역별 섹션 */}
-      {renderRegionSection('🏙 제주시', 'jeju', sortedAccommodations.jeju)}
-      {renderRegionSection('🌊 서귀포시', 'seogwipo', sortedAccommodations.seogwipo)}
-      {renderRegionSection('🏝 기타 지역', 'other', sortedAccommodations.other)}
+      <section className="region-section">
+        <h2>🏙 제주시</h2>
+        {renderCards(accommodations.jeju)}
+      </section>
+
+      <section className="region-section">
+        <h2>🌊 서귀포시</h2>
+        {renderCards(accommodations.seogwipo)}
+      </section>
+
+      <section className="region-section">
+        <h2>🏝 기타 지역</h2>
+        {renderCards(accommodations.other)}
+      </section>
     </div>
   );
 };
