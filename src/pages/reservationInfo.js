@@ -162,15 +162,22 @@ const ReservationInfo = () => {
       const response = await axios.post('http://localhost:8080/reservation', reservationData, {
         headers: {
           'Content-Type': 'application/json',
-          "user-id": userId, // 쿠키에서 가져온 user_id를 헤더로 전송
+          'user-id': userId, // 쿠키에서 가져온 user_id를 헤더로 전송
         },
       });
 
       console.log('예약 성공:', response.data);
 
-      // 예약 성공 시 확인 메시지와 함께 홈으로 이동
-      alert(`예약이 완료되었습니다!\n예약 번호: ${response.data.reservation_id || 'N/A'}`);
-      navigate('/', {
+      // 예약 성공 시 상세 정보 안내 메시지와 함께 홈으로 이동
+      const nights = calculateNights();
+      const infoMsg =
+        `예약이 완료되었습니다!\n\n` +
+        `체크인: ${formatDate(checkIn)}\n` +
+        `체크아웃: ${formatDate(checkOut)}\n` +
+        `투숙객: ${guests}명\n` +
+        `숙박일수: ${nights}박`;
+      alert(infoMsg);
+      navigate({
         state: {
           message: '예약이 성공적으로 완료되었습니다.',
         },
@@ -199,7 +206,7 @@ const ReservationInfo = () => {
     }
   };
 
-  // 🔥 추가된 부분: 총 숙박일수 계산
+  // 총 숙박일수 계산
   const calculateNights = () => {
     if (!checkIn || !checkOut) return 0;
     const start = new Date(checkIn);
@@ -209,7 +216,7 @@ const ReservationInfo = () => {
     return diffDays;
   };
 
-  // 🔥 추가된 부분: 총 가격 계산
+  // 총 가격 계산
   const calculateTotalPrice = () => {
     if (!selectedRoom) return 0;
     const nights = calculateNights();
@@ -271,7 +278,11 @@ const ReservationInfo = () => {
     <div className="reservation-container">
       {/* Main Image */}
       <div className="main-image-section">
-        <img src={`/images/guesthouses/${guesthouse.photo_id}.png`} alt={guesthouse.name} className="main-image" />
+        <img
+          src={`http://localhost:8080/images/guesthouses/${guesthouse.photo_id}.png`}
+          alt={guesthouse.name}
+          className="main-image"
+        />
       </div>
 
       {/* Content */}
@@ -311,7 +322,11 @@ const ReservationInfo = () => {
                     className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''}`}
                     onClick={() => handleRoomSelect(room)}
                   >
-                    <img src={`/images/rooms/${room.photo_id}.png`} alt={room.name} className="room-image" />
+                    <img
+                      src={`http://localhost:8080/images/rooms/${room.photo_id}.png`}
+                      alt={room.name}
+                      className="room-image"
+                    />
                     <div className="room-info">
                       <h3>{room.name}</h3>
                       <p className="room-capacity">👥 최대 {room.capacity}명</p>
