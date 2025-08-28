@@ -29,6 +29,13 @@ const Home = () => {
     check_out: formatDate(tomorrow),
     people: 1,
   });
+  // 검색 버튼을 눌렀을 때의 값만 저장
+  const [confirmedParams, setConfirmedParams] = useState({
+    name: '',
+    check_in: formatDate(today),
+    check_out: formatDate(tomorrow),
+    people: 1,
+  });
 
   useEffect(() => {
     fetchAccommodations();
@@ -68,15 +75,27 @@ const Home = () => {
   };
 
   const handleSearch = () => {
+    const checkInDate = new Date(searchParams.check_in);
+    const checkOutDate = new Date(searchParams.check_out);
+    if (Number(searchParams.people) < 1) {
+      alert('인원수는 1명 이상이어야 합니다. \n다시 입력해주세요.');
+      return;
+    }
+    if (checkInDate >= checkOutDate) {
+      alert('체크아웃 날짜는 체크인 날짜보다 반드시 늦어야 합니다.\n\n체크인/체크아웃 날짜를 다시 선택해 주세요.');
+      return;
+    }
+    setConfirmedParams({ ...searchParams });
     fetchAccommodations();
   };
 
   const handleCardClick = (id) => {
     navigate(`/detail/${id}`, {
       state: {
-        checkIn: searchParams.check_in,
-        checkOut: searchParams.check_out,
-        guests: searchParams.people,
+        checkIn: confirmedParams.check_in,
+        checkOut: confirmedParams.check_out,
+        guests: confirmedParams.people,
+        name: confirmedParams.name,
       },
     });
   };
@@ -106,9 +125,7 @@ const Home = () => {
                 <span className="card-rating">⭐ {item.rating ? item.rating.toFixed(1) : '평점 없음'}</span>
                 <div className="card-meta">
                   <span className="card-price">
-                    {item.room_available.length > 0
-                      ? `💸 \\${Number(item.min_price).toLocaleString()} ~`
-                      : '예약 불가'}
+                    {item.room_available.length > 0 ? `💸 \\${Number(item.min_price).toLocaleString()} ~` : '예약 불가'}
                   </span>
                   <span className="card-room">🛏️ {item.room_count}개</span>
                 </div>
@@ -155,7 +172,14 @@ const Home = () => {
 
           {/* 검색 박스 */}
           <div className="search-box-container">
-            <div className="search-box" style={{ display: 'flex', gap: '10px' }}>
+            <form
+              className="search-box"
+              style={{ display: 'flex', gap: '10px' }}
+              onSubmit={(e) => {
+                e.preventDefault();
+                handleSearch();
+              }}
+            >
               <input
                 type="text"
                 name="name"
@@ -172,10 +196,10 @@ const Home = () => {
                 value={searchParams.people}
                 onChange={handleChange}
               />
-              <button onClick={handleSearch}>
+              <button type="submit">
                 <img src="/images/search.png" alt="검색" className="search-icon" />
               </button>
-            </div>
+            </form>
           </div>
         </div>
       </div>
@@ -190,7 +214,7 @@ const Home = () => {
         <h2>🌊 서귀포시</h2>
         {renderCards(accommodations.seogwipo)}
       </section>
-      
+
       <section className="region-section">
         <h2>🏝 기타 지역</h2>
         {renderCards(accommodations.other)}
