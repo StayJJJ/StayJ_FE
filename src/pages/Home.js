@@ -119,13 +119,14 @@ const Home = () => {
     fetchAccommodations();
   };
 
-  const handleCardClick = (id) => {
+  const handleCardClick = (id, roomAvailable) => {
     navigate(`/detail/${id}`, {
       state: {
         checkIn: confirmedParams.check_in,
         checkOut: confirmedParams.check_out,
         guests: confirmedParams.people,
         name: confirmedParams.name,
+        roomAvailable: roomAvailable,
       },
     });
   };
@@ -141,7 +142,7 @@ const Home = () => {
         {list.map((item) => {
           const imagePath = `http://localhost:8080/images/guesthouses/${item.photo_id}.png`;
           return (
-            <div className="card" key={item.id} onClick={() => handleCardClick(item.id)}>
+            <div className="card" key={item.id} onClick={() => handleCardClick(item.id, item.room_available)}>
               <img
                 src={imagePath}
                 alt={item.name}

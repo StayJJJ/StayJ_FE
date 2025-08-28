@@ -30,7 +30,7 @@ const ReservationInfo = () => {
   const navigate = useNavigate();
   const location = useLocation();
 
-  const { checkIn, checkOut, guests } = location.state || {};
+  const { checkIn, checkOut, guests, roomAvailable } = location.state || {};
 
   const [selectedRoom, setSelectedRoom] = useState(null);
   const [guestData, setGuestData] = useState(null);
@@ -45,9 +45,14 @@ const ReservationInfo = () => {
         setError(null);
 
         // 병렬로 API 호출
+        // roomAvailable이 있으면 쿼리로 넘김
+        const roomsUrl =
+          roomAvailable && Array.isArray(roomAvailable) && roomAvailable.length > 0
+            ? `/guesthouse/${id}/rooms?` + roomAvailable.map((rid) => `room_available=${rid}`).join('&')
+            : `/guesthouse/${id}/rooms`;
         const [guesthouseResponse, roomsResponse, reviewsResponse] = await Promise.all([
           api.get(`/guesthouse/${id}`),
-          api.get(`/guesthouse/${id}/rooms`),
+          api.get(roomsUrl),
           api.get(`/guesthouse/${id}/reviews`),
         ]);
 
@@ -177,7 +182,7 @@ const ReservationInfo = () => {
         `투숙객: ${guests}명\n` +
         `숙박일수: ${nights}박`;
       alert(infoMsg);
-      navigate({
+      navigate('/', {
         state: {
           message: '예약이 성공적으로 완료되었습니다.',
         },
@@ -316,25 +321,51 @@ const ReservationInfo = () => {
             <h2>객실 선택</h2>
             <div className="rooms-grid">
               {Array.isArray(rooms) && rooms.length > 0 ? (
-                rooms.map((room) => (
-                  <div
-                    key={room.id}
-                    className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''}`}
-                    onClick={() => handleRoomSelect(room)}
-                  >
-                    <img
-                      src={`http://localhost:8080/images/rooms/${room.photo_id}.png`}
-                      alt={room.name}
-                      className="room-image"
-                    />
-                    <div className="room-info">
-                      <h3>{room.name}</h3>
-                      <p className="room-capacity">👥 최대 {room.capacity}명</p>
-                      <p className="room-price">₩{room.price.toLocaleString()}/박</p>
+                rooms.map((room) => {
+                  // 예약 불가 여부: roomAvailable이 있고, room.id가 포함되어 있지 않으면 불가
+                  const isAvailable = !roomAvailable || roomAvailable.includes(room.id);
+                  return (
+                    <div
+                      key={room.id}
+                      className={`room-card ${selectedRoom?.id === room.id ? 'selected' : ''} ${
+                        !isAvailable ? 'unavailable' : ''
+                      }`}
+                      onClick={() => isAvailable && handleRoomSelect(room)}
+                      style={{ cursor: isAvailable ? 'pointer' : 'not-allowed', position: 'relative' }}
+                    >
+                      <img
+                        src={`http://localhost:8080/images/rooms/${room.photo_id}.png`}
+                        alt={room.name}
+                        className="room-image"
+                        style={{ filter: isAvailable ? 'none' : 'grayscale(80%)', opacity: isAvailable ? 1 : 0.5 }}
+                      />
+                      <div className="room-info">
+                        <h3>{room.name}</h3>
+                        <p className="room-capacity">👥 최대 {room.capacity}명</p>
+                        <p className="room-price">₩{room.price.toLocaleString()}/박</p>
+                      </div>
+                      {!isAvailable && (
+                        <div
+                          style={{
+                            position: 'absolute',
+                            top: 8,
+                            right: 8,
+                            color: 'red',
+                            fontWeight: 'bold',
+                            background: 'white',
+                            padding: '2px 8px',
+                            borderRadius: '8px',
+                            fontSize: '0.9em',
+                            border: '1px solid #f55',
+                          }}
+                        >
+                          예약 불가
+                        </div>
+                      )}
+                      {selectedRoom?.id === room.id && isAvailable && <div className="selected-badge">선택됨</div>}
                     </div>
-                    {selectedRoom?.id === room.id && <div className="selected-badge">선택됨</div>}
-                  </div>
-                ))
+                  );
+                })
               ) : (
                 <p className="no-rooms">사용 가능한 객실이 없습니다.</p>
               )}

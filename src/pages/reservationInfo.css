@@ -116,6 +116,25 @@
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
 }
 
+/* 예약불가 카드: 모든 인터랙션 차단 */
+.room-card.unavailable {
+  pointer-events: none !important;
+  cursor: not-allowed !important;
+  /* filter: grayscale(80%) !important; */
+  /* opacity: 0.6 !important; */
+  box-shadow: none !important;
+  border-color: #e0e0e0 !important;
+  background: #fafafa !important;
+}
+.room-card.unavailable:hover,
+.room-card.unavailable:focus,
+.room-card.unavailable:active {
+  border-color: #e0e0e0 !important;
+  box-shadow: none !important;
+  outline: none !important;
+  background: #fafafa !important;
+}
+
 .room-card.selected {
   border-color: #5eb74a;
   box-shadow: 0 0 0 2px rgba(255, 56, 92, 0.2);
@@ -388,37 +407,37 @@
     grid-template-columns: 1fr;
     gap: 30px;
   }
-  
+
   .booking-card {
     position: static;
   }
-  
+
   .main-image {
     height: 250px;
   }
-  
+
   .reservation-info {
     gap: 20px;
   }
-  
+
   .rooms-grid {
     grid-template-columns: 1fr;
   }
-  
+
   .date-inputs {
     grid-template-columns: 1fr;
   }
-  
+
   .title-section h1 {
     font-size: 24px;
   }
-  
+
   .guesthouse-info {
     flex-direction: column;
     align-items: flex-start;
     gap: 10px;
   }
-  
+
   .review-header {
     flex-direction: column;
     align-items: flex-start;
