@@ -7,7 +7,7 @@
 
 .main-header {
   background: white;
-  height: 60px; /* 고정 높이: 너무 높지 않게 */
+  height: 70px; /* 고정 높이: 너무 높지 않게 */
   padding: 0 20px; /* 좌우 여백만 */
   color: black;
   position: sticky;
@@ -20,7 +20,8 @@
   width: 120px; /* 원하는 크기 */
   height: auto; /* 비율 유지 */
   object-fit: contain;
-  padding-left: 60%;
+  padding-left: 50%;
+  padding-top: 5%;
 }
 
 .header-container {
@@ -38,13 +39,14 @@
 
 .mypage-button {
   background: white;
-  color: #132213;
+  color: hsl(120, 28%, 10%);
   border: 2px solid white;
   padding: 8px 16px;
   text-decoration: none;
   font-weight: bold;
   border-radius: 3px;
   transition: background 0.3s;
+  padding-top: 10%;
 }
 
 /* 로그아웃 버튼 스타일 */
@@ -57,6 +59,7 @@
   border-radius: 3px;
   cursor: pointer;
   transition: background 0.3s, color 0.3s;
+  margin-top: 5%;
 }
 .logout-btn:hover {
   background: #e6e6e6;
