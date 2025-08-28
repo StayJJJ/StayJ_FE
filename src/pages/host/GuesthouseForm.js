@@ -382,7 +382,7 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
               >
                 {coverFile ? '사진 재업로드' : '사진 업로드'}
               </button>
-              <span style={{ color: '#666', fontSize: 14 }}>{coverFile ? coverFile.name : '선택된 파일 없음'}</span>
+              <span className = "file-placeholder" style={{ color: '#666', fontSize: 14 }}>{coverFile ? coverFile.name : '선택된 파일 없음'}</span>
             </div>
             {coverPreview && (
               <img
@@ -496,7 +496,7 @@ export default function GuesthouseForm({ initialValues = EMPTY, onSubmit, onCanc
               >
                 {roomFiles[i] ? '사진 재업로드' : '사진 업로드'}
               </button>
-              <span style={{ color: '#666', fontSize: 14 }}>
+              <span className = "file-placeholder" style={{ color: '#666', fontSize: 14 }}>
                 {roomFiles[i] ? roomFiles[i].name : '선택된 파일 없음'}
               </span>
               {roomPreviews[i] && (

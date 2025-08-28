@@ -9,6 +9,7 @@ const Header = () => {
   const navigate = useNavigate();
 
   const isHome = location.pathname === '/';
+  const isHostPage = location.pathname === '/host';
 
   const handleBackClick = () => {
     navigate(-1); // 이전 페이지로 이동
@@ -37,7 +38,7 @@ const Header = () => {
       <div className="header-container">
         {/* 왼쪽 영역 */}
         <div className="left-space">
-          {!isHome && (
+          {!isHome && !isHostPage &&(
             <button className="back-btn" onClick={handleBackClick}>
               ←
             </button>
