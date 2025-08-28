@@ -1,6 +1,6 @@
 /* 게스트 페이지 전체 컨테이너 */
 .guest-page-container {
-  font-family: 'Noto Sans KR', sans-serif;
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
   padding: 0 20px;
   max-width: 1200px;
   margin: 0 auto;
@@ -24,6 +24,53 @@
   display: flex;
   align-items: center;
   gap: 15px;
+}
+
+.write-review-btn { 
+    background-color: #4CAF50;
+    color: white;
+    padding: 0.5rem 1.0rem; /* 크기 조정: 내부 여백 증가 */
+    border: none;
+    border-radius: 0.8rem; /* 모서리 둥글게 */
+    font-family: 'Pretendard', sans-serif;
+    font-size: 0.9rem; /* 폰트 크기 */
+    font-weight: 500; /* 폰트 두께 */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
+
+}
+
+.deleteBtn {
+  background-color: #e53935; /* 예: 빨간색 배경 */
+  color: white;
+  border: none;
+  padding: 10px 16px;
+  border-radius: 4px;
+  cursor: pointer;
+  font-weight: bold;
+  font-size: 16px;
+  transition: background-color 0.3s ease;
+}
+
+.deleteBtn:hover {
+  background-color: #c62828;
+}
+
+
+.delete-review-btn { 
+    background-color: #cf646f;
+    color: white;
+    padding: 0.5rem 1rem; /* 크기 조정: 내부 여백 증가 */
+    border: none;
+    border-radius: 0.8rem; /* 모서리 둥글게 */
+    font-family: 'Pretendard', sans-serif;
+    font-size: 0.9rem; /* 폰트 크기 */
+    font-weight: 500; /* 폰트 두께 */
+    cursor: pointer;
+    transition: background-color 0.3s ease, box-shadow 0.3s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
+
 }
 
 .logout-btn {
@@ -92,7 +139,7 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  margin-bottom: 20px;
+  margin-bottom: 15px;
 }
 
 .section-title {
@@ -104,7 +151,7 @@
 
 /* 회원 정보 수정 버튼 */
 .edit-btn {
-  background-color: #05a666;
+  background-color: #4CAF50;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -117,6 +164,7 @@
 .edit-btn.cancel {
   background-color: #ccc;
   color: #666;
+  font-size: 16px;
 }
 
 .edit-btn:hover {
@@ -175,7 +223,7 @@
 }
 
 .save-btn {
-  background-color: #28a745;
+  background-color: #4CAF50;
   color: white;
   border: none;
   padding: 10px 20px;
@@ -195,6 +243,13 @@
   flex-direction: column;
   gap: 20px;
 }
+
+.reservation-actions {
+  display: flex;
+  align-items: center;     /* 수직 중앙 정렬 */
+  gap: 1rem;               /* 인원과 버튼 사이 간격 */
+}
+
 
 .reservation-card {
   border: 1px solid #eee;
@@ -269,9 +324,18 @@
 .review-section {
   background-color: white;
   padding: 15px;
-  border-radius: 1.2px;
   border: 1px solid #e8e8e8;
+  border-radius: 12px;           /* ✅ 둥글게 */
+  margin-top: 1rem;              /* 필요 시 카드와 간격 */
 }
+
+.review-comment {
+  margin: 0 0 12px 0;            /* ✅ 아래 여백 추가 */
+  font-size: 14px;
+  color: #555;
+  line-height: 1.5;
+}
+
 
 .review-header {
   display: flex;
@@ -282,19 +346,13 @@
 
 .review-title {
   margin: 0;
-  font-size: 14px;
+  font-size: 16px;
   font-weight: bold;
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
 }
 
 .review-rating {
   font-size: 14px;
-}
-
-.review-comment {
-  margin: 0;
-  font-size: 14px;
-  color: #555;
-  line-height: 1.5;
 }
 
 /* 리뷰 없을 때 */
@@ -311,26 +369,12 @@
   color: #666;
 }
 
-.write-review-btn {
-  background-color: #05a666;
-  color: white;
-  border: none;
-  padding: 8px 16px;
-  border-radius: 0px;
-  cursor: pointer;
-  font-size: 14px;
-}
-
-.write-review-btn:hover {
-  background-color: #05a666;
-}
-
 /* 예약 취소 버튼 */
 .cancel-btn {
-  background-color: #dc3545;
+  background-color: #cf646f;
   color: white;
   border: none;
-  padding: 0.6rem 1.2rem;
+  padding: 0.5rem 1rem;
   border-radius: 1rem;
   cursor: pointer;
   font-size: 0.8rem;
