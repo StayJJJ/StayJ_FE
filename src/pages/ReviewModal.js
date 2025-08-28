@@ -45,7 +45,7 @@ const ReviewModal = ({
         'user-id': userId,
       },
       body: JSON.stringify({
-        reservationId: reservationId,
+        reservation_id: reservationId,
         rating: reviewData.rating,
         comment: reviewData.comment,
       }),
