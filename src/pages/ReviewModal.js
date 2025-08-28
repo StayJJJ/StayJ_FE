@@ -42,10 +42,10 @@ const ReviewModal = ({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        user_id: userId,
+        'user-id': userId,
       },
       body: JSON.stringify({
-        reservationId: reservationId,
+        reservation_id: reservationId,
         rating: reviewData.rating,
         comment: reviewData.comment,
       }),
@@ -64,7 +64,7 @@ const ReviewModal = ({
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        user_id: userId,
+        'user-id': userId,
       },
       body: JSON.stringify({
         rating: reviewData.rating,
@@ -85,7 +85,7 @@ const ReviewModal = ({
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        user_id: userId,
+        'user-id': userId,
       },
       // DELETE는 body 없이 헤더만 전달
     });
