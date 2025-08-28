@@ -15,13 +15,22 @@ const handleApiError = async (response) => {
   return response;
 };
 
-const getHeaders = (userId) => ({
-  'Content-Type': 'application/json',
-  'user-id': userId.toString(),
-});
+const getHeaders = (userId) => {
+  if (!userId) {
+    throw new Error('사용자 ID가 없습니다. 로그인이 필요합니다.');
+  }
+  return {
+    'Content-Type': 'application/json',
+    'user-id': userId.toString(),
+  };
+};
 
 const apiService = {
   createReservation: async (userId, reservationData) => {
+    // userId가 없으면 에러 발생
+    if (!userId) {
+      throw new Error('인증되지 않은 사용자입니다.');
+    }
     const response = await fetch(`${API_BASE_URL}/reservation`, {
       method: 'POST',
       headers: getHeaders(userId),
@@ -38,6 +47,10 @@ const apiService = {
   },
 
   getMyReservations: async (userId) => {
+    // userId가 없으면 에러 발생
+    if (!userId) {
+      throw new Error('인증되지 않은 사용자입니다.');
+    }
     const response = await fetch(`${API_BASE_URL}/reservation/my`, {
       method: 'GET',
       headers: getHeaders(userId),
@@ -145,6 +158,7 @@ const GuestPage = () => {
   useEffect(() => {
     if (!userId) {
       setError('로그인이 필요합니다.');
+      setLoading(false);
       return;
     }
     loadUserData();
