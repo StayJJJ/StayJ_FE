@@ -316,9 +316,6 @@ const GuestPage = () => {
       <div className="info-section">
         <div className="section-header">
           <h2 className="section-title">예약 내역</h2>
-          <button onClick={loadReservations} className="refresh-btn">
-            새로고침
-          </button>
         </div>
         {reservations.length === 0 ? (
           <div className="no-reservations">
