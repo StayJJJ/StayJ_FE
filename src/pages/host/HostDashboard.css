@@ -61,18 +61,21 @@ html, body, #root {
 
 /* 기본 버튼 */
 .btn.primary {
-  background-color: #4a9b3b;
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
+  font-size:15px;
+  background-color: #4CAF50;
   color: #fff;
   box-shadow: 0 4px 14px rgba(0,0,0,0.08);
 }
 .btn.primary:hover {
-  background-color: #5eb74a;
+  background-color: #4CAF50;
 }
 
 /* 소프트 버튼 */
 .btn.soft {
   background-color: #f2f9f0;
-  color: #4a9b3b;
+  color: #4CAF50;
+  border-radius: 10px;
 }
 .btn.soft:hover {
   background-color: #e6f3e6;
@@ -93,15 +96,15 @@ html, body, #root {
   border: 1px solid #cce6c9;
 
   background-color: #fff;
-  color: #4a9b3b;
+  color: #4CAF50;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.15s ease;
 }
 .logout-btn:hover {
   background-color: #f2f9f0;
-  color: #5eb74a;
-  border-color: #5eb74a;
+  color: #4CAF50;
+  border-color: #4CAF50;
 }
 
 /* ==== 카드 그리드 ==== */

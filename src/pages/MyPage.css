@@ -175,5 +175,38 @@ input::placeholder {
     cursor: pointer;
     transition: background-color 0.3s ease, box-shadow 0.3s ease;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 은은한 그림자 */
-    margin-right: 10px;
+
+}
+
+/* 저장/취소 버튼 컨테이너 */
+.button-group {
+  display: flex;
+  gap: 16px;
+  justify-content: center;
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
+}
+
+/* 저장 버튼 */
+.savebt {
+  background-color: #5eb74a;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+/* 취소 버튼 */
+.cancelbt {
+  background-color: #cccccc;
+  color: #333;
+  border: none;
+  border-radius: 6px;
+  padding: 8px 20px;
+  font-size: 13px;
+  font-weight: bold;
+  cursor: pointer;
+
 }

@@ -236,12 +236,10 @@ const MyPage = () => {
                 />
               </div>
 
-              <button type="submit" className="button">
-                저장
-              </button>
-              <button type="button" onClick={handleEditToggle} className="button cancel">
-                취소
-              </button>
+              <div className="button-group">
+                <button className="savebt">저장</button>
+                <button className="cancelbt">취소</button>
+              </div>
             </form>
           ) : (
             <div className="info-body">

@@ -185,7 +185,7 @@
   background: #fee2e2;
 }
 .primary {
-  background: linear-gradient(135deg, var(--primary), var(--primary-2));
+  background: #4CAF50;
   color: #fff;
   border: none;
   border-radius: 10px;
