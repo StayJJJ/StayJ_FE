@@ -299,20 +299,9 @@ const Home = () => {
       </div>
 
       {/* 지역별 섹션 */}
-      <section className="region-section">
-        <h2>🏙 제주시</h2>
-        {renderCards(accommodations.jeju)}
-      </section>
-
-      <section className="region-section">
-        <h2>🌊 서귀포시</h2>
-        {renderCards(accommodations.seogwipo)}
-      </section>
-
-      <section className="region-section">
-        <h2>🏝 기타 지역</h2>
-        {renderCards(accommodations.other)}
-      </section>
+      {renderRegionSection('🏙 제주시', 'jeju', sortedAccommodations.jeju)}
+      {renderRegionSection('🌊 서귀포시', 'seogwipo', sortedAccommodations.seogwipo)}
+      {renderRegionSection('🏝 기타 지역', 'other', sortedAccommodations.other)}
     </div>
   );
 };
