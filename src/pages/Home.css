@@ -16,6 +16,34 @@
   margin-bottom: 15px;
 }
 
+/* 지역 섹션 헤더: 제목 중앙, 정렬 선택 박스 오른쪽 */
+.region-header {
+  display: flex;
+  justify-content: center; /* 제목 중앙 정렬 */
+  align-items: center;
+  position: relative; /* select를 오른쪽 끝에 위치시키기 위해 */
+  margin-bottom: 15px;
+}
+
+.region-header h2 {
+  font-size: 1.4rem;
+  margin: 0;
+  text-align: center;
+  flex: 1; /* 중앙 정렬을 위해 공간 차지 */
+}
+
+.region-header select {
+  position: absolute;
+  right: 0;
+  padding: 4px 8px;
+  font-size: 0.95rem;
+  border-radius: 6px;
+  border: 1px solid #ccc;
+  cursor: pointer;
+}
+
+
+
 /* ✅ 한 줄 가로 스크롤 */
 .card-scroll-container {
   display: flex;
@@ -172,7 +200,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  background-color: rgba(255, 255, 255, 0.9);
+  background-color: rgba(255, 255, 255, 0.7);
   padding: 20px 25px;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);

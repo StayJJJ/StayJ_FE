@@ -30,9 +30,44 @@ const Home = () => {
     people: 1,
   });
 
+  const [sortTypes, setSortTypes] = useState({
+    jeju: 'default',
+    seogwipo: 'default',
+    other: 'default',
+  });
+
+  const [sortedAccommodations, setSortedAccommodations] = useState(accommodations);
+
   useEffect(() => {
     fetchAccommodations();
   }, []);
+
+  useEffect(() => {
+    // 모든 지역 정렬
+    const sortFunc = (list, type) => {
+      let sorted = [...list];
+      switch (type) {
+        case 'rating':
+          sorted.sort((a, b) => (b.rating || 0) - (a.rating || 0));
+          break;
+        case 'review':
+          sorted.sort((a, b) => (b.review_count || 0) - (a.review_count || 0));
+          break;
+        case 'price':
+          sorted.sort((a, b) => (a.min_price || 0) - (b.min_price || 0));
+          break;
+        default:
+          break; // default = 추천순
+      }
+      return sorted;
+    };
+
+    setSortedAccommodations({
+      jeju: sortFunc(accommodations.jeju, sortTypes.jeju),
+      seogwipo: sortFunc(accommodations.seogwipo, sortTypes.seogwipo),
+      other: sortFunc(accommodations.other, sortTypes.other),
+    });
+  }, [accommodations, sortTypes]);
 
   const fetchAccommodations = async () => {
     try {
@@ -41,19 +76,14 @@ const Home = () => {
         headers: { 'user-id': 1 },
       });
 
-      // ✅ 지역별 분류
       const jeju = [];
       const seogwipo = [];
       const other = [];
 
       response.data.forEach((item) => {
-        if (item.address?.includes('제주시')) {
-          jeju.push(item);
-        } else if (item.address?.includes('서귀포시')) {
-          seogwipo.push(item);
-        } else {
-          other.push(item);
-        }
+        if (item.address?.includes('제주시')) jeju.push(item);
+        else if (item.address?.includes('서귀포시')) seogwipo.push(item);
+        else other.push(item);
       });
 
       setAccommodations({ jeju, seogwipo, other });
@@ -67,9 +97,7 @@ const Home = () => {
     setSearchParams((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSearch = () => {
-    fetchAccommodations();
-  };
+  const handleSearch = () => fetchAccommodations();
 
   const handleCardClick = (id) => {
     navigate(`/detail/${id}`, {
@@ -81,11 +109,12 @@ const Home = () => {
     });
   };
 
-  // ✅ 카드 UI (재사용)
+  const handleSortChange = (region, type) => {
+    setSortTypes((prev) => ({ ...prev, [region]: type }));
+  };
+
   const renderCards = (list) => {
-    if (list.length === 0) {
-      return <p className="no-result">검색 조건에 맞는 숙소가 없습니다.</p>;
-    }
+    if (list.length === 0) return <p className="no-result">검색 조건에 맞는 숙소가 없습니다.</p>;
 
     return (
       <div className="card-scroll-container">
@@ -96,9 +125,7 @@ const Home = () => {
               <img
                 src={imagePath}
                 alt={item.name}
-                onError={(e) => {
-                  e.target.src = `http://localhost:8080/images/guesthouses/default.png`;
-                }}
+                onError={(e) => (e.target.src = `http://localhost:8080/images/guesthouses/default.png`)}
               />
               {item.isGuestPick && <div className="guest-pick">게스트 선호</div>}
               <div className="card-info">
@@ -119,6 +146,24 @@ const Home = () => {
       </div>
     );
   };
+
+  const renderRegionSection = (title, regionKey, list) => (
+    <section className="region-section">
+      <div className="region-header">
+        <h2>{title}</h2>
+        <select
+          value={sortTypes[regionKey]}
+          onChange={(e) => handleSortChange(regionKey, e.target.value)}
+        >
+          <option value="default">추천순</option>
+          <option value="rating">평점순</option>
+          <option value="review">리뷰순</option>
+          <option value="price">가격순</option>
+        </select>
+      </div>
+      {renderCards(list)}
+    </section>
+  );
 
   return (
     <div className="home-container">
@@ -153,25 +198,12 @@ const Home = () => {
           <h1 className="banner-title">제주 게스트하우스 예약</h1>
           <p className="banner-subtitle">편리하고 간편한 예약 시스템</p>
 
-          {/* 검색 박스 */}
           <div className="search-box-container">
             <div className="search-box" style={{ display: 'flex', gap: '10px' }}>
-              <input
-                type="text"
-                name="name"
-                placeholder="게스트하우스 이름"
-                value={searchParams.name}
-                onChange={handleChange}
-              />
+              <input type="text" name="name" placeholder="게스트하우스 이름" value={searchParams.name} onChange={handleChange} />
               <input type="date" name="check_in" value={searchParams.check_in} onChange={handleChange} />
               <input type="date" name="check_out" value={searchParams.check_out} onChange={handleChange} />
-              <input
-                type="number"
-                name="people"
-                placeholder="인원수"
-                value={searchParams.people}
-                onChange={handleChange}
-              />
+              <input type="number" name="people" placeholder="인원수" value={searchParams.people} onChange={handleChange} />
               <button onClick={handleSearch}>
                 <img src="/images/search.png" alt="검색" className="search-icon" />
               </button>
@@ -181,20 +213,9 @@ const Home = () => {
       </div>
 
       {/* 지역별 섹션 */}
-      <section className="region-section">
-        <h2>🏙 제주시</h2>
-        {renderCards(accommodations.jeju)}
-      </section>
-
-      <section className="region-section">
-        <h2>🌊 서귀포시</h2>
-        {renderCards(accommodations.seogwipo)}
-      </section>
-      
-      <section className="region-section">
-        <h2>🏝 기타 지역</h2>
-        {renderCards(accommodations.other)}
-      </section>
+      {renderRegionSection('🏙 제주시', 'jeju', sortedAccommodations.jeju)}
+      {renderRegionSection('🌊 서귀포시', 'seogwipo', sortedAccommodations.seogwipo)}
+      {renderRegionSection('🏝 기타 지역', 'other', sortedAccommodations.other)}
     </div>
   );
 };
