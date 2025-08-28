@@ -42,10 +42,10 @@ const ReviewModal = ({
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        user_id: userId,
+        'user-id': userId,
       },
       body: JSON.stringify({
-        reservationId: reservationId,
+        reservation_id: reservationId,
         rating: reviewData.rating,
         comment: reviewData.comment,
       }),
@@ -64,7 +64,7 @@ const ReviewModal = ({
       method: 'PATCH',
       headers: {
         'Content-Type': 'application/json',
-        user_id: userId,
+        'user-id': userId,
       },
       body: JSON.stringify({
         rating: reviewData.rating,
@@ -85,7 +85,7 @@ const ReviewModal = ({
       method: 'DELETE',
       headers: {
         'Content-Type': 'application/json',
-        user_id: userId,
+        'user-id': userId,
       },
       // DELETE는 body 없이 헤더만 전달
     });
@@ -149,12 +149,23 @@ const ReviewModal = ({
     }
   };
 
-  // 삭제 확인 모달
-  const handleDelete = () => {
+  const handleDelete = async () => {
     if (window.confirm('정말로 이 리뷰를 삭제하시겠습니까?')) {
-      handleSubmit({ preventDefault: () => {} });
+      setError('');
+      setIsSubmitting(true);
+      try {
+        await deleteReview();
+        console.log('리뷰가 삭제되었습니다.');
+        onClose(true);  // 모달 닫기 & 성공 알림
+      } catch (err) {
+        console.error('삭제 중 오류:', err);
+        setError(err.message || '삭제에 실패했습니다.');
+      } finally {
+        setIsSubmitting(false);
+      }
     }
   };
+
 
   if (!isOpen) return null;
 
@@ -165,17 +176,28 @@ const ReviewModal = ({
         <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
           <div className={styles.modalHeader}>
             <h2>리뷰 삭제</h2>
-            <button className={styles.closeBtn} onClick={onClose}>
-              ×
-            </button>
+              <div className={styles.modalHeader}>
+                <button
+                  type="button"
+                  className={styles.closeBtn}
+                  onClick={(e) => {
+                    e.preventDefault(); // ✅ 새로고침 방지
+                    onClose();
+                  }}
+                >
+                  ×
+                </button>
+              </div>
           </div>
           <div className={styles.deleteConfirm}>
             <p>정말로 이 리뷰를 삭제하시겠습니까?</p>
             <div className={styles.deleteButtons}>
-              <button className={styles.cancelBtn} onClick={onClose} disabled={isSubmitting}>
-                취소
-              </button>
-              <button className={styles.deleteBtn} onClick={handleDelete} disabled={isSubmitting}>
+              <button
+                type="button"
+                className={styles.deleteBtn}
+                onClick={handleDelete}
+                disabled={isSubmitting}
+              >
                 {isSubmitting ? '삭제 중...' : '삭제'}
               </button>
             </div>
@@ -191,9 +213,17 @@ const ReviewModal = ({
       <div className={styles.modalBox} onClick={(e) => e.stopPropagation()}>
         <div className={styles.modalHeader}>
           <h2>{mode === 'edit' ? '리뷰 수정하기' : '리뷰 작성하기'}</h2>
-          <button className={styles.closeBtn} onClick={onClose}>
+          <button
+            type="button"              // 이걸 꼭 넣어야 기본 제출버튼이 아니게 됨
+            className={styles.closeBtn}
+            onClick={(e) => {
+              e.preventDefault();      // 기본 동작 막기
+              onClose();               // 모달 닫기 함수 호출
+            }}
+          >
             ×
           </button>
+
         </div>
 
         <div className={styles.starRating}>

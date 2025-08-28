@@ -13,11 +13,12 @@
 
 .modalBox {
   background-color: white;
-  padding: 24px;
+  padding: 4px 24px 24px 24px; /* ⬅ 상단 padding 줄임 */
   border-radius: 8px;
   width: 400px;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2);
 }
+
 
 .modalHeader {
   display: flex;
@@ -64,18 +65,37 @@
   font-size: 16px;
   margin-bottom: 16px;
   resize: none;
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
 }
 
 .submitBtn {
-  background-color: #4a7ad1;
+  background-color: #4CAF50;
   color: white;
   border: none;
   padding: 10px;
   font-size: 16px;
   border-radius: 4px;
   cursor: pointer;
+  font-family: 'Sweet', 'Noto Sans KR', sans-serif;
 }
 
 .submitBtn:hover {
-  background-color: #4a7ad1;
+  background-color: #4CAF50;
+}
+
+.error {
+  font-size: 14px;
+  margin-bottom: 12px; /* ✅ 아래 요소와 간격 확보 */
+}
+
+
+.deleteBtn {
+  background-color: #cf646f;
+  color: white;
+  border: none;
+  padding: 0.5rem 1rem; /* 크기 조정: 내부 여백 증가 */
+  border-radius: 0.8rem; /* 모서리 둥글게 */
+  cursor: pointer;
+  font-size: 14px;
+  transition: background-color 0.3s ease;
 }
