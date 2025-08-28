@@ -23,19 +23,42 @@ const Home = () => {
     return `${yyyy}-${mm}-${dd}`;
   };
 
-  const [searchParams, setSearchParams] = useState({
-    name: '',
-    check_in: formatDate(today),
-    check_out: formatDate(tomorrow),
-    people: 1,
-  });
+  // localStorage에서 검색 조건 불러오기
+  const getInitialParams = () => {
+    const saved = localStorage.getItem('stayj_search');
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved);
+        // 날짜 유효성 체크 (오늘 이전이면 오늘/내일로)
+        const todayStr = formatDate(today);
+        const tomorrowStr = formatDate(tomorrow);
+        return {
+          name: parsed.name || '',
+          check_in: parsed.check_in >= todayStr ? parsed.check_in : todayStr,
+          check_out: parsed.check_out >= todayStr ? parsed.check_out : tomorrowStr,
+          people: parsed.people > 0 ? parsed.people : 1,
+        };
+      } catch {
+        // 파싱 실패 시 기본값
+        return {
+          name: '',
+          check_in: formatDate(today),
+          check_out: formatDate(tomorrow),
+          people: 1,
+        };
+      }
+    }
+    return {
+      name: '',
+      check_in: formatDate(today),
+      check_out: formatDate(tomorrow),
+      people: 1,
+    };
+  };
+
+  const [searchParams, setSearchParams] = useState(getInitialParams);
   // 검색 버튼을 눌렀을 때의 값만 저장
-  const [confirmedParams, setConfirmedParams] = useState({
-    name: '',
-    check_in: formatDate(today),
-    check_out: formatDate(tomorrow),
-    people: 1,
-  });
+  const [confirmedParams, setConfirmedParams] = useState(getInitialParams);
 
   useEffect(() => {
     fetchAccommodations();
@@ -77,8 +100,13 @@ const Home = () => {
   const handleSearch = () => {
     const checkInDate = new Date(searchParams.check_in);
     const checkOutDate = new Date(searchParams.check_out);
+    const todayDate = new Date(formatDate(new Date()));
     if (Number(searchParams.people) < 1) {
       alert('인원수는 1명 이상이어야 합니다. \n다시 입력해주세요.');
+      return;
+    }
+    if (checkInDate < todayDate || checkOutDate < todayDate) {
+      alert('체크인과 체크아웃 날짜는 오늘 또는 오늘 이후만 선택할 수 있습니다.');
       return;
     }
     if (checkInDate >= checkOutDate) {
@@ -86,6 +114,8 @@ const Home = () => {
       return;
     }
     setConfirmedParams({ ...searchParams });
+    // localStorage에 저장
+    localStorage.setItem('stayj_search', JSON.stringify(searchParams));
     fetchAccommodations();
   };
 
@@ -187,8 +217,20 @@ const Home = () => {
                 value={searchParams.name}
                 onChange={handleChange}
               />
-              <input type="date" name="check_in" value={searchParams.check_in} onChange={handleChange} />
-              <input type="date" name="check_out" value={searchParams.check_out} onChange={handleChange} />
+              <input
+                type="date"
+                name="check_in"
+                value={searchParams.check_in}
+                onChange={handleChange}
+                min={formatDate(today)}
+              />
+              <input
+                type="date"
+                name="check_out"
+                value={searchParams.check_out}
+                onChange={handleChange}
+                min={formatDate(today)}
+              />
               <input
                 type="number"
                 name="people"
