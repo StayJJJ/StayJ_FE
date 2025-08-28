@@ -193,63 +193,7 @@ export default function HostDashboard() {
     <div className="host-wrap">
 
       <MyPage />
-      
-      <div className="info-section">
-        <div className="section-header">
-          <h2 className="section-title">회원 정보</h2>
-          <button onClick={handleEditToggle} className={`edit-btn ${isEditing ? 'cancel' : ''}`}>
-            {isEditing ? '취소' : '수정'}
-          </button>
-        </div>
-        {isEditing ? (
-          <div className="user-info-grid">
-            <div className="info-item">
-              <label>이름</label>
-              <input name="username" value={editForm.username} onChange={handleInputChange} />
-            </div>
-            <div className="info-item">
-              <label>전화번호</label>
-              <input name="phone_number" value={editForm.phone_number} onChange={handleInputChange} />
-            </div>
-            <div className="info-item">
-              <label>새 비밀번호</label>
-              <input
-                type="password"
-                name="password"
-                value={editForm.password}
-                onChange={handleInputChange}
-                placeholder="변경하지 않으려면 비워두세요"
-              />
-            </div>
-            <div className="save-btn-container">
-              <button onClick={handleSave} className="save-btn">
-                저장
-              </button>
-            </div>
-          </div>
-        ) : (
-          <div className="user-info-grid">
-            <div className="info-item">
-              <p className="label">이름</p>
-              <p className="value">{userData.username}</p>
-            </div>
-            <div className="info-item">
-              <p className="label">로그인 ID</p>
-              <p className="value">{userData.login_id}</p>
-            </div>
-            <div className="info-item">
-              <p className="label">전화번호</p>
-              <p className="value">{userData.phone_number}</p>
-            </div>
-            <div className="info-item">
-              <p className="label">회원 유형</p>
-              <p className="value">
-                <span className="role-badge">{userData.role === 'GUEST' ? '게스트' : '호스트'}</span>
-              </p>
-            </div>
-          </div>
-        )}
-      </div>
+    
       <div className="host-header">
         <h1>내 게스트하우스</h1>
         <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
