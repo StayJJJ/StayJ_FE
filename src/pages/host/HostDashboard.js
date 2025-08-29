@@ -3,7 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { getUserInfo } from '../../util/auth';
 import { useEffect, useState } from 'react';
 import MyPage from '../MyPage';
-import Cookies from 'js-cookie';
+
 import {
   getMyGuesthouses,
   createGuesthouse,
@@ -115,39 +115,6 @@ export default function HostDashboard() {
     }
     loadUserData();
   }, [userId]);
-
-  const handleEditToggle = () => {
-    setIsEditing(!isEditing);
-    if (!isEditing) {
-      setEditForm({
-        username: userData.username,
-        phone_number: userData.phone_number,
-        password: '',
-      });
-    }
-  };
-
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setEditForm((prev) => ({ ...prev, [name]: value }));
-  };
-
-  const handleSave = async () => {
-    try {
-      const updateData = {
-        username: editForm.username,
-        phone_number: editForm.phone_number,
-      };
-      if (editForm.password.trim()) updateData.password = editForm.password;
-
-      await apiService.updateUserInfo(userId, updateData);
-      setUserData((prev) => ({ ...prev, ...updateData }));
-      setIsEditing(false);
-      alert('정보가 수정되었습니다.');
-    } catch (err) {
-      alert('정보 수정 실패: ' + err.message);
-    }
-  };
 
   const load = async () => {
     try {

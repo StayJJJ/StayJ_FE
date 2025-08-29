@@ -1,7 +1,9 @@
 /* ===== HostDashboard.css (완전 새 디자인) ===== */
 
 /* ==== 기본 구조 ==== */
-html, body, #root {
+html,
+body,
+#root {
   height: 100%;
   margin: 0;
   font-family: 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
@@ -22,7 +24,7 @@ html, body, #root {
 
 /* ==== 헤더 ==== */
 .host-header {
-  position: sticky;
+  /* position: sticky; */
   top: 0;
   z-index: 10;
   display: flex;
@@ -63,7 +65,7 @@ html, body, #root {
 .btn.primary {
   background-color: #4a9b3b;
   color: #fff;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.08);
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.08);
 }
 .btn.primary:hover {
   background-color: #5eb74a;
@@ -107,7 +109,7 @@ html, body, #root {
 /* ==== 카드 그리드 ==== */
 .gh-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(300px,1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
   gap: 20px;
   list-style: none;
   padding: 0;
@@ -117,7 +119,7 @@ html, body, #root {
 .gh-card {
   background-color: #fff;
   border-radius: 18px;
-  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
   padding: 20px;
   display: flex;
   flex-direction: column;
@@ -127,7 +129,7 @@ html, body, #root {
 }
 .gh-card:hover {
   transform: translateY(-4px);
-  box-shadow: 0 12px 36px rgba(0,0,0,0.12);
+  box-shadow: 0 12px 36px rgba(0, 0, 0, 0.12);
 }
 
 /* HostDashboard.css */
@@ -138,7 +140,7 @@ html, body, #root {
 }
 
 .gh-card-link:hover .gh-card {
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   transform: scale(1.01);
   transition: all 0.2s ease;
   cursor: pointer;
@@ -203,9 +205,11 @@ html, body, #root {
 /* 모달 */
 .modal {
   position: fixed;
-  top: 0; left: 0;
-  width: 100%; height: 100%;
-  background: rgba(0,0,0,0.3);
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -218,7 +222,7 @@ html, body, #root {
   padding: 24px;
   max-width: 600px;
   width: 90%;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.12);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.12);
 }
 
 .modal-head {
@@ -260,7 +264,7 @@ html, body, #root {
   white-space: nowrap;
   opacity: 0;
   pointer-events: none;
-  transition: opacity .15s ease;
+  transition: opacity 0.15s ease;
 }
 [data-tip]:hover::after {
   opacity: 1;

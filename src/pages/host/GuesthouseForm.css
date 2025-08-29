@@ -23,22 +23,50 @@
 
 /* Modal */
 
-@keyframes modalIn{ from{opacity:0; transform: translateY(8px) scale(.98)} to{opacity:1; transform: none} }
-.modal-body{
-  width: min(760px, 96vw); max-height: 80vh; overflow:auto;
-  background: var(--panel); border-radius: 20px;
-  padding: 18px; animation: modalIn .18s ease-out;
+@keyframes modalIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px) scale(0.98);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
 }
-.modal-head{
-  display:flex; align-items:center; justify-content:space-between;
-  border-bottom: 1px solid var(--sky-200); padding-bottom: 8px; margin-bottom: 12px;
+.modal-body {
+  width: min(760px, 96vw);
+  max-height: 80vh;
+  overflow: auto;
+  background: var(--panel);
+  border-radius: 20px;
+  padding: 18px;
+  animation: modalIn 0.18s ease-out;
 }
-.modal-head h2{ margin:0; font-weight: 800; letter-spacing: -.01em; }
+.modal-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid var(--sky-200);
+  padding-bottom: 8px;
+  margin-bottom: 12px;
+}
+.modal-head h2 {
+  margin: 0;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
 
 /* Form */
 
-.gh-form{ display: flex; flex-direction: column; gap: 18px; }
-.form-row { display: flex; gap: 18px; }
+.gh-form {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+.form-row {
+  display: flex;
+  gap: 18px;
+}
 .gh-form label {
   display: flex;
   flex-direction: column;
@@ -66,17 +94,33 @@
 }
 
 .input-label {
-  font-size: 14px; font-weight: 700; color: #0b2a3a;
+  font-size: 14px;
+  font-weight: 700;
+  color: #0b2a3a;
   margin-bottom: 6px;
+  text-align: left;
 }
 
-.gh-form input, .gh-form textarea, .gh-form select {
-  border: 1.5px solid #0e2416; border-radius: 12px; padding: 10px 12px;
-  font-size: 14px; background: #fff; transition: border .15s, box-shadow .15s, transform .05s;
+.input-label span {
+  text-align: left;
 }
-.gh-form input:focus, .gh-form textarea:focus, .gh-form select:focus {
-  outline: none; border-color: var(--primary);
-  box-shadow: 0 0 0 4px rgba(14,165,233,.22);
+
+.gh-form input,
+.gh-form textarea,
+.gh-form select {
+  border: 1.5px solid #0e2416;
+  border-radius: 12px;
+  padding: 10px 12px;
+  font-size: 14px;
+  background: #fff;
+  transition: border 0.15s, box-shadow 0.15s, transform 0.05s;
+}
+.gh-form input:focus,
+.gh-form textarea:focus,
+.gh-form select:focus {
+  outline: none;
+  border-color: var(--primary);
+  box-shadow: 0 0 0 4px rgba(14, 165, 233, 0.22);
 }
 
 .gray-placeholder::placeholder {
@@ -86,17 +130,24 @@
   font-weight: 400;
 }
 
-.form-section{
-  margin-top: 6px; padding-top: 10px;
+.form-section {
+  margin-top: 6px;
+  padding-top: 10px;
   border-top: 0px dashed var(--sky-200);
-  color: var(--muted); font-weight: 700; letter-spacing: .02em;
+  color: var(--muted);
+  font-weight: 700;
+  letter-spacing: 0.02em;
 }
 
 .address-type-toggle {
-  display: flex; gap: 8px; margin-bottom: 8px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 8px;
 }
 .address-selects {
-  display: flex; gap: 8px; margin-bottom: 4px;
+  display: flex;
+  gap: 8px;
+  margin-bottom: 4px;
 }
 
 .close-btn {
@@ -131,12 +182,16 @@
   border: 1px solid #fecaca;
   border-radius: 6px;
   font-size: 13px;
-  padding: 3px 10px;
+  padding: 6px 10px;
   margin-left: 4px;
   height: 28px;
   min-width: 40px;
   cursor: pointer;
   transition: background 0.15s, color 0.15s;
+  line-height: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .room-remove-btn:hover {
   background: #fee2e2;
